@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)",
+      "Bash(py -3 --version)",
+      "Bash(py -3 -c ' *)",
+      "Bash(py -3 runner.py)",
+      "Bash(PYTHONUTF8=1 PYTHONIOENCODING=utf-8 py -3 runner.py)",
+      "Bash(py -3 -c \"import docx; print\\('have python-docx'\\)\")",
+      "Bash(py -3 -m pip install --quiet python-docx)",
+      "Bash(PYTHONUTF8=1 PYTHONIOENCODING=utf-8 py -3 -c ' *)",
+      "Bash(PYTHONUTF8=1 PYTHONIOENCODING=utf-8 py -3 \"C:\\\\Users\\\\ADMIN\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-ADMIN-Downloads-Product-Contribution\\\\fa3f98fe-83b7-432e-ac24-f0f9e7fd5d7b\\\\scratchpad\\\\build_leakage_doc.py\")",
+      "Bash(PYTHONUTF8=1 PYTHONIOENCODING=utf-8 py -3 \"C:\\\\Users\\\\ADMIN\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-ADMIN-Downloads-Product-Contribution\\\\fa3f98fe-83b7-432e-ac24-f0f9e7fd5d7b\\\\scratchpad\\\\build_tool_doc.py\")",
+      "Bash(ipconfig)",
+      "Bash(PYTHONUTF8=1 py -3 -m http.server 5007 --bind 192.168.0.133)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://192.168.0.133:5007/peps_contribution_tool.html)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --max-time 3 http://192.168.0.133:5007/peps_contribution_tool.html)",
+      "Bash(node -e \"new Function\\(require\\('fs'\\).readFileSync\\('peps_contribution_tool.html','utf8'\\).match\\(/<script>\\([\\\\s\\\\S]*\\)<\\\\/script>/\\)[1]\\); console.log\\('JS parses OK'\\)\")",
+      "Bash(node -e ' *)",
+      "PowerShell(Start-Process -FilePath \"py\" -ArgumentList \"-3\",\"-m\",\"http.server\",\"5007\",\"--bind\",\"192.168.0.133\",\"--directory\",\"C:\\\\Users\\\\ADMIN\\\\Downloads\\\\Product Contribution\\\\web\" -WindowStyle Hidden)",
+      "PowerShell(Get-Process -Name python -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-NetTCPConnection -LocalPort 5007 -ErrorAction SilentlyContinue)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --max-time 5 http://192.168.0.133:5007/peps_contribution_tool.html)"
+    ]
+  }
+}

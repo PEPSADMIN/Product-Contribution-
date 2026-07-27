@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peps Industries — Product Contribution</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Calibri,Arial,sans-serif;font-size:13px;background:#f0f2f5;color:#1a1a2e}
+:root{--blue:#1F3864;--blue2:#2E75B6;--green:#1E5631;--red:#C00000;--amber:#BF8F00;--border:#d0d4dd;--bg:#fff;--bg2:#f7f9fc;--bg3:#eef1f7}
+
+/* ── Top bar ── */
+.topbar{background:var(--blue);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.topbar h1{font-size:16px;font-weight:600;letter-spacing:.3px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.badge{font-size:11px;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3)}
+.btn{padding:6px 14px;border-radius:5px;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit}
+.btn-primary{background:#2E75B6;color:#fff}.btn-primary:hover{background:#1F5C9A}
+.btn-success{background:#1E5631;color:#fff}.btn-success:hover{background:#164426}
+.btn-outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5)}.btn-outline:hover{background:rgba(255,255,255,.1)}
+.btn-sm{padding:3px 10px;font-size:11px}
+
+/* ── Layout ── */
+.layout{display:flex;height:calc(100vh - 46px)}
+.sidebar{width:220px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.main{flex:1;overflow-y:auto;padding:0}
+
+/* ── Sidebar ── */
+.sidebar-section{font-size:10px;font-weight:700;color:#8892a4;padding:12px 14px 4px;text-transform:uppercase;letter-spacing:.08em}
+.nav-item{padding:8px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;border-left:3px solid transparent;font-size:13px;color:#444;transition:all .15s}
+.nav-item:hover{background:var(--bg2);color:var(--blue)}
+.nav-item.active{background:#EBF3FC;color:var(--blue2);border-left-color:var(--blue2);font-weight:600}
+.nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.nd-peps{background:#2E75B6}.nd-cirrus{background:#1E5631}.nd-it{background:#BF8F00}.nd-acc{background:#C00000}
+.ramco-zone{margin:10px;padding:10px;border:1.5px dashed #2E75B6;border-radius:6px;background:#EBF3FC}
+.ramco-zone label{display:block;font-size:11px;font-weight:600;color:var(--blue2);margin-bottom:6px}
+.ramco-zone input[type=file]{font-size:11px;width:100%}
+.ramco-status{font-size:10px;margin-top:6px;color:#555}
+
+/* ── Cards ── */
+.page{padding:16px;display:none}.page.active{display:block}
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:14px}
+.card-header{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:13px;font-weight:700;color:var(--blue)}
+.card-body{padding:12px 14px}
+
+/* ── Params panel ── */
+.params-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.param-group{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:10px 12px}
+.param-group-title{font-size:10px;font-weight:700;color:#8892a4;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.param-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.param-label{font-size:11px;color:#555;flex:1}
+.param-input{width:72px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;font-size:12px;font-family:inherit;text-align:right;background:#fff}
+.param-input:focus{outline:none;border-color:var(--blue2);box-shadow:0 0 0 2px rgba(46,117,182,.15)}
+.param-input.changed{border-color:var(--amber);background:#FFFDE7}
+.param-unit{font-size:10px;color:#888;margin-left:4px;width:20px}
+
+/* ── NM Table ── */
+.nm-table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--blue);color:#fff;padding:7px 8px;text-align:left;font-weight:600;white-space:nowrap;position:sticky;top:0}
+thead th:first-child{border-radius:4px 0 0 0}
+thead th:last-child{border-radius:0 4px 0 0}
+tbody tr{border-bottom:1px solid var(--border)}
+tbody tr:hover{background:#EBF3FC}
+tbody tr.brand-header td{background:var(--bg3);font-weight:700;font-size:11px;color:var(--blue);padding:4px 8px;letter-spacing:.05em}
+tbody td{padding:6px 8px;white-space:nowrap}
+.mrp-cell input{width:80px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;font-size:12px;font-family:inherit;text-align:right}
+.mrp-cell input:focus{outline:none;border-color:var(--blue2)}
+.mrp-cell input.changed{border-color:var(--amber);background:#FFFDE7;font-weight:700}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+.pill-g{background:#E8F5E9;color:#1B5E20}
+.pill-a{background:#FFF8E1;color:#F57F17}
+.pill-r{background:#FFEBEE;color:#B71C1C}
+.delta{font-size:11px;font-weight:600}
+.delta-up{color:#1B5E20}.delta-dn{color:#B71C1C}.delta-0{color:#888}
+.rm-src{font-size:10px;padding:1px 5px;border-radius:3px;background:#E3F2FD;color:var(--blue2);margin-left:4px}
+.rm-src-manual{background:#FFF3E0;color:#E65100}
+
+/* ── Summary cards ── */
+.summary-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.summary-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.sc-label{font-size:11px;color:#888;margin-bottom:4px}
+.sc-val{font-size:22px;font-weight:700;color:var(--blue)}
+.sc-sub{font-size:11px;color:#888;margin-top:2px}
+.sc-peps{border-top:3px solid #2E75B6}
+.sc-cirrus{border-top:3px solid #1E5631}
+.sc-it{border-top:3px solid #BF8F00}
+.sc-acc{border-top:3px solid #C00000}
+
+/* ── Waterfall detail ── */
+.detail-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
+.detail-overlay.open{display:flex}
+.detail-box{background:#fff;border-radius:10px;padding:20px;width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+.detail-box h3{font-size:14px;font-weight:700;color:var(--blue);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.wf-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:12px}
+.wf-row.wf-total{font-weight:700;border-top:2px solid var(--border);border-bottom:none;padding-top:6px;margin-top:4px}
+.wf-row.wf-section{font-weight:700;color:var(--blue);background:var(--bg3);padding:4px 8px;margin:6px -8px;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.wf-row.wf-pos{color:#1B5E20}.wf-row.wf-neg{color:#B71C1C}
+.close-btn{float:right;cursor:pointer;font-size:18px;color:#888;line-height:1;margin-top:-4px}
+
+/* ── Utilities (replace inline styles) ── */
+.mt-8{margin-top:8px}
+.nd-all{background:#8892a4}
+.section-pad-top{padding:14px 16px 0}
+.section-pad-bottom{padding:0 16px 16px}
+.section-pad{padding:16px}
+.hint-text{font-size:11px;color:#888}
+.params-grid-2col{grid-template-columns:repeat(2,1fr)}
+.msg-success{color:#1E5631}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--blue);color:#fff;padding:10px 18px;border-radius:6px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Peps Industries &nbsp;—&nbsp; Product Contribution Tool</h1>
+  <div class="topbar-right">
+    <span class="badge" id="rate-badge">Rates: Current</span>
+    <button class="btn btn-outline btn-sm" onclick="resetAll()">Reset All</button>
+    <button class="btn btn-success" onclick="exportExcel()">Export Excel</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-section">Views</div>
+    <div class="nav-item active" onclick="showPage('nm')">NM Abstract</div>
+    <div class="nav-item" onclick="showPage('params')">Commercial Rates</div>
+
+    <div class="sidebar-section mt-8">Brands</div>
+    <div class="nav-item" onclick="filterBrand('all')"><span class="nav-dot nd-all"></span>All Brands</div>
+    <div class="nav-item" onclick="filterBrand('peps')"><span class="nav-dot nd-peps"></span>Peps Spring</div>
+    <div class="nav-item" onclick="filterBrand('cirrus')"><span class="nav-dot nd-cirrus"></span>Cirrus Foam</div>
+    <div class="nav-item" onclick="filterBrand('italiano')"><span class="nav-dot nd-it"></span>Italiano</div>
+    <div class="nav-item" onclick="filterBrand('accessories')"><span class="nav-dot nd-acc"></span>Accessories</div>
+
+    <div class="sidebar-section mt-8">Filters</div>
+    <div class="nav-item" onclick="filterNM('below6')">⚠ NM below 6%</div>
+    <div class="nav-item" onclick="filterNM('changed')">✎ MRP changed</div>
+    <div class="nav-item" onclick="filterNM('all')">Show all</div>
+
+    <div class="sidebar-section mt-8">Ramco BOM</div>
+    <div class="ramco-zone">
+      <label for="ramco-file">Upload BOM extract (CSV/Excel)</label>
+      <input type="file" id="ramco-file" accept=".csv,.xlsx,.xls" onchange="loadRamco(this)"
+        title="Upload Ramco BOM extract (CSV or Excel)" aria-label="Upload Ramco BOM extract (CSV or Excel)">
+      <div class="ramco-status" id="ramco-status">No file loaded — using manual RM costs</div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- NM Abstract page -->
+    <div class="page active" id="page-nm">
+      <div class="section-pad-top">
+        <div class="summary-row" id="summary-row"></div>
+      </div>
+      <div class="section-pad-bottom">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Net Margin Abstract — South DIS Channel</span>
+            <span class="hint-text">Click any row for full waterfall &nbsp;|&nbsp; Edit MRP to see live impact</span>
+          </div>
+          <div class="nm-table-wrap">
+            <table id="nm-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>MRP (₹)</th>
+                  <th>Net Billing (₹)</th>
+                  <th>RM Cost (₹)</th>
+                  <th>Net Sales (₹)</th>
+                  <th>EBITDA (₹)</th>
+                  <th>Net Margin (₹)</th>
+                  <th>NM %</th>
+                  <th>NM/sqft (₹)</th>
+                  <th>vs Base</th>
+                </tr>
+              </thead>
+              <tbody id="nm-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Commercial Rates page -->
+    <div class="page" id="page-params">
+      <div class="section-pad">
+        <div id="params-cards"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Waterfall detail overlay -->
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetail(event)">
+  <div class="detail-box" id="detail-box">
+    <span class="close-btn" onclick="closeDetail()">×</span>
+    <h3 id="detail-title"></h3>
+    <div id="detail-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// DATA — embedded from engine
+// ═══════════════════════════════════════════════════════════════════
+
+const FINANCE = {
+  mfg_ohs_pct:0.0672, admin_ohs_lump:500, admin_ohs_pct:0.1815, admin_ohs_pct_it:0.2371,
+  mktg_ohs_lump:1516, mktg_salary_pct:0.1672, mktg_salary_pct_it:0.163,
+  adv_promo_pct_it:0.1921, finance_cost_pct:0.0204,
+  depreciation_pct:0.0155, depreciation_pct_cirrus:0.0259,
+  direct_tax_rate:0.2517,
+  direct_labour_spring:400, direct_labour_pct_cirrus:0.1635,
+  direct_labour_pct_it:0.1635, direct_labour_pct_acc:0.0982
+};
+
+// Commercial rates — editable by MD
+let COMM = {
+  peps_dealer:0.30, peps_dist_vat:0.016364, peps_dist:0.10,
+  peps_cd:0.030, peps_dct:0.040, peps_tod:0.030,
+  peps_sr:0.015, peps_scheme:0.132431,
+  cirrus_dealer:0.30, cirrus_dist_vat:0.016364, cirrus_dist:0.10,
+  cirrus_cd:0.030, cirrus_dct:0.0285, cirrus_tod:0.040,
+  cirrus_sr:0.015, cirrus_scheme:0.133759,
+  inspree_dealer:0.35, inspree_scheme:0.148600,
+  it_dealer:0.40, it_dist_vat:0.016364, it_dist:0.10,
+  it_cd:0.030, it_dct:0.040, it_tod:0.030,
+  it_sr:0.015, it_scheme:0.183736,
+  acc_dealer:0.50, acc_cd:0.030, acc_sr:0.015
+};
+const COMM_BASE = JSON.parse(JSON.stringify(COMM));
+
+const SKUS_RAW = [
+  {b:"peps",ic:"PEPSBNCOMNLBG78X60X06",p:"Peps Comfort 6\"",sqft:32.5,mrp:15999,rm:3232.21,fr:431.03,cs:105},
+  {b:"peps",ic:"PEPSBNCOMNLBG78X60X08",p:"Peps Comfort 8\"",sqft:32.5,mrp:18499,rm:3720.74,fr:574.71,cs:105},
+  {b:"peps",ic:"PEPSBNCOMNLBG78X60X10",p:"Peps Comfort 10\"",sqft:32.5,mrp:20999,rm:4310.56,fr:714.29,cs:105},
+  {b:"peps",ic:"",p:"Peps Supreme 6\"",sqft:32.5,mrp:18999,rm:3295.50,fr:431.03,cs:105},
+  {b:"peps",ic:"",p:"Peps Supreme 8\"",sqft:32.5,mrp:21555,rm:3867.17,fr:574.71,cs:105},
+  {b:"peps",ic:"",p:"Peps Supreme 10\"",sqft:32.5,mrp:24999,rm:4473.30,fr:714.29,cs:105},
+  {b:"peps",ic:"",p:"Sanibel NL 6\"",sqft:32.5,mrp:25198,rm:4200.00,fr:431.03,cs:105},
+  {b:"peps",ic:"",p:"Sanibel MF 6\"",sqft:32.5,mrp:26999,rm:4850.00,fr:431.03,cs:105},
+  {b:"peps",ic:"",p:"Sanibel MF 8\"",sqft:32.5,mrp:30555,rm:5620.00,fr:574.71,cs:105},
+  {b:"peps",ic:"",p:"Sanibel MF 10\"",sqft:32.5,mrp:32999,rm:6180.00,fr:714.29,cs:105},
+  {b:"peps",ic:"",p:"Sanibel MF PT 6\"",sqft:32.5,mrp:33599,rm:5200.00,fr:431.03,cs:105},
+  {b:"peps",ic:"",p:"Sanibel MF PT 8\"",sqft:32.5,mrp:35999,rm:5900.00,fr:574.71,cs:105},
+  {b:"peps",ic:"",p:"Sanibel MF PT 10\"",sqft:32.5,mrp:39499,rm:6500.00,fr:714.29,cs:105},
+  {b:"peps",ic:"",p:"Sanibel MF ET 6\"",sqft:32.5,mrp:34599,rm:5500.00,fr:431.03,cs:105},
+  {b:"peps",ic:"",p:"Sanibel MF ET 8\"",sqft:32.5,mrp:36999,rm:6200.00,fr:574.71,cs:105},
+  {b:"peps",ic:"",p:"Sanibel MF ET 10\"",sqft:32.5,mrp:40499,rm:6800.00,fr:714.29,cs:105},
+  {b:"cirrus",ic:"HYPKBRZFMDB78X60X04",p:"Kozybreeze 4\"",sqft:32.5,mrp:9942,rm:2688.40,fr:287.36,cs:60},
+  {b:"cirrus",ic:"HYPKBRZFMDB78X60X05",p:"Kozybreeze 5\"",sqft:32.5,mrp:12414,rm:2976.48,fr:357.14,cs:60},
+  {b:"cirrus",ic:"HYPKBRZFMDB78X60X06",p:"Kozybreeze 6\"",sqft:32.5,mrp:15341,rm:3288.86,fr:431.03,cs:60},
+  {b:"cirrus",ic:"HYPFURFMBG78X60X04",p:"Furno 4\"",sqft:32.5,mrp:11318,rm:2227.92,fr:287.36,cs:105},
+  {b:"cirrus",ic:"HYPFURFMBG78X60X05",p:"Furno 5\"",sqft:32.5,mrp:14149,rm:2658.11,fr:357.14,cs:105},
+  {b:"cirrus",ic:"HYPFURFMBG78X60X06",p:"Furno 6\"",sqft:32.5,mrp:16977,rm:3008.58,fr:431.03,cs:105},
+  {b:"cirrus",ic:"HYPINSFMMR78X60X04",p:"Inspree PU 4\"",sqft:32.5,mrp:14718,rm:2691.36,fr:287.36,cs:245,ck:"inspree"},
+  {b:"cirrus",ic:"",p:"Inspree PU 5\"",sqft:32.5,mrp:16840,rm:2979.03,fr:357.14,cs:245,ck:"inspree"},
+  {b:"cirrus",ic:"",p:"Inspree PU 6\"",sqft:32.5,mrp:19056,rm:3046.61,fr:431.03,cs:245,ck:"inspree"},
+  {b:"cirrus",ic:"",p:"Inspree PU 8\"",sqft:32.5,mrp:24329,rm:3724.24,fr:574.71,cs:245,ck:"inspree"},
+  {b:"cirrus",ic:"",p:"Foamera 4\"",sqft:32.5,mrp:14189,rm:2436.58,fr:287.36,cs:105},
+  {b:"cirrus",ic:"",p:"Foamera 5\"",sqft:32.5,mrp:16553,rm:2809.32,fr:357.14,cs:105},
+  {b:"cirrus",ic:"",p:"Foamera 6\"",sqft:32.5,mrp:18918,rm:3188.00,fr:431.03,cs:105},
+  {b:"cirrus",ic:"",p:"Inspree Memory 5\"",sqft:32.5,mrp:20346,rm:3301.57,fr:357.14,cs:105},
+  {b:"cirrus",ic:"",p:"Inspree Memory 6\"",sqft:32.5,mrp:22561,rm:3376.51,fr:431.03,cs:105},
+  {b:"cirrus",ic:"",p:"Inspree Memory 8\"",sqft:32.5,mrp:27836,rm:4076.27,fr:574.71,cs:105},
+  {b:"cirrus",ic:"",p:"Inspree Latex 5\"",sqft:32.5,mrp:27124,rm:4862.08,fr:357.14,cs:105},
+  {b:"italiano",ic:"PEPSITSTPKNL78X60X06",p:"Serenita NL 6\"",sqft:32.5,mrp:49306,rm:8196.99,fr:454.55,cs:678},
+  {b:"italiano",ic:"PEPSITETPKNL78X60X08",p:"Enchanto NL 8\"",sqft:32.5,mrp:57644,rm:7567.41,fr:602.41,cs:678},
+  {b:"italiano",ic:"PEPSITETPKET78X60X08",p:"Enchanto ET 8\"",sqft:32.5,mrp:66919,rm:7889.03,fr:602.41,cs:678},
+  {b:"italiano",ic:"PEPSITICOPKCT78X60X08",p:"Icona CT 8\"",sqft:32.5,mrp:77131,rm:9802.56,fr:602.41,cs:678},
+  {b:"italiano",ic:"PEPSITICOPKCT78X60X10",p:"Icona CT 10\"",sqft:32.5,mrp:87940,rm:10560.91,fr:757.58,cs:678},
+  {b:"italiano",ic:"PEPSITICOPKCT78X60X12",p:"Icona CT 12\"",sqft:32.5,mrp:96481,rm:11262.94,fr:909.09,cs:678},
+  {b:"italiano",ic:"PEPSITMGPKFT78X60X08",p:"Magnifico FT 8\"",sqft:32.5,mrp:101095,rm:10029.71,fr:602.41,cs:678},
+  {b:"italiano",ic:"PEPSITMGPKFT78X60X10",p:"Magnifico FT 10\"",sqft:32.5,mrp:121278,rm:10378.98,fr:757.58,cs:678},
+  {b:"italiano",ic:"PEPSITMGPKFT78X60X12",p:"Magnifico FT 12\"",sqft:32.5,mrp:131535,rm:13842.56,fr:909.09,cs:678},
+  {b:"accessories",ic:"",p:"Peps Stargaze Pillow 26x16",sqft:1,mrp:611,rm:123.51,fr:27.27,cs:0,mt:"BO"},
+  {b:"accessories",ic:"",p:"Stargaze Plus Pillow 27x17",sqft:1,mrp:721,rm:139.84,fr:30.00,cs:0,mt:"BO"},
+  {b:"accessories",ic:"",p:"Tender Plush Pillow 27x17",sqft:1,mrp:1099,rm:210.56,fr:30.00,cs:0,mt:"BO"},
+  {b:"accessories",ic:"",p:"Allura PU Moulded Pillow",sqft:1,mrp:1429,rm:346.54,fr:36.36,cs:0,mt:"Manuf"},
+  {b:"accessories",ic:"",p:"Jumbo Plush Pillow 30x20",sqft:1,mrp:1759,rm:271.75,fr:38.96,cs:0,mt:"BO"},
+  {b:"accessories",ic:"",p:"Memory Moulded Pillow",sqft:1,mrp:2566,rm:417.10,fr:26.09,cs:0,mt:"Manuf"},
+  {b:"accessories",ic:"",p:"Contour Memory Foam Pillow",sqft:1,mrp:2444,rm:424.77,fr:30.00,cs:0,mt:"Manuf"},
+  {b:"accessories",ic:"",p:"Tufted Pillow 24x15x05",sqft:1,mrp:1649,rm:190.66,fr:37.50,cs:0,mt:"Manuf"},
+  {b:"accessories",ic:"",p:"Natural Latex Pillow 20x11",sqft:1,mrp:1869,rm:386.97,fr:15.79,cs:0,mt:"Manuf"},
+  {b:"accessories",ic:"",p:"Fitted Sheets 78x60",sqft:1,mrp:1782,rm:451.20,fr:9.38,cs:0,mt:"BO"},
+  {b:"accessories",ic:"",p:"Micro Polyester Comforter",sqft:1,mrp:3506,rm:858.80,fr:55.56,cs:0,mt:"BO"},
+  {b:"accessories",ic:"",p:"Fleece Blanket 90x100",sqft:1,mrp:1649,rm:546.20,fr:27.27,cs:0,mt:"BO"}
+];
+
+// Live state
+let skus = SKUS_RAW.map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:false}));
+let currentFilter = {brand:'all', nm:'all'};
+let baseResults = null;
+
+// ═══════════════════════════════════════════════════════════════════
+// ENGINE — JS port of engine.py
+// ═══════════════════════════════════════════════════════════════════
+function calcSKU(s){
+  const f = FINANCE; const gst = 0.18;
+  const mrp = s.mrp_live; const rm = s.rm_live;
+  const b = s.b; const ck = s.ck||null;
+
+  // Channel policy
+  let p;
+  if(b==="peps"){
+    p={dm:COMM.peps_dealer,dv:COMM.peps_dist_vat,di:COMM.peps_dist,
+       cd:COMM.peps_cd,dct:COMM.peps_dct,tod:COMM.peps_tod,
+       sr:COMM.peps_sr,scheme_rm:COMM.peps_scheme};
+  } else if(b==="cirrus"&&ck==="inspree"){
+    p={dm:COMM.inspree_dealer,dv:COMM.cirrus_dist_vat,di:COMM.cirrus_dist,
+       cd:COMM.cirrus_cd,dct:COMM.cirrus_dct,tod:COMM.cirrus_tod,
+       sr:COMM.cirrus_sr,scheme_rm:COMM.inspree_scheme};
+  } else if(b==="cirrus"){
+    p={dm:COMM.cirrus_dealer,dv:COMM.cirrus_dist_vat,di:COMM.cirrus_dist,
+       cd:COMM.cirrus_cd,dct:COMM.cirrus_dct,tod:COMM.cirrus_tod,
+       sr:COMM.cirrus_sr,scheme_rm:COMM.cirrus_scheme};
+  } else if(b==="italiano"){
+    p={dm:COMM.it_dealer,dv:COMM.it_dist_vat,di:COMM.it_dist,
+       cd:COMM.it_cd,dct:COMM.it_dct,tod:COMM.it_tod,
+       sr:COMM.it_sr,scheme_rm:COMM.it_scheme};
+  } else {
+    p={dm:COMM.acc_dealer,dv:0,di:0,cd:COMM.acc_cd,dct:0,tod:0,
+       sr:COMM.acc_sr,scheme_rm:0};
+  }
+
+  // Revenue waterfall
+  const dealer_margin = mrp*p.dm;
+  const dealer_price  = mrp-dealer_margin;
+  const dist_vat_diff = p.dv ? dealer_price*p.dv/(1+p.dv) : 0;
+  const after_vat     = p.dv ? dealer_price/(1+p.dv) : dealer_price;
+  const dist_margin   = p.di ? after_vat*p.di/(1+p.di) : 0;
+  const dist_price    = p.di ? after_vat/(1+p.di) : after_vat;
+  const cgst          = dist_price*(gst/2)/(1+gst);
+  const sgst          = cgst;
+  const nbr           = dist_price/(1+gst);
+
+  // Deductions
+  const sales_return  = rm*p.sr;
+  const cd            = dist_price*p.cd;
+  const dct           = (dealer_price/(1+gst))*p.dct;
+  const tod           = nbr*p.tod;
+  const scheme        = rm*p.scheme_rm;
+  const net_sales     = nbr-sales_return-cd-dct-tod-scheme;
+
+  // Costs
+  let dl,admin_ohs,mkt_ohs,adv,dep,tax_rate;
+  if(b==="peps"){
+    dl=f.direct_labour_spring; admin_ohs=f.admin_ohs_lump;
+    mkt_ohs=f.mktg_ohs_lump; adv=0; dep=0; tax_rate=0;
+  } else if(b==="cirrus"){
+    dl=rm*f.direct_labour_pct_cirrus; admin_ohs=rm*f.admin_ohs_pct;
+    mkt_ohs=rm*f.mktg_salary_pct; adv=0; dep=rm*f.depreciation_pct_cirrus; tax_rate=f.direct_tax_rate;
+  } else if(b==="italiano"){
+    dl=rm*f.direct_labour_pct_it; admin_ohs=rm*f.admin_ohs_pct_it;
+    mkt_ohs=rm*f.mktg_salary_pct_it; adv=rm*f.adv_promo_pct_it;
+    dep=rm*f.depreciation_pct_cirrus; tax_rate=f.direct_tax_rate;
+  } else {
+    const isBO=(s.mt==="BO");
+    dl=isBO?0:rm*f.direct_labour_pct_acc;
+    admin_ohs=rm*f.admin_ohs_pct; mkt_ohs=rm*f.mktg_salary_pct;
+    adv=0; dep=rm*f.depreciation_pct; tax_rate=f.direct_tax_rate;
+    const mfg_ohs=isBO?0:rm*f.mfg_ohs_pct;
+    const gross=net_sales-dl-rm-s.cs-mfg_ohs;
+    const ebitda=gross-mkt_ohs-adv-s.fr-admin_ohs;
+    const fc=rm*f.finance_cost_pct;
+    const ebt=ebitda-fc-dep;
+    const taxes=ebt*tax_rate;
+    const nm=ebt-taxes;
+    const nm_pct=net_sales?nm/net_sales:0;
+    return{dealer_margin,dealer_price,dist_vat_diff,after_vat,dist_margin,dist_price,
+           cgst,sgst,nbr,sales_return,cd,dct,tod,scheme,net_sales,
+           dl,rm,cs:s.cs,mfg_ohs,gross,mkt_ohs,adv,fr:s.fr,admin_ohs,ebitda,
+           fc,dep,ebt,taxes,nm,nm_pct,nm_sqft:s.sqft?nm/s.sqft:0};
+  }
+
+  const mfg_ohs = rm*f.mfg_ohs_pct;
+  const gross   = net_sales-dl-rm-s.cs-mfg_ohs;
+  const ebitda  = gross-mkt_ohs-adv-s.fr-admin_ohs;
+  const fc      = rm*f.finance_cost_pct;
+  const ebt     = ebitda-fc-dep;
+  const taxes   = ebt*tax_rate;
+  const nm      = ebt-taxes;
+  const nm_pct  = net_sales?nm/net_sales:0;
+  return{dealer_margin,dealer_price,dist_vat_diff,after_vat,dist_margin,dist_price,
+         cgst,sgst,nbr,sales_return,cd,dct,tod,scheme,net_sales,
+         dl,rm,cs:s.cs,mfg_ohs,gross,mkt_ohs,adv,fr:s.fr,admin_ohs,ebitda,
+         fc,dep,ebt,taxes,nm,nm_pct,nm_sqft:s.sqft?nm/s.sqft:0};
+}
+
+function runAll(){return skus.map(s=>({...s,...calcSKU(s)}));}
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════════
+const INR = v=>v<0?`(${Math.abs(v).toLocaleString('en-IN',{maximumFractionDigits:0})})`
+                  :v.toLocaleString('en-IN',{maximumFractionDigits:0});
+const PCT = v=>(v*100).toFixed(1)+'%';
+const pill = v=>v>=0.12?`<span class="pill pill-g">${PCT(v)}</span>`
+                :v>=0.06?`<span class="pill pill-a">${PCT(v)}</span>`
+                        :`<span class="pill pill-r">${PCT(v)}</span>`;
+
+function renderSummary(results){
+  const brands=['peps','cirrus','italiano','accessories'];
+  const labels=['Peps Spring','Cirrus Foam','Italiano','Accessories'];
+  const scClass=['sc-peps','sc-cirrus','sc-it','sc-acc'];
+  let html='';
+  brands.forEach((b,i)=>{
+    const rows=results.filter(r=>r.b===b);
+    const avg=rows.reduce((s,r)=>s+r.nm_pct,0)/rows.length;
+    const below=rows.filter(r=>r.nm_pct<0.06).length;
+    html+=`<div class="summary-card ${scClass[i]}">
+      <div class="sc-label">${labels[i]}</div>
+      <div class="sc-val">${PCT(avg)}</div>
+      <div class="sc-sub">Avg NM &nbsp;|&nbsp; ${below} SKU${below!==1?'s':''} below 6%</div>
+    </div>`;
+  });
+  document.getElementById('summary-row').innerHTML=html;
+}
+
+function renderTable(results){
+  const brands=['peps','cirrus','italiano','accessories'];
+  const bLabels={peps:'PEPS SPRING',cirrus:'CIRRUS FOAM',italiano:'ITALIANO',accessories:'ACCESSORIES'};
+  let html='';
+  brands.forEach(b=>{
+    let rows=results.filter(r=>r.b===b);
+    if(currentFilter.brand!=='all'&&currentFilter.brand!==b)return;
+    if(currentFilter.nm==='below6') rows=rows.filter(r=>r.nm_pct<0.06);
+    if(currentFilter.nm==='changed') rows=rows.filter(r=>r.mrp_live!==r.mrp);
+    if(!rows.length)return;
+    html+=`<tr class="brand-header"><td colspan="10">${bLabels[b]}</td></tr>`;
+    rows.forEach((r,i)=>{
+      const base=baseResults?baseResults.find(x=>x.p===r.p):null;
+      const delta=base?r.nm_pct-base.nm_pct:0;
+      const dclass=delta>0.001?'delta-up':delta<-0.001?'delta-dn':'delta-0';
+      const dsign=delta>0.001?'+':delta<-0.001?'−':'';
+      const dstr=Math.abs(delta)>0.0005?`<span class="delta ${dclass}">${dsign}${(Math.abs(delta)*100).toFixed(1)}pp</span>`:'—';
+      const rmSrc=r.rm_from_ramco?`<span class="rm-src">Ramco</span>`:`<span class="rm-src rm-src-manual">Manual</span>`;
+      const mrpChanged=r.mrp_live!==r.mrp;
+      html+=`<tr onclick="showDetail('${r.p.replace(/'/g,"\\'")}')">
+        <td>${r.p}</td>
+        <td class="mrp-cell" onclick="event.stopPropagation()">
+          <input type="number" value="${r.mrp_live}" data-prod="${r.p}"
+            class="${mrpChanged?'changed':''}"
+            onchange="updateMRP('${r.p.replace(/'/g,"\\'")}',this.value)"
+            oninput="this.classList.add('changed')">
+        </td>
+        <td>${INR(r.nbr)}</td>
+        <td>${INR(r.rm)} ${rmSrc}</td>
+        <td>${INR(r.net_sales)}</td>
+        <td>${INR(r.ebitda)}</td>
+        <td>${INR(r.nm)}</td>
+        <td>${pill(r.nm_pct)}</td>
+        <td>${r.sqft>1?INR(r.nm_sqft):'—'}</td>
+        <td>${dstr}</td>
+      </tr>`;
+    });
+  });
+  document.getElementById('nm-tbody').innerHTML=html;
+}
+
+function render(){
+  const results=runAll();
+  if(!baseResults) baseResults=JSON.parse(JSON.stringify(results));
+  renderSummary(results);
+  renderTable(results);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PARAMS PAGE
+// ═══════════════════════════════════════════════════════════════════
+function renderParams(){
+  const groups=[
+    {title:'Peps Spring — Channel Policy',fields:[
+      {k:'peps_dealer',l:'Dealer margin',unit:'%',mult:100},
+      {k:'peps_dist',l:'Distributor margin',unit:'%',mult:100},
+      {k:'peps_cd',l:'Cash discount (CD)',unit:'%',mult:100},
+      {k:'peps_dct',l:'DCT',unit:'%',mult:100},
+      {k:'peps_tod',l:'TOD',unit:'%',mult:100},
+      {k:'peps_sr',l:'Sales return',unit:'%',mult:100},
+      {k:'peps_scheme',l:'Scheme (% of RM)',unit:'%',mult:100},
+    ]},
+    {title:'Cirrus Foam — Channel Policy',fields:[
+      {k:'cirrus_dealer',l:'Dealer margin',unit:'%',mult:100},
+      {k:'cirrus_dist',l:'Distributor margin',unit:'%',mult:100},
+      {k:'cirrus_cd',l:'Cash discount (CD)',unit:'%',mult:100},
+      {k:'cirrus_dct',l:'DCT',unit:'%',mult:100},
+      {k:'cirrus_tod',l:'TOD',unit:'%',mult:100},
+      {k:'cirrus_sr',l:'Sales return',unit:'%',mult:100},
+      {k:'cirrus_scheme',l:'Scheme (% of RM)',unit:'%',mult:100},
+      {k:'inspree_dealer',l:'Inspree dealer margin',unit:'%',mult:100},
+      {k:'inspree_scheme',l:'Inspree scheme (% of RM)',unit:'%',mult:100},
+    ]},
+    {title:'Italiano — Channel Policy',fields:[
+      {k:'it_dealer',l:'Dealer margin',unit:'%',mult:100},
+      {k:'it_dist',l:'Distributor margin',unit:'%',mult:100},
+      {k:'it_cd',l:'Cash discount (CD)',unit:'%',mult:100},
+      {k:'it_dct',l:'DCT',unit:'%',mult:100},
+      {k:'it_tod',l:'TOD',unit:'%',mult:100},
+      {k:'it_sr',l:'Sales return',unit:'%',mult:100},
+      {k:'it_scheme',l:'Scheme (% of RM)',unit:'%',mult:100},
+    ]},
+    {title:'Accessories — Channel Policy',fields:[
+      {k:'acc_dealer',l:'Dealer margin',unit:'%',mult:100},
+      {k:'acc_cd',l:'Cash discount (CD)',unit:'%',mult:100},
+      {k:'acc_sr',l:'Sales return',unit:'%',mult:100},
+    ]},
+  ];
+  let html='<div class="params-grid params-grid-2col">';
+  groups.forEach(g=>{
+    html+=`<div class="param-group"><div class="param-group-title">${g.title}</div>`;
+    g.fields.forEach(f=>{
+      const val=(COMM[f.k]*(f.mult||1)).toFixed(f.mult===100?2:2);
+      const changed=COMM[f.k]!==COMM_BASE[f.k];
+      html+=`<div class="param-row">
+        <span class="param-label">${f.l}</span>
+        <input class="param-input${changed?' changed':''}" type="number" step="0.01"
+          value="${val}" data-key="${f.k}" data-mult="${f.mult||1}"
+          onchange="updateComm(this)" oninput="this.classList.add('changed')">
+        <span class="param-unit">${f.unit}</span>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  html+='</div>';
+  document.getElementById('params-cards').innerHTML=html;
+}
+
+function updateComm(el){
+  const k=el.dataset.key; const mult=parseFloat(el.dataset.mult)||1;
+  COMM[k]=parseFloat(el.value)/mult;
+  baseResults=null;
+  render();
+  toast('Rates updated — table recalculated');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════════════════════════
+function updateMRP(prod,val){
+  const s=skus.find(x=>x.p===prod);
+  if(!s)return;
+  s.mrp_live=parseFloat(val)||s.mrp;
+  render();
+}
+
+function showDetail(prod){
+  const s=skus.find(x=>x.p===prod); if(!s)return;
+  const r={...s,...calcSKU(s)};
+  document.getElementById('detail-title').textContent=r.p+' — Full P&L Waterfall';
+  const f=(v,cls='')=>`<span class="${cls}">${INR(v)}</span>`;
+  const rows=[
+    ['section','REVENUE'],
+    ['A. MRP',f(r.mrp_live)],
+    ['B. Dealer margin',f(-r.dealer_margin,'wf-neg')],
+    ['C. Dealer price',f(r.dealer_price),'wf-total'],
+    ['Dist. VAT diff',f(-r.dist_vat_diff,'wf-neg')],
+    ['Dist. margin',f(-r.dist_margin,'wf-neg')],
+    ['Dist. price',f(r.dist_price),'wf-total'],
+    ['CGST @ 9%',f(-r.cgst,'wf-neg')],
+    ['SGST @ 9%',f(-r.sgst,'wf-neg')],
+    ['Net Billing Rate',f(r.nbr),'wf-total wf-pos'],
+    ['section','DEDUCTIONS'],
+    ['Sales return',f(-r.sales_return,'wf-neg')],
+    ['Cash discount (CD)',f(-r.cd,'wf-neg')],
+    ['DCT',f(-r.dct,'wf-neg')],
+    ['TOD',f(-r.tod,'wf-neg')],
+    ['Scheme',f(-r.scheme,'wf-neg')],
+    ['Net Sales',f(r.net_sales),'wf-total wf-pos'],
+    ['section','COSTS'],
+    ['Direct labour',f(-r.dl,'wf-neg')],
+    ['RM cost',f(-r.rm,'wf-neg')],
+    ['Consumer scheme',f(-r.cs,'wf-neg')],
+    ['Mfg overhead',f(-r.mfg_ohs,'wf-neg')],
+    ['Gross Margin',f(r.gross),'wf-total '+(r.gross>=0?'wf-pos':'wf-neg')],
+    ['Marketing OHS',f(-r.mkt_ohs,'wf-neg')],
+    ['Adv & Promo',f(-r.adv,'wf-neg')],
+    ['Freight OHS',f(-r.fr,'wf-neg')],
+    ['Admin OHS',f(-r.admin_ohs,'wf-neg')],
+    ['EBITDA',f(r.ebitda),'wf-total '+(r.ebitda>=0?'wf-pos':'wf-neg')],
+    ['section','BELOW EBITDA'],
+    ['Finance cost',f(-r.fc,'wf-neg')],
+    ['Depreciation',f(-r.dep,'wf-neg')],
+    ['EBT',f(r.ebt),'wf-total'],
+    ['Direct taxes',f(-r.taxes,'wf-neg')],
+    ['Net Margin',f(r.nm),'wf-total '+(r.nm>=0?'wf-pos':'wf-neg')],
+    ['Net Margin %',`<strong>${PCT(r.nm_pct)}</strong>`,'wf-total '+(r.nm_pct>=0.12?'wf-pos':r.nm_pct>=0.06?'':'wf-neg')],
+  ];
+  let html='';
+  rows.forEach(row=>{
+    if(row[0]==='section'){html+=`<div class="wf-row wf-section">${row[1]}</div>`;return;}
+    html+=`<div class="wf-row ${row[2]||''}"><span>${row[0]}</span>${row[1]}</div>`;
+  });
+  document.getElementById('detail-content').innerHTML=html;
+  document.getElementById('detail-overlay').classList.add('open');
+}
+
+function closeDetail(e){
+  if(!e||e.target===document.getElementById('detail-overlay'))
+    document.getElementById('detail-overlay').classList.remove('open');
+}
+
+function showPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  if(p==='params')renderParams();
+}
+
+function filterBrand(b){
+  currentFilter.brand=b;
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  render();
+}
+function filterNM(f){
+  currentFilter.nm=f;
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  render();
+}
+
+function resetAll(){
+  skus=SKUS_RAW.map(s=>({...s,mrp_live:s.mrp,rm_live:s.rm,rm_from_ramco:false}));
+  Object.assign(COMM,JSON.parse(JSON.stringify(COMM_BASE)));
+  baseResults=null;
+  render();
+  if(document.getElementById('page-params').classList.contains('active'))renderParams();
+  toast('All values reset to baseline');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RAMCO BOM UPLOAD
+// ═══════════════════════════════════════════════════════════════════
+function loadRamco(input){
+  const file=input.files[0]; if(!file)return;
+  const ext=file.name.split('.').pop().toLowerCase();
+  const status=document.getElementById('ramco-status');
+  status.textContent='Reading file...';
+
+  if(ext==='csv'){
+    const reader=new FileReader();
+    reader.onload=e=>parseRamcoCSV(e.target.result,file.name);
+    reader.readAsText(file);
+  } else {
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const wb=XLSX.read(e.target.result,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const csv=XLSX.utils.sheet_to_csv(ws);
+      parseRamcoCSV(csv,file.name);
+    };
+    reader.readAsArrayBuffer(file);
+  }
+}
+
+function parseRamcoCSV(csv,fname){
+  const lines=csv.trim().split('\n').filter(l=>l.trim());
+  if(lines.length<2){
+    document.getElementById('ramco-status').textContent='Error: empty file';return;
+  }
+  // Auto-detect columns: look for item_code and cost-like headers
+  const headers=lines[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
+  const codeCol=headers.findIndex(h=>h.includes('item')||h.includes('code')||h.includes('sku'));
+  const costCol=headers.findIndex(h=>h.includes('cost')||h.includes('rm')||h.includes('material')||h.includes('rate'));
+  const descCol=headers.findIndex(h=>h.includes('desc')||h.includes('product')||h.includes('name'));
+
+  if(codeCol<0||costCol<0){
+    document.getElementById('ramco-status').innerHTML=
+      'Could not auto-detect columns.<br>Expected headers: Item Code, RM Cost (or similar)';
+    return;
+  }
+
+  let matched=0,unmatched=[];
+  for(let i=1;i<lines.length;i++){
+    const cols=lines[i].split(',').map(c=>c.replace(/"/g,'').trim());
+    const code=(cols[codeCol]||'').trim().toUpperCase();
+    const cost=parseFloat(cols[costCol]);
+    if(!code||isNaN(cost)||cost<=0)continue;
+
+    // Match by item_code (exact) or by description fuzzy
+    let s=skus.find(x=>x.ic&&x.ic.toUpperCase()===code);
+    if(!s&&descCol>=0){
+      const desc=(cols[descCol]||'').toLowerCase();
+      s=skus.find(x=>x.p.toLowerCase().includes(desc.substring(0,8))||
+                      desc.includes(x.p.toLowerCase().substring(0,8)));
+    }
+    if(s){
+      s.rm_live=cost; s.rm_from_ramco=true; matched++;
+    } else {
+      unmatched.push(code);
+    }
+  }
+
+  baseResults=null;
+  render();
+  const st=document.getElementById('ramco-status');
+  st.innerHTML=`<strong class="msg-success">${matched} SKUs updated from Ramco</strong><br>`+
+    (unmatched.length?`${unmatched.length} unmatched: ${unmatched.slice(0,3).join(', ')}${unmatched.length>3?'…':''}`:
+    'All codes matched');
+  toast(`Ramco BOM loaded — ${matched} RM costs updated`);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// EXCEL EXPORT
+// ═══════════════════════════════════════════════════════════════════
+function exportExcel(){
+  const results=runAll();
+  const wb=XLSX.utils.book_new();
+
+  // Sheet 1: NM Abstract
+  const abs=[
+    ['Peps Industries — Product Contribution Summary'],
+    ['Generated: '+new Date().toLocaleString('en-IN')],
+    [],
+    ['Brand','Item Code','Product','MRP (₹)','Net Billing (₹)','RM Cost (₹)',
+     'Net Sales (₹)','Gross Margin (₹)','EBITDA (₹)','Net Margin (₹)','NM %','NM/sqft (₹)','RM Source']
+  ];
+  results.forEach(r=>{
+    abs.push([
+      r.b,r.ic,r.p,
+      Math.round(r.mrp_live),Math.round(r.nbr),Math.round(r.rm_live),
+      Math.round(r.net_sales),Math.round(r.gross),Math.round(r.ebitda),
+      Math.round(r.nm),(r.nm_pct*100).toFixed(2)+'%',
+      r.sqft>1?Math.round(r.nm_sqft):'—',
+      r.rm_from_ramco?'Ramco BOM':'Manual'
+    ]);
+  });
+  const ws1=XLSX.utils.aoa_to_sheet(abs);
+  ws1['!cols']=[{wch:12},{wch:24},{wch:30},{wch:10},{wch:14},{wch:12},
+                {wch:12},{wch:14},{wch:12},{wch:14},{wch:8},{wch:12},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,ws1,'NM Abstract');
+
+  // Sheet 2: Full waterfall per SKU
+  const wf=[
+    ['Brand','Product','MRP','Dealer Margin','Dealer Price',
+     'Dist VAT Diff','Dist Margin','Dist Price','CGST','SGST','Net Billing Rate',
+     'Sales Return','CD','DCT','TOD','Scheme','Net Sales',
+     'Direct Labour','RM Cost','Consumer Scheme','Mfg OHS','Gross Margin',
+     'Marketing OHS','Adv & Promo','Freight OHS','Admin OHS','EBITDA',
+     'Finance Cost','Depreciation','EBT','Direct Taxes','Net Margin','NM %']
+  ];
+  results.forEach(r=>{
+    wf.push([r.b,r.p,
+      r.mrp_live,r.dealer_margin,r.dealer_price,
+      r.dist_vat_diff,r.dist_margin,r.dist_price,r.cgst,r.sgst,r.nbr,
+      r.sales_return,r.cd,r.dct,r.tod,r.scheme,r.net_sales,
+      r.dl,r.rm_live,r.cs,r.mfg_ohs,r.gross,
+      r.mkt_ohs,r.adv,r.fr,r.admin_ohs,r.ebitda,
+      r.fc,r.dep,r.ebt,r.taxes,r.nm,(r.nm_pct*100).toFixed(2)+'%'
+    ].map(v=>typeof v==='number'?Math.round(v*100)/100:v));
+  });
+  const ws2=XLSX.utils.aoa_to_sheet(wf);
+  XLSX.utils.book_append_sheet(wb,ws2,'Full Waterfall');
+
+  // Sheet 3: Commercial rates snapshot
+  const rates=[
+    ['Commercial Rates Snapshot — '+new Date().toLocaleDateString('en-IN')],
+    [],
+    ['Parameter','Value'],
+    ['Peps Dealer Margin',(COMM.peps_dealer*100).toFixed(2)+'%'],
+    ['Peps Dist Margin',(COMM.peps_dist*100).toFixed(2)+'%'],
+    ['Peps CD',(COMM.peps_cd*100).toFixed(2)+'%'],
+    ['Peps DCT',(COMM.peps_dct*100).toFixed(2)+'%'],
+    ['Peps TOD',(COMM.peps_tod*100).toFixed(2)+'%'],
+    ['Peps Sales Return',(COMM.peps_sr*100).toFixed(2)+'%'],
+    ['Peps Scheme % of RM',(COMM.peps_scheme*100).toFixed(4)+'%'],
+    [],
+    ['Cirrus Dealer Margin',(COMM.cirrus_dealer*100).toFixed(2)+'%'],
+    ['Cirrus Dist Margin',(COMM.cirrus_dist*100).toFixed(2)+'%'],
+    ['Cirrus CD',(COMM.cirrus_cd*100).toFixed(2)+'%'],
+    ['Cirrus DCT',(COMM.cirrus_dct*100).toFixed(2)+'%'],
+    ['Cirrus TOD',(COMM.cirrus_tod*100).toFixed(2)+'%'],
+    ['Cirrus Scheme % of RM',(COMM.cirrus_scheme*100).toFixed(4)+'%'],
+    [],
+    ['Italiano Dealer Margin',(COMM.it_dealer*100).toFixed(2)+'%'],
+    ['Italiano Dist Margin',(COMM.it_dist*100).toFixed(2)+'%'],
+    ['Italiano Scheme % of RM',(COMM.it_scheme*100).toFixed(4)+'%'],
+  ];
+  const ws3=XLSX.utils.aoa_to_sheet(rates);
+  ws3['!cols']=[{wch:28},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,ws3,'Rates Snapshot');
+
+  XLSX.writeFile(wb,'Peps_Contribution_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  toast('Excel exported successfully');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// Init
+render();
+</script>
+</body>
+</html>
