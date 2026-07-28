@@ -5,6 +5,29 @@ sys.path.insert(0, os.path.dirname(__file__))
 from engine import calc_peps, calc_cirrus, calc_italiano, calc_accessories
 from sku_master import SKUS
 from config import FINANCE, COMMERCIAL
+import costing_store
+
+
+def _live_rm_cost(item_code: str, hardcoded: float) -> tuple:
+    """Prefer the latest Ramco-ledger-sourced RM cost for this item_code;
+    fall back to sku_master.py's hardcoded value if no snapshot exists yet.
+
+    Returns (rm_cost, rm_source) where rm_source is one of:
+      "ledger:<month>"           — Ramco-ledger-verified this month
+      "estimated:no_item_code"   — SKU has no item_code; can never be
+                                    matched to a Ramco BOM/ledger row
+      "estimated:no_ledger_match" — has an item_code but no ledger
+                                    snapshot exists for it yet
+    (see Leakage Analysis §C.1/§C.2 — an unverified RM cost should never
+    be presented with the same confidence as a source-checked one)
+    """
+    if not item_code:
+        return hardcoded, "estimated:no_item_code"
+    snap = costing_store.latest(item_code)
+    if snap is None:
+        return hardcoded, "estimated:no_ledger_match"
+    month, rm_cost, _source_file = snap
+    return rm_cost, f"ledger:{month}"
 
 try:
     from tabulate import tabulate
@@ -15,8 +38,19 @@ except ImportError:
     from tabulate import tabulate
 
 
-def run_all(overrides: dict = None) -> list:
-    """overrides: {product_name: {mrp, rm_cost, ...}}"""
+def run_all(overrides: dict = None, use_live_rm: bool = True) -> list:
+    """overrides: {product_name: {mrp, rm_cost, ...}}
+
+    use_live_rm=True (default, business view): prefer the latest Ramco-
+    ledger RM cost per SKU — this is what the NM Abstract / HTML tool show.
+
+    use_live_rm=False (formula-correctness check): use sku_master.py's
+    static rm_cost, matching the exact snapshot VALIDATION_TARGETS were
+    calibrated against. Live RM cost moves month to month by design (that's
+    the point of the Ramco refresh) — validate() must hold RM cost fixed,
+    or every monthly refresh looks like a broken formula when it's really
+    just current, correct, different data (see Leakage Analysis §C.8).
+    """
     fin = {**FINANCE}
     results = []
     for sku in SKUS:
@@ -29,7 +63,10 @@ def run_all(overrides: dict = None) -> list:
 
         brand   = s["brand"]
         mrp     = s["mrp"]
-        rm      = s["rm_cost"]
+        if use_live_rm:
+            rm, rm_source = _live_rm_cost(s.get("item_code", ""), s["rm_cost"])
+        else:
+            rm, rm_source = s["rm_cost"], "static:sku_master"
         freight = s.get("freight_south", 0)
         sqft    = s.get("sqft", 32.5)
         cs      = s.get("consumer_scheme", 105)
@@ -62,7 +99,9 @@ def run_all(overrides: dict = None) -> list:
                                  mfg_type=s.get("mfg_type","BO"))
         else:
             continue
-        results.append(r.to_dict())
+        rd = r.to_dict()
+        rd["rm_source"] = rm_source
+        results.append(rd)
     return results
 
 
@@ -147,9 +186,10 @@ def whatif(product: str, new_mrp: float):
 
 
 if __name__ == "__main__":
-    results = run_all()
-    validate(results)
-    nm_abstract(results)
+    # Formula-correctness check: static RM cost, matches VALIDATION_TARGETS' snapshot.
+    validate(run_all(use_live_rm=False))
+    # Business view: live Ramco-ledger RM cost where available.
+    nm_abstract(run_all(use_live_rm=True))
     print()
     whatif("Peps Comfort 6\"", 17500)
     whatif("Serenita NL 6\"", 52000)

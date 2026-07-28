@@ -77,6 +77,7 @@ tbody td{padding:6px 8px;white-space:nowrap}
 .delta-up{color:#1B5E20}.delta-dn{color:#B71C1C}.delta-0{color:#888}
 .rm-src{font-size:10px;padding:1px 5px;border-radius:3px;background:#E3F2FD;color:var(--blue2);margin-left:4px}
 .rm-src-manual{background:#FFF3E0;color:#E65100}
+.rm-src-estimated{background:#FFEBEE;color:#C62828}
 
 /* ── Summary cards ── */
 .summary-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
@@ -130,27 +131,30 @@ tbody td{padding:6px 8px;white-space:nowrap}
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-section">Views</div>
-    <div class="nav-item active" onclick="showPage('nm')">NM Abstract</div>
-    <div class="nav-item" onclick="showPage('params')">Commercial Rates</div>
+    <div class="nav-group-view">
+      <div class="nav-item active" onclick="showPage('nm')">NM Abstract</div>
+      <div class="nav-item" onclick="showPage('params')">Commercial Rates</div>
+    </div>
 
     <div class="sidebar-section mt-8">Brands</div>
-    <div class="nav-item" onclick="filterBrand('all')"><span class="nav-dot nd-all"></span>All Brands</div>
-    <div class="nav-item" onclick="filterBrand('peps')"><span class="nav-dot nd-peps"></span>Peps Spring</div>
-    <div class="nav-item" onclick="filterBrand('cirrus')"><span class="nav-dot nd-cirrus"></span>Cirrus Foam</div>
-    <div class="nav-item" onclick="filterBrand('italiano')"><span class="nav-dot nd-it"></span>Italiano</div>
-    <div class="nav-item" onclick="filterBrand('accessories')"><span class="nav-dot nd-acc"></span>Accessories</div>
+    <div class="nav-group-brand">
+      <div class="nav-item active" onclick="filterBrand('all')"><span class="nav-dot nd-all"></span>All Brands</div>
+      <div class="nav-item" onclick="filterBrand('peps')"><span class="nav-dot nd-peps"></span>Peps Spring</div>
+      <div class="nav-item" onclick="filterBrand('cirrus')"><span class="nav-dot nd-cirrus"></span>Cirrus Foam</div>
+      <div class="nav-item" onclick="filterBrand('italiano')"><span class="nav-dot nd-it"></span>Italiano</div>
+      <div class="nav-item" onclick="filterBrand('accessories')"><span class="nav-dot nd-acc"></span>Accessories</div>
+    </div>
 
     <div class="sidebar-section mt-8">Filters</div>
-    <div class="nav-item" onclick="filterNM('below6')">⚠ NM below 6%</div>
-    <div class="nav-item" onclick="filterNM('changed')">✎ MRP changed</div>
-    <div class="nav-item" onclick="filterNM('all')">Show all</div>
+    <div class="nav-group-filter">
+      <div class="nav-item" onclick="filterNM('below6')">⚠ NM below 6%</div>
+      <div class="nav-item" onclick="filterNM('changed')">✎ MRP changed</div>
+      <div class="nav-item active" onclick="filterNM('all')">Show all</div>
+    </div>
 
-    <div class="sidebar-section mt-8">Ramco BOM</div>
+    <div class="sidebar-section mt-8">Engine Status</div>
     <div class="ramco-zone">
-      <label for="ramco-file">Upload BOM extract (CSV/Excel)</label>
-      <input type="file" id="ramco-file" accept=".csv,.xlsx,.xls" onchange="loadRamco(this)"
-        title="Upload Ramco BOM extract (CSV or Excel)" aria-label="Upload Ramco BOM extract (CSV or Excel)">
-      <div class="ramco-status" id="ramco-status">No file loaded — using manual RM costs</div>
+      <div class="ramco-status" id="ramco-status">Connecting to engine…</div>
     </div>
   </div>
 
@@ -174,8 +178,11 @@ tbody td{padding:6px 8px;white-space:nowrap}
                 <tr>
                   <th>Product</th>
                   <th>MRP (₹)</th>
+                  <th>Dealer Margin (₹)</th>
+                  <th>Dist Margin (₹)</th>
                   <th>Net Billing (₹)</th>
                   <th>RM Cost (₹)</th>
+                  <th title="RM cost as % of MRP — a leading indicator of margin-thin SKUs">RM/MRP %</th>
                   <th>Net Sales (₹)</th>
                   <th>EBITDA (₹)</th>
                   <th>Net Margin (₹)</th>
@@ -218,6 +225,7 @@ tbody td{padding:6px 8px;white-space:nowrap}
 // ═══════════════════════════════════════════════════════════════════
 
 const FINANCE = {
+  gst_pct:0.18,
   mfg_ohs_pct:0.0672, admin_ohs_lump:500, admin_ohs_pct:0.1815, admin_ohs_pct_it:0.2371,
   mktg_ohs_lump:1516, mktg_salary_pct:0.1672, mktg_salary_pct_it:0.163,
   adv_promo_pct_it:0.1921, finance_cost_pct:0.0204,
@@ -266,17 +274,35 @@ const SKUS_RAW = [
   {b:"cirrus",ic:"HYPFURFMBG78X60X04",p:"Furno 4\"",sqft:32.5,mrp:11318,rm:2227.92,fr:287.36,cs:105},
   {b:"cirrus",ic:"HYPFURFMBG78X60X05",p:"Furno 5\"",sqft:32.5,mrp:14149,rm:2658.11,fr:357.14,cs:105},
   {b:"cirrus",ic:"HYPFURFMBG78X60X06",p:"Furno 6\"",sqft:32.5,mrp:16977,rm:3008.58,fr:431.03,cs:105},
-  {b:"cirrus",ic:"HYPINSFMMR78X60X04",p:"Inspree PU 4\"",sqft:32.5,mrp:14718,rm:2691.36,fr:287.36,cs:245,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMMR78X60X04-90D",p:"Inspree PU 4\"",sqft:32.5,mrp:14718,rm:2691.36,fr:287.36,cs:245,ck:"inspree"},
   {b:"cirrus",ic:"",p:"Inspree PU 5\"",sqft:32.5,mrp:16840,rm:2979.03,fr:357.14,cs:245,ck:"inspree"},
   {b:"cirrus",ic:"",p:"Inspree PU 6\"",sqft:32.5,mrp:19056,rm:3046.61,fr:431.03,cs:245,ck:"inspree"},
   {b:"cirrus",ic:"",p:"Inspree PU 8\"",sqft:32.5,mrp:24329,rm:3724.24,fr:574.71,cs:245,ck:"inspree"},
   {b:"cirrus",ic:"",p:"Foamera 4\"",sqft:32.5,mrp:14189,rm:2436.58,fr:287.36,cs:105},
   {b:"cirrus",ic:"",p:"Foamera 5\"",sqft:32.5,mrp:16553,rm:2809.32,fr:357.14,cs:105},
   {b:"cirrus",ic:"",p:"Foamera 6\"",sqft:32.5,mrp:18918,rm:3188.00,fr:431.03,cs:105},
-  {b:"cirrus",ic:"",p:"Inspree Memory 5\"",sqft:32.5,mrp:20346,rm:3301.57,fr:357.14,cs:105},
-  {b:"cirrus",ic:"",p:"Inspree Memory 6\"",sqft:32.5,mrp:22561,rm:3376.51,fr:431.03,cs:105},
-  {b:"cirrus",ic:"",p:"Inspree Memory 8\"",sqft:32.5,mrp:27836,rm:4076.27,fr:574.71,cs:105},
-  {b:"cirrus",ic:"",p:"Inspree Latex 5\"",sqft:32.5,mrp:27124,rm:4862.08,fr:357.14,cs:105},
+  {b:"cirrus",ic:"HYPINSFMMFGR78X60X05-90D",p:"Inspree Memory 5\"",sqft:32.5,mrp:20346,rm:3301.57,fr:357.14,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMMFBL78X60X06-90D",p:"Inspree Memory 6\"",sqft:32.5,mrp:22561,rm:3376.51,fr:431.03,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMMFGR78X60X08-90D",p:"Inspree Memory 8\"",sqft:32.5,mrp:27836,rm:4076.27,fr:574.71,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMLTGRN78X60X05-90D",p:"Inspree Latex 5\"",sqft:32.5,mrp:27124,rm:4862.08,fr:429.38,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMETMR78X60X05-90D",p:"Inspree PU ET 5\"",sqft:32.5,mrp:18153,rm:3178.40,fr:357.14,cs:245,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMETMR78X60X06-90D",p:"Inspree PU ET 6\"",sqft:32.5,mrp:20489,rm:3234.36,fr:431.03,cs:245,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMETMR78X60X08-90D",p:"Inspree PU ET 8\"",sqft:32.5,mrp:26195,rm:3916.73,fr:574.71,cs:245,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMMFETBL78X60X05-90D",p:"Inspree Memory ET 5\"",sqft:32.5,mrp:21848,rm:3514.97,fr:357.14,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMMFETBL78X60X06-90D",p:"Inspree Memory ET 6\"",sqft:32.5,mrp:24182,rm:3540.86,fr:431.03,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMMFETBL78X60X08-90D",p:"Inspree Memory ET 8\"",sqft:32.5,mrp:29890,rm:4280.01,fr:574.71,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMLTETGRN78X60X05-90D",p:"Inspree Latex ET 5\"",sqft:32.5,mrp:28989,rm:5027.33,fr:429.38,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMLTETGRN78X60X06-90D",p:"Inspree Latex ET 6\"",sqft:32.5,mrp:31325,rm:5080.85,fr:503.72,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPINSFMLTETGRN78X60X08-90D",p:"Inspree Latex ET 8\"",sqft:32.5,mrp:37032,rm:5804.64,fr:645.57,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPMEMFMVL78X60X05",p:"Memorio 5\"",sqft:32.5,mrp:24492,rm:3876.26,fr:357.14,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPMEMFMVL78X60X06",p:"Memorio 6\"",sqft:32.5,mrp:29391,rm:4382.95,fr:431.03,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPMEMFMVL78X60X08",p:"Memorio 8\"",sqft:32.5,mrp:39187,rm:5427.45,fr:574.71,cs:313,ck:"inspree"},
+  {b:"cirrus",ic:"HYPSPSFMNB78X60X05",p:"Spine Safe 5\"",sqft:32.5,mrp:26415,rm:3233.73,fr:429.38,cs:438,ck:"inspree"},
+  {b:"cirrus",ic:"HYPSPSFMNB78X60X06",p:"Spine Safe 6\"",sqft:32.5,mrp:31697,rm:3307.52,fr:503.72,cs:438,ck:"inspree"},
+  {b:"cirrus",ic:"HYPSPSFMNB78X60X08",p:"Spine Safe 8\"",sqft:32.5,mrp:42264,rm:3992.59,fr:645.57,cs:438,ck:"inspree"},
+  {b:"cirrus",ic:"HYPMULTFMGR78X60X05",p:"Memorio Ultra 5\"",sqft:32.5,mrp:29216,rm:3833.45,fr:429.38,cs:438,ck:"inspree"},
+  {b:"cirrus",ic:"HYPMULTFMGR78X60X06",p:"Memorio Ultra 6\"",sqft:32.5,mrp:35060,rm:4203.07,fr:503.72,cs:438,ck:"inspree"},
+  {b:"cirrus",ic:"HYPMULTFMGR78X60X08",p:"Memorio Ultra 8\"",sqft:32.5,mrp:46746,rm:5053.17,fr:645.57,cs:438,ck:"inspree"},
   {b:"italiano",ic:"PEPSITSTPKNL78X60X06",p:"Serenita NL 6\"",sqft:32.5,mrp:49306,rm:8196.99,fr:454.55,cs:678},
   {b:"italiano",ic:"PEPSITETPKNL78X60X08",p:"Enchanto NL 8\"",sqft:32.5,mrp:57644,rm:7567.41,fr:602.41,cs:678},
   {b:"italiano",ic:"PEPSITETPKET78X60X08",p:"Enchanto ET 8\"",sqft:32.5,mrp:66919,rm:7889.03,fr:602.41,cs:678},
@@ -301,15 +327,102 @@ const SKUS_RAW = [
 ];
 
 // Live state
-let skus = SKUS_RAW.map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:false}));
+// SKUS_BASE is the mutable baseline (starts = embedded fallback, patched by
+// the engine server if reachable); resetAll() reverts to this, not to the
+// static SKUS_RAW, so a server-loaded RM cost survives a reset.
+let SKUS_BASE = JSON.parse(JSON.stringify(SKUS_RAW));
+let skus = SKUS_BASE.map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:s.rm_from_ramco||false, rm_source:s.rm_source}));
 let currentFilter = {brand:'all', nm:'all'};
 let baseResults = null;
+
+// ═══════════════════════════════════════════════════════════════════
+// ENGINE SERVER CONNECTION — like BOM Tool, pulls live data over HTTP
+// instead of relying only on values baked into this file. Falls back
+// to the embedded SKUS_RAW/FINANCE/COMM above if the server (server.py)
+// isn't reachable (e.g. this file opened directly as file://).
+// ═══════════════════════════════════════════════════════════════════
+const COMM_PATH = {
+  peps_dealer:['peps','dis_south','dealer_margin'], peps_dist_vat:['peps','dis_south','dist_vat_diff'],
+  peps_dist:['peps','dis_south','dist_margin'], peps_cd:['peps','dis_south','cd'],
+  peps_dct:['peps','dis_south','dct'], peps_tod:['peps','dis_south','tod'],
+  peps_sr:['peps','dis_south','sales_return'], peps_scheme:['peps','dis_south','scheme_rm_pct'],
+  cirrus_dealer:['cirrus','dis_south','dealer_margin'], cirrus_dist_vat:['cirrus','dis_south','dist_vat_diff'],
+  cirrus_dist:['cirrus','dis_south','dist_margin'], cirrus_cd:['cirrus','dis_south','cd'],
+  cirrus_dct:['cirrus','dis_south','dct'], cirrus_tod:['cirrus','dis_south','tod'],
+  cirrus_sr:['cirrus','dis_south','sales_return'], cirrus_scheme:['cirrus','dis_south','scheme_rm_pct'],
+  inspree_dealer:['cirrus','inspree','dealer_margin'], inspree_scheme:['cirrus','inspree','scheme_rm_pct'],
+  it_dealer:['italiano','dis_south','dealer_margin'], it_dist_vat:['italiano','dis_south','dist_vat_diff'],
+  it_dist:['italiano','dis_south','dist_margin'], it_cd:['italiano','dis_south','cd'],
+  it_dct:['italiano','dis_south','dct'], it_tod:['italiano','dis_south','tod'],
+  it_sr:['italiano','dis_south','sales_return'], it_scheme:['italiano','dis_south','scheme_rm_pct'],
+  acc_dealer:['accessories','south','dealer_margin'], acc_cd:['accessories','south','cd'],
+  acc_sr:['accessories','south','sales_return'],
+};
+
+function applyServerConfig(cfg){
+  if(!cfg) return;
+  Object.assign(FINANCE, cfg.FINANCE);
+  for(const [key, path] of Object.entries(COMM_PATH)){
+    let v = cfg.COMMERCIAL;
+    for(const p of path){ v = v ? v[p] : undefined; }
+    if(typeof v === 'number') COMM[key] = v;
+  }
+  Object.assign(COMM_BASE, JSON.parse(JSON.stringify(COMM)));
+}
+
+function applyServerSkus(list){
+  if(!Array.isArray(list)) return 0;
+  const byCode = {}, byProduct = {};
+  list.forEach(item=>{
+    if(item.item_code) byCode[item.item_code]=item;
+    byProduct[item.product]=item;
+  });
+  let updated = 0;
+  SKUS_BASE.forEach(s=>{
+    const item = (s.ic && byCode[s.ic]) || byProduct[s.p];
+    if(item){
+      s.rm = item.rm_cost;
+      // rm_source: "ledger:<month>" (Ramco-verified) or "estimated:..."
+      // (no item_code, or item_code with no ledger match yet) — never
+      // show an estimate with the same confidence as a verified figure.
+      s.rm_source = item.rm_source;
+      s.rm_from_ramco = (item.rm_source||'').startsWith('ledger');
+      if(item.rm_source && item.rm_source.startsWith('ledger')) updated++;
+    }
+  });
+  skus = SKUS_BASE.map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:s.rm_from_ramco||false, rm_source:s.rm_source}));
+  return updated;
+}
+
+async function connectToEngine(){
+  const badge = document.getElementById('rate-badge');
+  const status = document.getElementById('ramco-status');
+  try{
+    const [skuResp, cfgResp] = await Promise.all([
+      fetch('/api/skus', {signal: AbortSignal.timeout(3000)}),
+      fetch('/api/config', {signal: AbortSignal.timeout(3000)}),
+    ]);
+    if(!skuResp.ok || !cfgResp.ok) throw new Error('non-200 response');
+    const [skuData, cfgData] = await Promise.all([skuResp.json(), cfgResp.json()]);
+    applyServerConfig(cfgData);
+    const updated = applyServerSkus(skuData);
+    if(badge){ badge.textContent = 'Rates: Live (engine)'; badge.title = 'Connected to server.py — RM cost pulled from Ramco ledger where available'; }
+    if(status){
+      status.innerHTML = `<strong class="msg-success">Connected to engine</strong><br>${updated} SKUs have Ramco-ledger RM cost; others use the last known value.`;
+    }
+  }catch(e){
+    if(badge){ badge.textContent = 'Rates: Static (offline)'; badge.title = 'server.py not reachable — showing values embedded in this file'; }
+    if(status){ status.textContent = 'Engine server not reachable — using manual/embedded RM costs'; }
+  }
+  render();
+  if(document.getElementById('page-params').classList.contains('active')) renderParams();
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // ENGINE — JS port of engine.py
 // ═══════════════════════════════════════════════════════════════════
 function calcSKU(s){
-  const f = FINANCE; const gst = 0.18;
+  const f = FINANCE; const gst = f.gst_pct;
   const mrp = s.mrp_live; const rm = s.rm_live;
   const b = s.b; const ck = s.ck||null;
 
@@ -405,6 +518,13 @@ function runAll(){return skus.map(s=>({...s,...calcSKU(s)}));}
 // ═══════════════════════════════════════════════════════════════════
 // RENDER
 // ═══════════════════════════════════════════════════════════════════
+// Product names contain a literal " (inch mark, e.g. Kozybreeze 4") —
+// when interpolated into an onclick="..." attribute (double-quoted),
+// that unescaped " prematurely closes the attribute and breaks the
+// click handler for almost every mattress row. Escape both the HTML
+// attribute delimiter (") and the JS string delimiter (') here.
+const escAttr = s => s.replace(/"/g,'&quot;').replace(/'/g,"\\'");
+
 const INR = v=>v<0?`(${Math.abs(v).toLocaleString('en-IN',{maximumFractionDigits:0})})`
                   :v.toLocaleString('en-IN',{maximumFractionDigits:0});
 const PCT = v=>(v*100).toFixed(1)+'%';
@@ -440,25 +560,35 @@ function renderTable(results){
     if(currentFilter.nm==='below6') rows=rows.filter(r=>r.nm_pct<0.06);
     if(currentFilter.nm==='changed') rows=rows.filter(r=>r.mrp_live!==r.mrp);
     if(!rows.length)return;
-    html+=`<tr class="brand-header"><td colspan="10">${bLabels[b]}</td></tr>`;
+    html+=`<tr class="brand-header"><td colspan="13">${bLabels[b]}</td></tr>`;
     rows.forEach((r,i)=>{
       const base=baseResults?baseResults.find(x=>x.p===r.p):null;
       const delta=base?r.nm_pct-base.nm_pct:0;
       const dclass=delta>0.001?'delta-up':delta<-0.001?'delta-dn':'delta-0';
       const dsign=delta>0.001?'+':delta<-0.001?'−':'';
       const dstr=Math.abs(delta)>0.0005?`<span class="delta ${dclass}">${dsign}${(Math.abs(delta)*100).toFixed(1)}pp</span>`:'—';
-      const rmSrc=r.rm_from_ramco?`<span class="rm-src">Ramco</span>`:`<span class="rm-src rm-src-manual">Manual</span>`;
+      const src=r.rm_source||'';
+      const rmSrc = src.startsWith('ledger')
+        ? `<span class="rm-src" title="RM cost from Ramco FG/SFG ledger">Ramco</span>`
+        : src==='estimated:no_item_code'
+          ? `<span class="rm-src rm-src-estimated" title="No Ramco item_code on this SKU — RM cost is an estimate, not source-verified">Estimated</span>`
+          : src==='estimated:no_ledger_match'
+            ? `<span class="rm-src rm-src-estimated" title="Item_code exists but no Ramco ledger match yet — RM cost is an estimate">Estimated</span>`
+            : `<span class="rm-src rm-src-manual">Manual</span>`;
       const mrpChanged=r.mrp_live!==r.mrp;
-      html+=`<tr onclick="showDetail('${r.p.replace(/'/g,"\\'")}')">
+      html+=`<tr onclick="showDetail('${escAttr(r.p)}')">
         <td>${r.p}</td>
         <td class="mrp-cell" onclick="event.stopPropagation()">
           <input type="number" value="${r.mrp_live}" data-prod="${r.p}"
             class="${mrpChanged?'changed':''}"
-            onchange="updateMRP('${r.p.replace(/'/g,"\\'")}',this.value)"
+            onchange="updateMRP('${escAttr(r.p)}',this.value)"
             oninput="this.classList.add('changed')">
         </td>
+        <td>${INR(r.dealer_margin)}</td>
+        <td>${INR(r.dist_margin)}</td>
         <td>${INR(r.nbr)}</td>
         <td>${INR(r.rm)} ${rmSrc}</td>
+        <td>${(r.rm/r.mrp_live*100).toFixed(1)}%</td>
         <td>${INR(r.net_sales)}</td>
         <td>${INR(r.ebitda)}</td>
         <td>${INR(r.nm)}</td>
@@ -612,106 +742,39 @@ function closeDetail(e){
     document.getElementById('detail-overlay').classList.remove('open');
 }
 
+// Each nav group (Views / Brands / Filters) highlights independently —
+// clicking a brand no longer clears which NM filter is active and vice
+// versa, since both apply simultaneously to the table (see currentFilter).
+function _setActiveInGroup(groupSelector){
+  document.querySelectorAll(groupSelector+' .nav-item').forEach(x=>x.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
 function showPage(p){
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  _setActiveInGroup('.nav-group-view');
   if(p==='params')renderParams();
 }
 
 function filterBrand(b){
   currentFilter.brand=b;
-  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  _setActiveInGroup('.nav-group-brand');
   render();
 }
 function filterNM(f){
   currentFilter.nm=f;
-  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  _setActiveInGroup('.nav-group-filter');
   render();
 }
 
 function resetAll(){
-  skus=SKUS_RAW.map(s=>({...s,mrp_live:s.mrp,rm_live:s.rm,rm_from_ramco:false}));
+  skus=SKUS_BASE.map(s=>({...s,mrp_live:s.mrp,rm_live:s.rm,rm_from_ramco:s.rm_from_ramco||false,rm_source:s.rm_source}));
   Object.assign(COMM,JSON.parse(JSON.stringify(COMM_BASE)));
   baseResults=null;
   render();
   if(document.getElementById('page-params').classList.contains('active'))renderParams();
   toast('All values reset to baseline');
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// RAMCO BOM UPLOAD
-// ═══════════════════════════════════════════════════════════════════
-function loadRamco(input){
-  const file=input.files[0]; if(!file)return;
-  const ext=file.name.split('.').pop().toLowerCase();
-  const status=document.getElementById('ramco-status');
-  status.textContent='Reading file...';
-
-  if(ext==='csv'){
-    const reader=new FileReader();
-    reader.onload=e=>parseRamcoCSV(e.target.result,file.name);
-    reader.readAsText(file);
-  } else {
-    const reader=new FileReader();
-    reader.onload=e=>{
-      const wb=XLSX.read(e.target.result,{type:'array'});
-      const ws=wb.Sheets[wb.SheetNames[0]];
-      const csv=XLSX.utils.sheet_to_csv(ws);
-      parseRamcoCSV(csv,file.name);
-    };
-    reader.readAsArrayBuffer(file);
-  }
-}
-
-function parseRamcoCSV(csv,fname){
-  const lines=csv.trim().split('\n').filter(l=>l.trim());
-  if(lines.length<2){
-    document.getElementById('ramco-status').textContent='Error: empty file';return;
-  }
-  // Auto-detect columns: look for item_code and cost-like headers
-  const headers=lines[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
-  const codeCol=headers.findIndex(h=>h.includes('item')||h.includes('code')||h.includes('sku'));
-  const costCol=headers.findIndex(h=>h.includes('cost')||h.includes('rm')||h.includes('material')||h.includes('rate'));
-  const descCol=headers.findIndex(h=>h.includes('desc')||h.includes('product')||h.includes('name'));
-
-  if(codeCol<0||costCol<0){
-    document.getElementById('ramco-status').innerHTML=
-      'Could not auto-detect columns.<br>Expected headers: Item Code, RM Cost (or similar)';
-    return;
-  }
-
-  let matched=0,unmatched=[];
-  for(let i=1;i<lines.length;i++){
-    const cols=lines[i].split(',').map(c=>c.replace(/"/g,'').trim());
-    const code=(cols[codeCol]||'').trim().toUpperCase();
-    const cost=parseFloat(cols[costCol]);
-    if(!code||isNaN(cost)||cost<=0)continue;
-
-    // Match by item_code (exact) or by description fuzzy
-    let s=skus.find(x=>x.ic&&x.ic.toUpperCase()===code);
-    if(!s&&descCol>=0){
-      const desc=(cols[descCol]||'').toLowerCase();
-      s=skus.find(x=>x.p.toLowerCase().includes(desc.substring(0,8))||
-                      desc.includes(x.p.toLowerCase().substring(0,8)));
-    }
-    if(s){
-      s.rm_live=cost; s.rm_from_ramco=true; matched++;
-    } else {
-      unmatched.push(code);
-    }
-  }
-
-  baseResults=null;
-  render();
-  const st=document.getElementById('ramco-status');
-  st.innerHTML=`<strong class="msg-success">${matched} SKUs updated from Ramco</strong><br>`+
-    (unmatched.length?`${unmatched.length} unmatched: ${unmatched.slice(0,3).join(', ')}${unmatched.length>3?'…':''}`:
-    'All codes matched');
-  toast(`Ramco BOM loaded — ${matched} RM costs updated`);
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -736,7 +799,8 @@ function exportExcel(){
       Math.round(r.net_sales),Math.round(r.gross),Math.round(r.ebitda),
       Math.round(r.nm),(r.nm_pct*100).toFixed(2)+'%',
       r.sqft>1?Math.round(r.nm_sqft):'—',
-      r.rm_from_ramco?'Ramco BOM':'Manual'
+      (r.rm_source||'').startsWith('ledger')?'Ramco Ledger'
+        :(r.rm_source||'').startsWith('estimated')?'Estimated (not source-verified)':'Manual'
     ]);
   });
   const ws1=XLSX.utils.aoa_to_sheet(abs);
@@ -807,8 +871,8 @@ function toast(msg){
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-// Init
-render();
+// Init — try the live engine server first, falling back to embedded data
+connectToEngine();
 </script>
 </body>
 </html>

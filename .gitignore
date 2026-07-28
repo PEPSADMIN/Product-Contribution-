@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+
+# Generated/runtime data — rebuilt by refresh_rm_costs.py / server.py, not source
+costing_history.db
+server.log
+refresh_output.log
+
+# One-off analysis/debug output from data extraction sessions
+*_dump.txt
+cirrus_new_products_extract.json
+extract_cirrus_sheets.py

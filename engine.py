@@ -51,7 +51,7 @@ def calculate(mrp, rm_cost, freight_ohs, direct_labour, consumer_scheme,
 
     r = ContributionResult(product=product, item_code=item_code,
                            brand=brand, channel=channel, mrp=mrp, sqft=sqft)
-    p = channel_policy; f = finance; gst = 0.18
+    p = channel_policy; f = finance; gst = f.get("gst_pct", 0.18)
 
     # ── Revenue waterfall ────────────────────────────────────────────────────
     r.dealer_margin = mrp * p["dealer_margin"]

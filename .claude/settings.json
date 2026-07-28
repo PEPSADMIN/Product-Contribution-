@@ -21,7 +21,26 @@
       "PowerShell(Get-Process -Name python -ErrorAction SilentlyContinue)",
       "PowerShell(Get-NetTCPConnection -LocalPort 5007 -ErrorAction SilentlyContinue)",
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --max-time 5 http://192.168.0.133:5007/peps_contribution_tool.html)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(python -u -c ' *)",
+      "Bash(python refresh_rm_costs.py)",
+      "Bash(tasklist //FI \"IMAGENAME eq python.exe\")",
+      "Bash(powershell -Command \"Get-NetTCPConnection -LocalPort 5007 -ErrorAction SilentlyContinue\")",
+      "Bash(tasklist //FI \"IMAGENAME eq python.exe\" //V)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --max-time 5 http://localhost:5007/peps_contribution_tool.html)",
+      "Bash(python -c \"import flask; print\\('flask', flask.__version__\\)\")",
+      "Bash(powershell -Command ' *)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --max-time 5 http://192.168.0.133:5007/api/skus)",
+      "Bash(curl -s http://192.168.0.133:5007/api/skus)",
+      "Bash(curl -s http://192.168.0.133:5007/api/config)",
+      "Bash(curl -s http://192.168.0.133:5007/peps_contribution_tool.html)",
+      "Bash(python \"C:/Users/ADMIN/AppData/Local/Temp/claude/c--Users-ADMIN-Downloads-Product-Contribution/98588dab-0622-4b58-8632-1b0ac55973e8/scratchpad/resolve_taxonomy.py\")",
+      "Bash(cp peps_contribution_tool.html web/peps_contribution_tool.html)",
+      "Bash(rm -f bom_taxonomy_mapping.json)",
+      "Bash(echo \"grep exit: $?\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('server.py'\\).read\\(\\)\\); print\\('server.py syntax OK'\\)\")",
+      "Bash(PYTHONIOENCODING=utf-8 python -c ' *)",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('engine.py'\\).read\\(\\)\\); ast.parse\\(open\\('runner.py'\\).read\\(\\)\\); ast.parse\\(open\\('server.py'\\).read\\(\\)\\); print\\('all python syntax OK'\\)\")"
     ]
   }
 }

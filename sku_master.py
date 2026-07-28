@@ -52,7 +52,10 @@ SKUS = [
     {"brand":"cirrus","item_code":"HYPFURFMBG78X60X06","product":"Furno 6\"","sqft":32.5,
      "mrp":16977,"rm_cost":3008.58,"freight_south":431.03,"consumer_scheme":105},
     # Inspree PU: DM=0.35, scheme_ratio=9:1, CS=245 — use "inspree" channel
-    {"brand":"cirrus","item_code":"HYPINSFMMR78X60X04","product":"Inspree PU 4\"","sqft":32.5,
+    # item_code carries the "-90D" density suffix — verified against the FG
+    # ledger, which has BOTH a stray no-suffix row (1 line, wrong) and the
+    # real complete "-90D" row (16 lines) for this exact code (2026-07-28).
+    {"brand":"cirrus","item_code":"HYPINSFMMR78X60X04-90D","product":"Inspree PU 4\"","sqft":32.5,
      "mrp":14718,"rm_cost":2691.36,"freight_south":287.36,"consumer_scheme":245,
      "channel_key":"inspree"},
     {"brand":"cirrus","item_code":"","product":"Inspree PU 5\"","sqft":32.5,
@@ -70,14 +73,90 @@ SKUS = [
      "mrp":16553,"rm_cost":2809.32,"freight_south":357.14,"consumer_scheme":105},
     {"brand":"cirrus","item_code":"","product":"Foamera 6\"","sqft":32.5,
      "mrp":18918,"rm_cost":3188.00,"freight_south":431.03,"consumer_scheme":105},
-    {"brand":"cirrus","item_code":"","product":"Inspree Memory 5\"","sqft":32.5,
-     "mrp":20346,"rm_cost":3301.57,"freight_south":357.14,"consumer_scheme":105},
-    {"brand":"cirrus","item_code":"","product":"Inspree Memory 6\"","sqft":32.5,
-     "mrp":22561,"rm_cost":3376.51,"freight_south":431.03,"consumer_scheme":105},
-    {"brand":"cirrus","item_code":"","product":"Inspree Memory 8\"","sqft":32.5,
-     "mrp":27836,"rm_cost":4076.27,"freight_south":574.71,"consumer_scheme":105},
-    {"brand":"cirrus","item_code":"","product":"Inspree Latex 5\"","sqft":32.5,
-     "mrp":27124,"rm_cost":4862.08,"freight_south":357.14,"consumer_scheme":105},
+    # Inspree Memory/Latex: FIXED 2026-07-28 — dedicated source sheets show
+    # DM=35% (not the 30% dis_south default previously used) and Consumer
+    # Scheme=313 (not 105, which was copied from the Furno/Foamera
+    # convention by mistake). Verified: reproduces source NM% within
+    # ~0.1-0.16pp, in line with other passing validation targets.
+    {"brand":"cirrus","item_code":"HYPINSFMMFGR78X60X05-90D","product":"Inspree Memory 5\"","sqft":32.5,
+     "mrp":20346,"rm_cost":3301.57,"freight_south":357.14,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPINSFMMFBL78X60X06-90D","product":"Inspree Memory 6\"","sqft":32.5,
+     "mrp":22561,"rm_cost":3376.51,"freight_south":431.03,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPINSFMMFGR78X60X08-90D","product":"Inspree Memory 8\"","sqft":32.5,
+     "mrp":27836,"rm_cost":4076.27,"freight_south":574.71,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPINSFMLTGRN78X60X05-90D","product":"Inspree Latex 5\"","sqft":32.5,
+     "mrp":27124,"rm_cost":4862.08,"freight_south":429.38,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    # New — added 2026-07-28, extracted from dedicated source sheets
+    # (Inspree PU ET / Inspree Memory ET / Inspree Latex ET / Memorio /
+    # Spine Safe / Memorio Ultra / Vistabond), "As per Financial" column.
+    # All confirmed DM=35% -> "inspree" channel, per-product consumer_scheme.
+    {"brand":"cirrus","item_code":"HYPINSFMETMR78X60X05-90D","product":"Inspree PU ET 5\"","sqft":32.5,
+     "mrp":18153,"rm_cost":3178.40,"freight_south":357.14,"consumer_scheme":245,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPINSFMETMR78X60X06-90D","product":"Inspree PU ET 6\"","sqft":32.5,
+     "mrp":20489,"rm_cost":3234.36,"freight_south":431.03,"consumer_scheme":245,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPINSFMETMR78X60X08-90D","product":"Inspree PU ET 8\"","sqft":32.5,
+     "mrp":26195,"rm_cost":3916.73,"freight_south":574.71,"consumer_scheme":245,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPINSFMMFETBL78X60X05-90D","product":"Inspree Memory ET 5\"","sqft":32.5,
+     "mrp":21848,"rm_cost":3514.97,"freight_south":357.14,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPINSFMMFETBL78X60X06-90D","product":"Inspree Memory ET 6\"","sqft":32.5,
+     "mrp":24182,"rm_cost":3540.86,"freight_south":431.03,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPINSFMMFETBL78X60X08-90D","product":"Inspree Memory ET 8\"","sqft":32.5,
+     "mrp":29890,"rm_cost":4280.01,"freight_south":574.71,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPINSFMLTETGRN78X60X05-90D","product":"Inspree Latex ET 5\"","sqft":32.5,
+     "mrp":28989,"rm_cost":5027.33,"freight_south":429.38,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPINSFMLTETGRN78X60X06-90D","product":"Inspree Latex ET 6\"","sqft":32.5,
+     "mrp":31325,"rm_cost":5080.85,"freight_south":503.72,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPINSFMLTETGRN78X60X08-90D","product":"Inspree Latex ET 8\"","sqft":32.5,
+     "mrp":37032,"rm_cost":5804.64,"freight_south":645.57,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPMEMFMVL78X60X05","product":"Memorio 5\"","sqft":32.5,
+     "mrp":24492,"rm_cost":3876.26,"freight_south":357.14,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPMEMFMVL78X60X06","product":"Memorio 6\"","sqft":32.5,
+     "mrp":29391,"rm_cost":4382.95,"freight_south":431.03,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPMEMFMVL78X60X08","product":"Memorio 8\"","sqft":32.5,
+     "mrp":39187,"rm_cost":5427.45,"freight_south":574.71,"consumer_scheme":313,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPSPSFMNB78X60X05","product":"Spine Safe 5\"","sqft":32.5,
+     "mrp":26415,"rm_cost":3233.73,"freight_south":429.38,"consumer_scheme":438,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPSPSFMNB78X60X06","product":"Spine Safe 6\"","sqft":32.5,
+     "mrp":31697,"rm_cost":3307.52,"freight_south":503.72,"consumer_scheme":438,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPSPSFMNB78X60X08","product":"Spine Safe 8\"","sqft":32.5,
+     "mrp":42264,"rm_cost":3992.59,"freight_south":645.57,"consumer_scheme":438,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPMULTFMGR78X60X05","product":"Memorio Ultra 5\"","sqft":32.5,
+     "mrp":29216,"rm_cost":3833.45,"freight_south":429.38,"consumer_scheme":438,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPMULTFMGR78X60X06","product":"Memorio Ultra 6\"","sqft":32.5,
+     "mrp":35060,"rm_cost":4203.07,"freight_south":503.72,"consumer_scheme":438,
+     "channel_key":"inspree"},
+    {"brand":"cirrus","item_code":"HYPMULTFMGR78X60X08","product":"Memorio Ultra 8\"","sqft":32.5,
+     "mrp":46746,"rm_cost":5053.17,"freight_south":645.57,"consumer_scheme":438,
+     "channel_key":"inspree"},
+    # Vista bond 4"/5"/6" — INTENTIONALLY NOT ADDED (2026-07-28).
+    # Source sheet's Direct Labour / Admin OHS / Marketing OHS are each
+    # exactly HALF of what the standard %-of-RM formula produces (verified
+    # both under "inspree" and a new "direct" 50%-dealer-margin channel —
+    # both failed by 13-17pp). This looks like a real structural anomaly
+    # (possibly a bundled/combo product), not a channel misconfiguration.
+    # Needs Works Manager confirmation of the RM/OHS basis before adding —
+    # not fabricating a number here. Source item codes for reference:
+    # HYPVISBND78X60X04/05/06, MRP 9737/11670/13851, RM 2687.50/2974.80/3318.05.
 
     # ── Italiano ─────────────────────────────────────────────────────────────
     {"brand":"italiano","item_code":"PEPSITSTPKNL78X60X06","product":"Serenita NL 6\"","sqft":32.5,
