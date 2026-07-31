@@ -143,6 +143,23 @@ def calc_italiano(mrp, rm_cost, freight_ohs, channel_policy, finance,
                      depreciation_pct=finance["depreciation_pct_cirrus"])
 
 
+def calc_peps_premium(mrp, rm_cost, freight_ohs, channel_policy, finance,
+                      product="", item_code="", channel="", sqft=32.5, consumer_scheme=313):
+    """Peps-branded SKUs (Sanibel/Ardene family) that do NOT use Peps'
+    flat-₹/zero-tax overhead convention — verified against their own
+    dedicated source sheets, which show Italiano-style %-of-RM overheads
+    (direct labour, admin, marketing, adv & promo) plus Italiano's
+    depreciation/tax rates. brand stays "peps" for UI grouping."""
+    return calculate(mrp, rm_cost, freight_ohs,
+                     rm_cost * finance["direct_labour_pct_it"], consumer_scheme,
+                     channel_policy, finance, product=product, item_code=item_code,
+                     brand="peps", channel=channel, sqft=sqft,
+                     admin_ohs_pct=finance["admin_ohs_pct_it"],
+                     mktg_salary_pct=finance["mktg_salary_pct_it"],
+                     adv_promo_pct=finance["adv_promo_pct_it"],
+                     depreciation_pct=finance["depreciation_pct_cirrus"])
+
+
 def calc_accessories(mrp, rm_cost, freight_ohs, channel_policy, finance,
                      product="", item_code="", channel="", sqft=1.0, mfg_type="BO"):
     dl = rm_cost * finance["direct_labour_pct_acc"] if mfg_type != "BO" else 0.0

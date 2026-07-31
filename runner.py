@@ -2,7 +2,7 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 
-from engine import calc_peps, calc_cirrus, calc_italiano, calc_accessories
+from engine import calc_peps, calc_peps_premium, calc_cirrus, calc_italiano, calc_accessories
 from sku_master import SKUS
 from config import FINANCE, COMMERCIAL
 import costing_store
@@ -72,7 +72,14 @@ def run_all(overrides: dict = None, use_live_rm: bool = True) -> list:
         cs      = s.get("consumer_scheme", 105)
         channel_key = s.get("channel_key", None)
 
-        if brand == "peps":
+        if brand == "peps" and s.get("cost_structure") == "premium":
+            # Sanibel/Ardene family — Italiano-style overheads, not Peps' (see calc_peps_premium)
+            policy = COMMERCIAL["peps"]["sanibel"]
+            r = calc_peps_premium(mrp, rm, freight, policy, fin,
+                                  product=s["product"], item_code=s.get("item_code",""),
+                                  channel="South DIS", sqft=sqft, consumer_scheme=cs)
+
+        elif brand == "peps":
             policy = COMMERCIAL["peps"]["dis_south"]
             r = calc_peps(mrp, rm, freight, policy, fin,
                           product=s["product"], item_code=s.get("item_code",""),
