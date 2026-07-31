@@ -10,3 +10,11 @@ refresh_output.log
 *_dump.txt
 cirrus_new_products_extract.json
 extract_cirrus_sheets.py
+
+# Source data — real Ramco/Item Master exports, kept locally only (some
+# individual files exceed GitHub's 100MB push limit). Code reads these at
+# runtime; they are not meant to be version-controlled.
+Accounts W - 27.07.2026/
+Item Master/
+*.xlsx
+*.xls
