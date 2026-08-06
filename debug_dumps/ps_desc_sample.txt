@@ -1,0 +1,61 @@
+DONE scanned 941180 rows in 245s, 70608 unique FG codes captured
+RTPKCLETCR77.50X36X06               | Peps Restonic Pocketed Carousel Euro Top Cream 77.50X36X06
+RTHTMTPKRG78X47.50X08               | Peps Restonic Hotel Motel Pocketed Regular 78X47.50X08
+RTBNGVETLB80X48X08                  | Peps Restonic Bonnel Geneva Euro Top Light Blue 80x48x08
+PEPSPKSUPNLGR77.75X73X08            | Peps Pocketed Supreme Normal Grey 77.75X73X08
+RTHTMTBNRG75X70X08                  | Peps Restonic Hotel Motel Bonnell Regular 75X70X08
+RTPKARPLMFNLBL78X63X10              | Peps Restonic Pocketed Ardene Plush Memory NL Blue 78X63X10
+RTBNSNMR70.50X46.50X06              | Peps Restonic Bonnell Sanibel Normal Maroon 70.50X46.50X06
+RTHTMTBNRG73X51X06                  | Peps Restonic Hotel Motel Bonnell Regular 73X51X06
+SKSGFM77X49X06                      | Peps Spine Guard Foam 77X49X06
+SKBNNLKFBW72X36X10                  | Peps Springkoil Bonnell Normal KNIT Brown 72X36X10
+SKBNNLKFDB78X68X06                  | Peps Springkoil Bonnell Normal KNIT Dark Blue 78X68X06
+RTHTMTPKMFRG78X42X06                | Peps Restonic Hotel Motel Pocketed Memory Foam Regular 78X42X06
+HYPSPSFMGR77X35X06                  | Hypnos Spine Safe Soft Top Grey 77X35X06
+RTBNSNPLMFNLPR72X54X10              | Peps Restonic Bonnell Sanibel Plush Memory NL Purple 72X54X10
+HYPINSFMETMR84X57X08-90D            | Hypnos Inspree Soft Top PU Foam ET Maroon 84X57X08-90D
+PEPSITICOPKCT80X30X08               | Peps Italiano Icona Pocketed Crown Top 80X30X08
+RTPKCLETCR75X52X06                  | Peps Restonic Pocketed Carousel Euro Top Cream 75X52X06
+RTPKARPLMFNLBL75X57.50X08           | Peps Restonic Pocketed Ardene Plush Memory NL Blue 75X57.50X08
+RTPKCLETCR75X81X06                  | Peps Restonic Pocketed Carousel Euro Top Cream 75X81X06
+HYPCASBNNLNB84X30X08-ECOM           | Hypnos Caspio Bonnell Normal Navy Blue 84X30X08
+HYPINSFMETMR78X39X08-90D            | Hypnos Inspree Soft Top PU Foam ET Maroon 78X39X08-90D
+PEPSPKORGBW74X66X10                 | Peps Organica Brown 74X66X10
+RTHTMTPKRG80X71X12                  | Peps Restonic Hotel Motel Pocketed Regular 80X71X12
+HYPINSFMLTPNK80X63X06-90D           | Hypnos Inspree Soft Top Latex Pink 80X63X06-90D
+RTHTMTPKRG74X81X06                  | Peps Restonic Hotel Motel Pocketed Regular 74X81X06
+RTUPGPBW72X51X12                    | Peps Restonic Ultra Premium Grand Palais Brown 72X51X12
+HYPINSFMMFETBL84X48X08-90D          | Hypnos Inspree Soft Top Memory ET Blue 84X48X08-90D
+RTHTMTBNRG79X48X06                  | Peps Restonic Hotel Motel Bonnell Regular 79X48X06
+RTPKCLETCR80X71.50X06               | Peps Restonic Pocketed Carousel Euro Top Cream 80X71.50X06
+RTBNGVBG84X80X08                    | Peps Restonic Bonnel Geneva Normal Beige 84X80X08
+SKSGSR82X75X08                      | Peps Spine Guard Spring 82X75X08
+HYPINSFMMR96.50X17.50X06            | Hypnos Inspree Soft Top Maroon 96.50X17.50X06
+SKSGSR76X59.80X05                   | Peps Spine Guard Spring 76X59.80X05
+HYPFOMFMBW71.50X35.50X05            | Hypnos Foamera Soft Top Brown 71.50X35.50X05
+HYPSPSFMGR78X51X05                  | Hypnos Spine Safe Soft Top Grey 78X51X05
+PEPSPKSUPNLBG75X72X08               | Peps Pocketed Supreme Normal Beige 75X72X08
+RTPKARPLMFPTBL72X33X08              | Peps Restonic Pocketed Ardene Plush Memory PT Blue 72X33X08
+RTPKCLETLB78X64X06                  | Peps Restonic Pocketed Carousel Euro Top LightBlue 78X64X06
+HYPFOMFMMR72X36X06                  | Hypnos Foamera Soft Top Maroon 72X36X06
+RTBNSNMR75X70.50X06                 | Peps Restonic Bonnell Sanibel Normal Maroon 75X70.50X06
+HYPKBRZFMMR84X66X06                 | None
+HYPFOMFMBW79.50X71X04               | Hypnos Foamera Soft Top Brown 79.50X71X04
+RTPKFTNLLB78X33X10                  | Peps Restonic Pocketed Fontaine Normal Light Blue 78X33X10
+HYPFURFMMR75X69X05                  | Hypnos Furno Soft Top Maroon 75X69X05
+PEPSITICOPKCT72X30X08               | Peps Italiano Icona Pocketed Crown Top 72X30X08
+HYPSPSFMGR76X58X06                  | Hypnos Spine Safe Soft Top Grey 76X58X06
+RTPKCLETPLCR75X46.50X06             | Peps Restonic Pocketed Carousel Euro Top Plush Cream 75X46.50X06
+RTBNSNPLMFNLGR75X46X06              | Peps Restonic Bonnell Sanibel Plush Memory NL Grey 75X46X06
+HYPFOMFMMR78X78X05                  | Hypnos Foamera Soft Top Maroon 78X78X05
+HYPSPSFMGR84X33X05                  | Hypnos Spine Safe Soft Top Grey 84X33X05
+HYPSPSFMNB78X33X08                  | Hypnos Spine Safe Soft Top Navy Blue 78X33X08
+HYPCAPHRLTX84X66X05                 | Cirrus Caprina HR with Latex Foam 84X66X05
+SKBNNLMR76.50X61X06                 | Peps Springkoil Bonnell Normal Maroon 76.50X61X06
+RTPKCLETCR79X67X06                  | Peps Restonic Pocketed Carousel Euro Top Cream 79X67X06
+SKSFRD71X26X04                      | Hypnos Spring Soft Red 71X26X04
+RTPKCLNLCR74.40X70.86X06            | Peps Restonic Pocketed Carousel Normal Cream 74.40X70.86X06
+SKSGSR75X60X06                      | Peps Spine Guard Spring 75X60X06
+RTBNSNBG71.50X63X06                 | Peps Restonic Bonnell Sanibel Normal Beige 71.50X63X06
+RTBNSNBG83.25X70.50X06              | Peps Restonic Bonnel Sanibel Normal Beige 83.25X70.50X06
+SKBNCTDB79X58X06                    | Peps Springkoil Bonnell Crown Top Dark Blue 79X58X06
