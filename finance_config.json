@@ -21,54 +21,109 @@
   "COMMERCIAL": {
     "peps": {
       "dis_south": {
-        "dealer_margin": 0.30, "dist_vat_diff": 0.016364, "dist_margin": 0.10,
-        "cd": 0.030, "dct": 0.040, "tod": 0.030, "sales_return": 0.015,
+        "dealer_margin": 0.3,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.04,
+        "tod": 0.03,
+        "sales_return": 0.015,
         "scheme_rm_pct": 0.132431
       },
       "dd_south": {
-        "dealer_margin": 0.35, "dist_vat_diff": 0.0, "dist_margin": 0.0,
-        "cd": 0.030, "dct": 0.040, "tod": 0.0, "sales_return": 0.015,
+        "dealer_margin": 0.35,
+        "dist_vat_diff": 0.0,
+        "dist_margin": 0.0,
+        "cd": 0.03,
+        "dct": 0.04,
+        "tod": 0.0,
+        "sales_return": 0.015,
         "scheme_rm_pct": 0.132431
       },
       "dd_a_south": {
-        "dealer_margin": 0.40, "dist_vat_diff": 0.0, "dist_margin": 0.0,
-        "cd": 0.030, "dct": 0.0, "tod": 0.0, "sales_return": 0.015,
+        "dealer_margin": 0.4,
+        "dist_vat_diff": 0.0,
+        "dist_margin": 0.0,
+        "cd": 0.03,
+        "dct": 0.0,
+        "tod": 0.0,
+        "sales_return": 0.015,
         "scheme_rm_pct": 0.0
+      },
+      "sanibel": {
+        "dealer_margin": 0.33,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.04,
+        "tod": 0.04,
+        "sales_return": 0.015,
+        "scheme_rm_pct": 0.14732
       }
     },
     "cirrus": {
       "dis_south": {
-        "dealer_margin": 0.30, "dist_vat_diff": 0.016364, "dist_margin": 0.10,
-        "cd": 0.030, "dct": 0.0285, "tod": 0.040, "sales_return": 0.015,
+        "dealer_margin": 0.3,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.0285,
+        "tod": 0.04,
+        "sales_return": 0.015,
         "scheme_rm_pct": 0.133759
       },
       "inspree": {
-        "dealer_margin": 0.35, "dist_vat_diff": 0.016364, "dist_margin": 0.10,
-        "cd": 0.030, "dct": 0.0285, "tod": 0.040, "sales_return": 0.015,
-        "scheme_rm_pct": 0.148600
+        "dealer_margin": 0.35,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.0285,
+        "tod": 0.04,
+        "sales_return": 0.015,
+        "scheme_rm_pct": 0.1486
       },
       "mgmt": {
-        "dealer_margin": 0.30, "dist_vat_diff": 0.016364, "dist_margin": 0.10,
-        "cd": 0.030, "dct": 0.0285, "tod": 0.040, "sales_return": 0.0573,
+        "dealer_margin": 0.3,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.0285,
+        "tod": 0.04,
+        "sales_return": 0.0573,
         "scheme_rm_pct": 0.133759
       }
     },
     "italiano": {
       "dis_south": {
-        "dealer_margin": 0.40, "dist_vat_diff": 0.016364, "dist_margin": 0.10,
-        "cd": 0.030, "dct": 0.040, "tod": 0.030, "sales_return": 0.015,
+        "dealer_margin": 0.4,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.04,
+        "tod": 0.03,
+        "sales_return": 0.015,
         "scheme_rm_pct": 0.183736
       }
     },
     "accessories": {
       "south": {
-        "dealer_margin": 0.50, "dist_vat_diff": 0.0, "dist_margin": 0.0,
-        "cd": 0.030, "dct": 0.0, "tod": 0.0, "sales_return": 0.015,
+        "dealer_margin": 0.5,
+        "dist_vat_diff": 0.0,
+        "dist_margin": 0.0,
+        "cd": 0.03,
+        "dct": 0.0,
+        "tod": 0.0,
+        "sales_return": 0.015,
         "scheme_rm_pct": 0.0
       },
       "pan_india": {
-        "dealer_margin": 0.50, "dist_vat_diff": 0.0, "dist_margin": 0.0,
-        "cd": 0.0, "dct": 0.0, "tod": 0.0, "sales_return": 0.015,
+        "dealer_margin": 0.5,
+        "dist_vat_diff": 0.0,
+        "dist_margin": 0.0,
+        "cd": 0.0,
+        "dct": 0.0,
+        "tod": 0.0,
+        "sales_return": 0.015,
         "scheme_rm_pct": 0.0
       }
     }
