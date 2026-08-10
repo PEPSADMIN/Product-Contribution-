@@ -40,7 +40,10 @@
       "Bash(echo \"grep exit: $?\")",
       "Bash(python -c \"import ast; ast.parse\\(open\\('server.py'\\).read\\(\\)\\); print\\('server.py syntax OK'\\)\")",
       "Bash(PYTHONIOENCODING=utf-8 python -c ' *)",
-      "Bash(python -c \"import ast; ast.parse\\(open\\('engine.py'\\).read\\(\\)\\); ast.parse\\(open\\('runner.py'\\).read\\(\\)\\); ast.parse\\(open\\('server.py'\\).read\\(\\)\\); print\\('all python syntax OK'\\)\")"
+      "Bash(python -c \"import ast; ast.parse\\(open\\('engine.py'\\).read\\(\\)\\); ast.parse\\(open\\('runner.py'\\).read\\(\\)\\); ast.parse\\(open\\('server.py'\\).read\\(\\)\\); print\\('all python syntax OK'\\)\")",
+      "Bash(powershell -Command \"Stop-Process -Id 10904 -Force\")",
+      "Bash(powershell -Command \"Stop-Process -Id 13124 -Force\")",
+      "Bash(python server.py)"
     ]
   }
 }
