@@ -158,6 +158,26 @@
         "tod": 0.04,
         "sales_return": 0.0573,
         "scheme_rm_pct": 0.133759
+      },
+      "vista_foam": {
+        "dealer_margin": 0.2,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.0,
+        "tod": 0.04,
+        "sales_return": 0.015,
+        "scheme_rm_pct": 0.279337
+      },
+      "caprina": {
+        "dealer_margin": 0.2,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.0,
+        "tod": 0.04,
+        "sales_return": 0.015,
+        "scheme_rm_pct": 0.134466
       }
     },
     "italiano": {
