@@ -16,7 +16,14 @@
     "direct_labour_spring": 400,
     "direct_labour_pct_cirrus": 0.1635,
     "direct_labour_pct_it": 0.1635,
-    "direct_labour_pct_acc": 0.0982
+    "direct_labour_pct_acc": 0.0982,
+    "direct_labour_pct_south": 0.1392,
+    "mfg_ohs_pct_south": 0.0594,
+    "adv_promo_pct_south": 0.2409,
+    "mktg_salary_pct_south": 0.1326,
+    "admin_ohs_pct_south": 0.1252,
+    "finance_cost_pct_south": 0.0229,
+    "depreciation_pct_south": 0.0281
   },
   "COMMERCIAL": {
     "peps": {
@@ -59,6 +66,66 @@
         "tod": 0.04,
         "sales_return": 0.015,
         "scheme_rm_pct": 0.14732
+      },
+      "spk_ct": {
+        "dealer_margin": 0.3,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.04,
+        "tod": 0.04,
+        "sales_return": 0.015,
+        "scheme_rm_pct": 0.130647
+      },
+      "zenimo": {
+        "dealer_margin": 0.33,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.04,
+        "tod": 0.04,
+        "sales_return": 0.015,
+        "scheme_rm_pct": 0.162025
+      },
+      "organica_crystal": {
+        "dealer_margin": 0.35,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.04,
+        "tod": 0.04,
+        "sales_return": 0.015,
+        "scheme_rm_pct": 0.162608
+      },
+      "grand_palais": {
+        "dealer_margin": 0.4,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.04,
+        "tod": 0.04,
+        "sales_return": 0.015,
+        "scheme_rm_pct": 0.185171
+      },
+      "vivah": {
+        "dealer_margin": 0.4,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.04,
+        "tod": 0.04,
+        "sales_return": 0.015,
+        "scheme_rm_pct": 0.177812
+      },
+      "dd": {
+        "dealer_margin": 0.4,
+        "dist_vat_diff": 0.016364,
+        "dist_margin": 0.1,
+        "cd": 0.03,
+        "dct": 0.04,
+        "tod": 0.04,
+        "sales_return": 0.015,
+        "scheme_rm_pct": 0.185171
       }
     },
     "cirrus": {
