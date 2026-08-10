@@ -1,0 +1,758 @@
+[
+  {
+    "item_code": "CIRNECOMR72X84X04",
+    "product": "New Eco 72x84 4\"",
+    "mrp": 14408,
+    "rm_cost": 2692.16,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNECOMR75X84X04",
+    "product": "New Eco 75x84 4\"",
+    "mrp": 15008,
+    "rm_cost": 2774.61,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNECOMR78X84X04",
+    "product": "New Eco 78x84 4\"",
+    "mrp": 15609,
+    "rm_cost": 2853.31,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBBW72X54X04",
+    "product": "Nimbo 72x54 4\"",
+    "mrp": 10189,
+    "rm_cost": 2114.89,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBBL72X54X05",
+    "product": "Nimbo 72x54 5\"",
+    "mrp": 12782,
+    "rm_cost": 2178.0,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBBW72X84X04",
+    "product": "Nimbo 72x84 4\"",
+    "mrp": 15850,
+    "rm_cost": 3206.73,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBWHBL72X84X06",
+    "product": "Nimbo 72x84 6\"",
+    "mrp": 23639,
+    "rm_cost": 3618.76,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBBW75X54X04",
+    "product": "Nimbo 75x54 4\"",
+    "mrp": 10616,
+    "rm_cost": 2174.98,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBBL75X54X05",
+    "product": "Nimbo 75x54 5\"",
+    "mrp": 13317,
+    "rm_cost": 2236.85,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBBW75X84X04",
+    "product": "Nimbo 75x84 4\"",
+    "mrp": 16511,
+    "rm_cost": 3298.41,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBBW78X54X04",
+    "product": "Nimbo 78x54 4\"",
+    "mrp": 11038,
+    "rm_cost": 2232.92,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBBL78X54X05",
+    "product": "Nimbo 78x54 5\"",
+    "mrp": 13847,
+    "rm_cost": 2293.17,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBBW78X84X04",
+    "product": "Nimbo 78x84 4\"",
+    "mrp": 17171,
+    "rm_cost": 3386.47,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBWHBL78X84X06",
+    "product": "Nimbo 78x84 6\"",
+    "mrp": 25609,
+    "rm_cost": 3799.92,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBPLBL72X84X06",
+    "product": "Nimbo Plus 72x84 6\"",
+    "mrp": 25670,
+    "rm_cost": 6274.58,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBPLBL75X84X05",
+    "product": "Nimbo Plus 75x84 5\"",
+    "mrp": 22708,
+    "rm_cost": 6231.63,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBPLBL75X84X06",
+    "product": "Nimbo Plus 75x84 6\"",
+    "mrp": 26740,
+    "rm_cost": 6478.55,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBPLBL78X84X05",
+    "product": "Nimbo Plus 78x84 5\"",
+    "mrp": 23617,
+    "rm_cost": 6430.91,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRNIMBPLBL78X84X06",
+    "product": "Nimbo Plus 78x84 6\"",
+    "mrp": 27810,
+    "rm_cost": 6678.22,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD72X54X05",
+    "product": "Bond Plus Latex 72x54 5\"",
+    "mrp": 28765,
+    "rm_cost": 6746.56,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD72X54X06",
+    "product": "Bond Plus Latex 72x54 6\"",
+    "mrp": 33897,
+    "rm_cost": 7355.28,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD72X84X05",
+    "product": "Bond Plus Latex 72x84 5\"",
+    "mrp": 44745,
+    "rm_cost": 10379.35,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD72X84X06",
+    "product": "Bond Plus Latex 72x84 6\"",
+    "mrp": 52729,
+    "rm_cost": 11313.14,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD75X54X05",
+    "product": "Bond Plus Latex 75x54 5\"",
+    "mrp": 29968,
+    "rm_cost": 6882.16,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD75X54X06",
+    "product": "Bond Plus Latex 75x54 6\"",
+    "mrp": 35316,
+    "rm_cost": 7491.3,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD75X84X05",
+    "product": "Bond Plus Latex 75x84 5\"",
+    "mrp": 46609,
+    "rm_cost": 10588.19,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD75X84X06",
+    "product": "Bond Plus Latex 75x84 6\"",
+    "mrp": 54926,
+    "rm_cost": 11522.42,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD78X54X05",
+    "product": "Bond Plus Latex 78x54 5\"",
+    "mrp": 31162,
+    "rm_cost": 7015.33,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD78X54X06",
+    "product": "Bond Plus Latex 78x54 6\"",
+    "mrp": 36722,
+    "rm_cost": 7624.77,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD78X84X05",
+    "product": "Bond Plus Latex 78x84 5\"",
+    "mrp": 48474,
+    "rm_cost": 10793.01,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLTPD78X84X06",
+    "product": "Bond Plus Latex 78x84 6\"",
+    "mrp": 57123,
+    "rm_cost": 11727.39,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDGN72X54X05",
+    "product": "Bond Plus MF 72x54 5\"",
+    "mrp": 19595,
+    "rm_cost": 4895.92,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDBL72X54X06",
+    "product": "Bond Plus MF 72x54 6\"",
+    "mrp": 23158,
+    "rm_cost": 5148.75,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDGN72X84X05",
+    "product": "Bond Plus MF 72x84 5\"",
+    "mrp": 30480,
+    "rm_cost": 7501.04,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDBL72X84X06",
+    "product": "Bond Plus MF 72x84 6\"",
+    "mrp": 36023,
+    "rm_cost": 7886.02,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDGN75X54X05",
+    "product": "Bond Plus MF 75x54 5\"",
+    "mrp": 20415,
+    "rm_cost": 5031.24,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDBL75X54X06",
+    "product": "Bond Plus MF 75x54 6\"",
+    "mrp": 24127,
+    "rm_cost": 5285.5,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDGN75X84X05",
+    "product": "Bond Plus MF 75x84 5\"",
+    "mrp": 31750,
+    "rm_cost": 7708.68,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDBL75X84X06",
+    "product": "Bond Plus MF 75x84 6\"",
+    "mrp": 37524,
+    "rm_cost": 8095.75,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDGN78X54X05",
+    "product": "Bond Plus MF 78x54 5\"",
+    "mrp": 21227,
+    "rm_cost": 5164.0,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDBL78X54X06",
+    "product": "Bond Plus MF 78x54 6\"",
+    "mrp": 25088,
+    "rm_cost": 5419.55,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDGN78X84X05",
+    "product": "Bond Plus MF 78x84 5\"",
+    "mrp": 33020,
+    "rm_cost": 7912.43,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPDBL78X84X06",
+    "product": "Bond Plus MF 78x84 6\"",
+    "mrp": 39025,
+    "rm_cost": 8301.18,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR72X54X05",
+    "product": "Bond Plus MF PT 72x54 5\"",
+    "mrp": 22207,
+    "rm_cost": 4926.83,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR72X54X06",
+    "product": "Bond Plus MF PT 72x54 6\"",
+    "mrp": 25058,
+    "rm_cost": 5160.22,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR72X84X05",
+    "product": "Bond Plus MF PT 72x84 5\"",
+    "mrp": 34545,
+    "rm_cost": 7501.47,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR72X84X06",
+    "product": "Bond Plus MF PT 72x84 6\"",
+    "mrp": 38980,
+    "rm_cost": 7851.6,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR75X54X05",
+    "product": "Bond Plus MF PT 75x54 5\"",
+    "mrp": 23137,
+    "rm_cost": 5064.07,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR75X54X06",
+    "product": "Bond Plus MF PT 75x54 6\"",
+    "mrp": 26107,
+    "rm_cost": 5298.17,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR75X84X05",
+    "product": "Bond Plus MF PT 75x84 5\"",
+    "mrp": 35984,
+    "rm_cost": 7710.32,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR75X84X06",
+    "product": "Bond Plus MF PT 75x84 6\"",
+    "mrp": 40604,
+    "rm_cost": 8061.16,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR78X54X05",
+    "product": "Bond Plus MF PT 78x54 5\"",
+    "mrp": 24058,
+    "rm_cost": 5198.89,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR78X54X06",
+    "product": "Bond Plus MF PT 78x54 6\"",
+    "mrp": 27147,
+    "rm_cost": 5433.56,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR78X84X05",
+    "product": "Bond Plus MF PT 78x84 5\"",
+    "mrp": 37423,
+    "rm_cost": 7915.1,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLMFPTPDOR78X84X06",
+    "product": "Bond Plus MF PT 78x84 6\"",
+    "mrp": 42228,
+    "rm_cost": 8266.37,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLGR72X54X05",
+    "product": "Bond Plus 72x54 5\"",
+    "mrp": 13620,
+    "rm_cost": 2132.7,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN72X54X06",
+    "product": "Bond Plus 72x54 6\"",
+    "mrp": 15667,
+    "rm_cost": 2192.1,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN72X54X08",
+    "product": "Bond Plus 72x54 8\"",
+    "mrp": 20889,
+    "rm_cost": 2210.06,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLGR72X84X05",
+    "product": "Bond Plus 72x84 5\"",
+    "mrp": 21186,
+    "rm_cost": 3226.72,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN72X84X06",
+    "product": "Bond Plus 72x84 6\"",
+    "mrp": 24370,
+    "rm_cost": 3191.17,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN72X84X08",
+    "product": "Bond Plus 72x84 8\"",
+    "mrp": 32494,
+    "rm_cost": 3266.29,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLGR75X54X05",
+    "product": "Bond Plus 75x54 5\"",
+    "mrp": 14190,
+    "rm_cost": 2188.69,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN75X54X06",
+    "product": "Bond Plus 75x54 6\"",
+    "mrp": 16322,
+    "rm_cost": 2211.7,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN75X54X08",
+    "product": "Bond Plus 75x54 8\"",
+    "mrp": 21763,
+    "rm_cost": 2269.85,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGPR75X84X04",
+    "product": "Bond Plus 75x84 4\"",
+    "mrp": 16770,
+    "rm_cost": 2971.07,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLGR75X84X05",
+    "product": "Bond Plus 75x84 5\"",
+    "mrp": 22069,
+    "rm_cost": 3311.64,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN75X84X06",
+    "product": "Bond Plus 75x84 6\"",
+    "mrp": 25386,
+    "rm_cost": 3278.74,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN75X84X08",
+    "product": "Bond Plus 75x84 8\"",
+    "mrp": 33848,
+    "rm_cost": 3356.21,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLGR78X54X05",
+    "product": "Bond Plus 78x54 5\"",
+    "mrp": 14755,
+    "rm_cost": 2242.15,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN78X54X06",
+    "product": "Bond Plus 78x54 6\"",
+    "mrp": 16972,
+    "rm_cost": 2267.14,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN78X54X08",
+    "product": "Bond Plus 78x54 8\"",
+    "mrp": 22630,
+    "rm_cost": 2327.07,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGPR78X84X04",
+    "product": "Bond Plus 78x84 4\"",
+    "mrp": 17441,
+    "rm_cost": 3050.55,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLLGR78X84X05",
+    "product": "Bond Plus 78x84 5\"",
+    "mrp": 22952,
+    "rm_cost": 3392.91,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN78X84X06",
+    "product": "Bond Plus 78x84 6\"",
+    "mrp": 26401,
+    "rm_cost": 3362.51,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRBOPLGN78X84X08",
+    "product": "Bond Plus 78x84 8\"",
+    "mrp": 35202,
+    "rm_cost": 3442.37,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRECOPLETBL72X54X06",
+    "product": "Eco Plus ET 72x54 6\"",
+    "mrp": 19423,
+    "rm_cost": 4166.07,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRECOPLETBL72X84X06",
+    "product": "Eco Plus ET 72x84 6\"",
+    "mrp": 30213,
+    "rm_cost": 6357.85,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRECOPLETBL75X54X06",
+    "product": "Eco Plus ET 75x54 6\"",
+    "mrp": 20235,
+    "rm_cost": 4305.53,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRECOPLETBL75X84X06",
+    "product": "Eco Plus ET 75x84 6\"",
+    "mrp": 31472,
+    "rm_cost": 6571.25,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRECOPLETBL78X54X06",
+    "product": "Eco Plus ET 78x54 6\"",
+    "mrp": 21041,
+    "rm_cost": 4442.42,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRECOPLETBL78X84X06",
+    "product": "Eco Plus ET 78x84 6\"",
+    "mrp": 32731,
+    "rm_cost": 6780.29,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRCFPLMR72X54X06",
+    "product": "Comfort Plush 72x54 6\"",
+    "mrp": 24708,
+    "rm_cost": 4475.6,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRCFPLMR72X84X05",
+    "product": "Comfort Plush 72x84 5\"",
+    "mrp": 31836,
+    "rm_cost": 6777.71,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRCFPLMR72X84X06",
+    "product": "Comfort Plush 72x84 6\"",
+    "mrp": 38435,
+    "rm_cost": 6863.24,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRCFPLMR75X54X06",
+    "product": "Comfort Plush 75x54 6\"",
+    "mrp": 25742,
+    "rm_cost": 4606.98,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRCFPLMR75X84X05",
+    "product": "Comfort Plush 75x84 5\"",
+    "mrp": 33162,
+    "rm_cost": 6977.27,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRCFPLMR75X84X06",
+    "product": "Comfort Plush 75x84 6\"",
+    "mrp": 40036,
+    "rm_cost": 7065.24,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRCFPLMR78X54X06",
+    "product": "Comfort Plush 78x54 6\"",
+    "mrp": 26767,
+    "rm_cost": 4735.51,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRCFPLMR78X84X05",
+    "product": "Comfort Plush 78x84 5\"",
+    "mrp": 34489,
+    "rm_cost": 7173.19,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRCFPLMR78X84X06",
+    "product": "Comfort Plush 78x84 6\"",
+    "mrp": 41637,
+    "rm_cost": 7263.45,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG72X54X05",
+    "product": "Luxury Memory 72x54 5\"",
+    "mrp": 29728,
+    "rm_cost": 5386.1,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG72X54X08",
+    "product": "Luxury Memory 72x54 8\"",
+    "mrp": 44385,
+    "rm_cost": 6503.02,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG72X84X05",
+    "product": "Luxury Memory 72x84 5\"",
+    "mrp": 46244,
+    "rm_cost": 8200.93,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG72X84X08",
+    "product": "Luxury Memory 72x84 8\"",
+    "mrp": 69043,
+    "rm_cost": 9975.54,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG75X54X05",
+    "product": "Luxury Memory 75x54 5\"",
+    "mrp": 30972,
+    "rm_cost": 5515.86,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG75X54X08",
+    "product": "Luxury Memory 75x54 8\"",
+    "mrp": 46242,
+    "rm_cost": 6639.17,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG75X84X05",
+    "product": "Luxury Memory 75x84 5\"",
+    "mrp": 48171,
+    "rm_cost": 8400.53,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG75X84X08",
+    "product": "Luxury Memory 75x84 8\"",
+    "mrp": 71920,
+    "rm_cost": 10184.48,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG78X54X05",
+    "product": "Luxury Memory 78x54 5\"",
+    "mrp": 32206,
+    "rm_cost": 5645.46,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG78X54X08",
+    "product": "Luxury Memory 78x54 8\"",
+    "mrp": 48083,
+    "rm_cost": 6772.61,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG78X84X05",
+    "product": "Luxury Memory 78x84 5\"",
+    "mrp": 50098,
+    "rm_cost": 8599.69,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXMFBG78X84X08",
+    "product": "Luxury Memory 78x84 8\"",
+    "mrp": 74796,
+    "rm_cost": 10389.13,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXPLETCR72X54X06",
+    "product": "Luxury Plush ET 72x54 6\"",
+    "mrp": 30233,
+    "rm_cost": 4610.9,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXPLETCR72X84X06",
+    "product": "Luxury Plush ET 72x84 6\"",
+    "mrp": 47030,
+    "rm_cost": 7007.13,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXPLETCR75X54X06",
+    "product": "Luxury Plush ET 75x54 6\"",
+    "mrp": 31499,
+    "rm_cost": 4751.58,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXPLETCR75X84X06",
+    "product": "Luxury Plush ET 75x84 6\"",
+    "mrp": 48989,
+    "rm_cost": 7220.68,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXPLETCR78X54X06",
+    "product": "Luxury Plush ET 78x54 6\"",
+    "mrp": 32753,
+    "rm_cost": 4889.56,
+    "status": "hidden_non_standard_width"
+  },
+  {
+    "item_code": "CIRLUXPLETCR78X84X06",
+    "product": "Luxury Plush ET 78x84 6\"",
+    "mrp": 50949,
+    "rm_cost": 7429.89,
+    "status": "hidden_non_standard_width"
+  }
+]
