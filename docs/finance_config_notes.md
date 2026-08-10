@@ -12,3 +12,4 @@ values in config.py, preserved here since JSON has no comment syntax.
 - `COMMERCIAL.cirrus.dis_south.scheme_rm_pct` (0.133759): exact ratio 359.597/2688.4.
 - `COMMERCIAL.cirrus.inspree.scheme_rm_pct` (0.148600): exact ratio 399.956/2691.355.
 - `COMMERCIAL.italiano.dis_south.scheme_rm_pct` (0.183736): exact ratio 1506.082/8196.986.
+- `COMMERCIAL.peps.sanibel.scheme_rm_pct` (0.14732): exact ratio 667.664073362354/4532.33296295 (Sanibel MF 6", "Scheme (09:01)" row, source workbook). Verified 2026-07-28: Sanibel/Ardene-family Peps SKUs use 33% dealer margin (not Peps' standard 30%) and Italiano-style %-of-RM overheads (see `engine.calc_peps_premium`), not Peps' flat-₹/zero-tax convention — confirmed against dedicated per-product sheets in the Peps source workbook.
