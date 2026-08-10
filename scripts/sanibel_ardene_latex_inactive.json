@@ -1,0 +1,44 @@
+[
+  {
+    "line": "Sanibel Latex",
+    "item_code_given": "RTBNSNMR78X60X06/08 (confirmed WRONG - belongs to Sanibel Normal Maroon)",
+    "mrp_6in": 38999,
+    "mrp_8in": 43333,
+    "status": "inactive_no_real_item_code"
+  },
+  {
+    "line": "Sanibel Latex PT",
+    "item_code_given": "RTBNSNMR78X60X06/08 (confirmed WRONG)",
+    "mrp_6in": 44999,
+    "mrp_8in": 48333,
+    "status": "inactive_no_real_item_code"
+  },
+  {
+    "line": "Sanibel Latex ET",
+    "item_code_given": "RTBNSNMR78X60X06/08 (confirmed WRONG)",
+    "mrp_6in": 47499,
+    "mrp_8in": 50555,
+    "status": "inactive_no_real_item_code"
+  },
+  {
+    "line": "Ardene Latex",
+    "item_code_given": "RTBNSNMR78X60X06/08 (confirmed WRONG)",
+    "mrp_6in": 42999,
+    "mrp_8in": 47333,
+    "status": "inactive_no_real_item_code"
+  },
+  {
+    "line": "Ardene Latex PT",
+    "item_code_given": "RTBNSNMR78X60X06/08 (confirmed WRONG)",
+    "mrp_6in": 48888,
+    "mrp_8in": 52999,
+    "status": "inactive_no_real_item_code"
+  },
+  {
+    "line": "Ardene Latex ET",
+    "item_code_given": "RTBNSNMR78X60X06/08 (confirmed WRONG)",
+    "mrp_6in": 52222,
+    "mrp_8in": 56499,
+    "status": "inactive_no_real_item_code"
+  }
+]
