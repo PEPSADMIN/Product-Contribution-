@@ -14,7 +14,6 @@ body{font-family:Calibri,Arial,sans-serif;font-size:13px;background:#f0f2f5;colo
 .topbar{background:var(--blue);color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .topbar h1{font-size:16px;font-weight:600;letter-spacing:.3px}
 .topbar-right{display:flex;align-items:center;gap:10px}
-.badge{font-size:11px;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3)}
 .btn{padding:6px 14px;border-radius:5px;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit}
 .btn-primary{background:#2E75B6;color:#fff}.btn-primary:hover{background:#1F5C9A}
 .btn-success{background:#1E5631;color:#fff}.btn-success:hover{background:#164426}
@@ -33,10 +32,6 @@ body{font-family:Calibri,Arial,sans-serif;font-size:13px;background:#f0f2f5;colo
 .nav-item.active{background:#EBF3FC;color:var(--blue2);border-left-color:var(--blue2);font-weight:600}
 .nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .nd-peps{background:#2E75B6}.nd-cirrus{background:#1E5631}.nd-it{background:#BF8F00}.nd-acc{background:#C00000}
-.ramco-zone{margin:10px;padding:10px;border:1.5px dashed #2E75B6;border-radius:6px;background:#EBF3FC}
-.ramco-zone label{display:block;font-size:11px;font-weight:600;color:var(--blue2);margin-bottom:6px}
-.ramco-zone input[type=file]{font-size:11px;width:100%}
-.ramco-status{font-size:10px;margin-top:6px;color:#555}
 
 /* ── Cards ── */
 .page{padding:16px;display:none}.page.active{display:block}
@@ -109,11 +104,184 @@ tbody td{padding:6px 8px;white-space:nowrap}
 .section-pad{padding:16px}
 .hint-text{font-size:11px;color:#888}
 .params-grid-2col{grid-template-columns:repeat(2,1fr)}
-.msg-success{color:#1E5631}
 
 /* ── Toast ── */
 .toast{position:fixed;bottom:20px;right:20px;background:var(--blue);color:#fff;padding:10px 18px;border-radius:6px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
+
+/* ── Material Costing tab ── */
+.mc-filterbar{background:#fff;border-bottom:1px solid var(--border);padding:10px 16px;display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
+.ffield{display:flex;flex-direction:column;gap:4px;min-width:130px}
+.ffield.grow{flex:1;min-width:200px}
+.ffield label{font-size:10px;font-weight:700;color:#8892a4;text-transform:uppercase;letter-spacing:.06em}
+.ffield select,.ffield input{padding:6px 8px;border:1px solid var(--border);border-radius:5px;background:#fff;font-size:12.5px;font-family:inherit}
+.ffield select:focus,.ffield input:focus{outline:2px solid var(--blue2);outline-offset:1px}
+.scale-note{font-size:11px;color:#8892a4;white-space:nowrap;padding-bottom:7px}
+.parsed-tag{font-size:9.5px;color:#8892a4;border-bottom:1px dotted #8892a4;cursor:help;text-transform:none;font-weight:400;letter-spacing:0}
+
+.cat-chip{display:inline-block;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:8px;margin-right:5px;letter-spacing:.02em}
+.cat-peps{background:#DCE6F5;color:var(--blue2)}
+.cat-hypnos{background:#DCEFE3;color:var(--green)}
+.cat-coir{background:#FBEFD2;color:var(--amber)}
+.cat-ecom{background:#F5DCE0;color:var(--red)}
+
+.mc-main{padding:16px 18px;overflow-x:auto}
+.mc-panel-hdr{margin-bottom:6px}
+.mc-panel-hdr h2{font-size:15px;font-weight:700;margin:0}
+.title-sub{font-weight:400;color:#8892a4;font-size:12.5px}
+
+.mc-subtabs{display:flex;gap:22px;border-bottom:1px solid var(--border);margin-top:8px}
+.mc-subtab{padding:10px 2px;font-size:13px;font-weight:600;color:#8892a4;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.mc-subtab.active{color:var(--blue2);border-bottom-color:var(--blue2)}
+.mc-subpage{display:none}.mc-subpage.active{display:block}
+.mc-section-label{font-size:11px;font-weight:700;color:#8892a4;text-transform:uppercase;letter-spacing:.06em;margin:16px 0 8px}
+.mc-section-note{font-weight:400;text-transform:none;letter-spacing:0}
+table.wf{width:100%;border-collapse:collapse;font-size:12.5px}
+table.wf:not(.mc-wf-transposed){max-width:880px}
+table.wf:not(.mc-wf-transposed) th:first-child,table.wf:not(.mc-wf-transposed) td:first-child{width:46%}
+table.wf:not(.mc-wf-transposed) th.pctcol,table.wf:not(.mc-wf-transposed) td.pctcol{width:22%}
+table.wf th{background:var(--bg3);text-align:left;padding:7px 10px;font-size:10.5px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--border)}
+table.wf td{padding:6px 10px;border:1px solid var(--border);vertical-align:middle;font-variant-numeric:tabular-nums;font-weight:700;color:#12172b}
+table.wf td.num{text-align:right}
+table.wf td.pctcol{text-align:right;font-weight:700;color:#12172b;font-size:11.5px;white-space:nowrap}
+table.wf .v-neg{color:var(--red)}
+table.wf tr.wf-group td{background:var(--bg3);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--blue2)}
+table.wf tr.wf-subtotal td{font-weight:800;background:var(--bg2);color:#12172b}
+table.wf tr.wf-final td{font-weight:800;background:var(--bg3);border-top:2px solid var(--blue2);font-size:14.5px;color:#12172b}
+table.wf tr.wf-vsbase td{background:var(--bg2)}
+table.wf tr.wf-vsbase td:first-child{font-weight:600}
+.mc-delta-pos{color:#1B5E20;font-weight:700}
+.mc-delta-neg{color:#B71C1C;font-weight:700}
+.dim-note{color:#8892a4;font-style:italic}
+.mc-bom-header{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.mc-bom-header-label{margin-bottom:0}
+.mc-bom-actions{display:flex;gap:8px;padding-bottom:6px}
+.btn-outline-blue{background:transparent;color:var(--blue2);border:1px solid var(--blue2)}
+.btn-outline-blue:hover{background:var(--bg3)}
+input.mc-pct{width:60px;padding:3px 5px;border:1px solid var(--border);border-radius:4px;background:#fff;text-align:right;font-size:12px}
+input.mc-amt{width:88px;padding:3px 5px;border:1px solid var(--border);border-radius:4px;background:#fff;text-align:right;font-size:12px;font-variant-numeric:tabular-nums}
+.mc-pct-cell{display:inline-flex;align-items:center;gap:3px;justify-content:flex-end}
+.mc-pct-cell span{color:#8892a4;font-size:11px}
+.mc-hstat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px 20px;padding:14px 16px}
+.mc-hstat{display:flex;flex-direction:column;gap:3px}
+.mc-hstat .k{font-size:10px;font-weight:700;color:#8892a4;text-transform:uppercase;letter-spacing:.05em}
+.mc-hstat .v{font-size:13px}
+table.mc-wf-transposed{min-width:1180px}
+table.mc-wf-transposed th{white-space:nowrap}
+table.mc-wf-transposed td:first-child{font-weight:600;white-space:nowrap;background:var(--bg3)}
+.status-ok{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;background:#E8F5E9;color:#1B5E20}
+.status-partial{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;background:#FFF8E1;color:#F57F17}
+.mc-card{background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.mc-scroll{overflow-x:auto}
+.item-code{font-family:Consolas,monospace;font-size:11.5px}
+.wh-tag{font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:4px}
+.wh-wip{background:var(--bg3);color:#8892a4}
+.wh-sfg{background:#DCE6F5;color:var(--blue2)}
+
+.sfg-row td{background:var(--bg2)}
+.sfg-detail{padding:0}
+.sfg-inner{padding:10px 10px 12px 34px;background:var(--bg2)}
+.sfg-inner .label{font-size:10.5px;font-weight:700;color:#8892a4;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.sfg-inner table{background:#fff;border:1px solid var(--border);border-radius:6px}
+.total-row td{font-weight:700;background:var(--bg3);border-top:2px solid var(--border)}
+.mc-hidden{display:none!important}
+.placeholder-row td{color:#8892a4;font-style:italic;font-size:11.5px}
+.placeholder-note{color:#8892a4;font-style:italic;font-size:12.5px;line-height:1.6;padding:10px}
+.col-narrow{width:26px}.col-kebab{width:38px}
+.kebab-wrap{position:relative;display:inline-block}
+.kebab-btn{background:var(--bg3);border:1px solid var(--blue2);color:var(--blue2);border-radius:4px;font-size:15px;font-weight:900;line-height:1;padding:5px 9px;cursor:pointer}
+.kebab-btn:hover,.kebab-btn[aria-expanded="true"]{background:var(--blue2);color:#fff}
+.kebab-menu{position:absolute;top:calc(100% + 4px);left:0;z-index:20;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.15);min-width:150px;padding:4px;display:flex;flex-direction:column;gap:1px}
+.kebab-menu.kebab-menu-up{top:auto;bottom:calc(100% + 4px)}
+.kebab-item{background:transparent;border:none;color:#1a1a2e;border-radius:4px;font-size:12px;text-align:left;padding:7px 9px;cursor:pointer;white-space:nowrap}
+.kebab-item:hover{background:var(--bg3)}
+.kebab-item.kebab-danger{color:var(--red)}
+.kebab-item.kebab-danger:hover{background:#FFEBEE}
+.add-row{background:var(--bg2);border:1px dashed var(--border);color:var(--blue2);border-radius:5px;font-size:11.5px;font-weight:600;padding:6px 12px;cursor:pointer;width:100%;text-align:left}
+.add-row:hover{background:var(--bg3)}
+select.bom-wh{padding:3px 5px;border:1px solid var(--border);border-radius:4px;background:#fff;font-size:11.5px}
+input.bom-code,input.bom-desc,input.bom-rate{padding:3px 5px;border:1px solid var(--border);border-radius:4px;background:#fff;font-size:12px;width:100%;box-sizing:border-box}
+input.bom-rate{text-align:right;width:70px}
+.picker-overlay{position:fixed;inset:0;background:rgba(20,20,30,.45);z-index:400;display:flex;align-items:center;justify-content:center;padding:24px}
+.picker-overlay.mc-hidden{display:none}
+.picker-modal{background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.3);width:100%;max-width:720px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden}
+.picker-header{padding:16px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.picker-header h3{margin:0;font-size:14px;font-weight:700;flex:1}
+.picker-search{flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);font-size:13px}
+.picker-close{background:transparent;border:1px solid var(--border);color:#8892a4;border-radius:5px;font-size:13px;font-weight:700;padding:4px 9px;cursor:pointer}
+.picker-subnote{padding:0 18px 10px;font-size:11px;color:#8892a4}
+.picker-results{overflow-y:auto;flex:1;padding:4px 8px}
+.picker-hint{padding:24px 16px;text-align:center;color:#8892a4;font-size:12.5px}
+.picker-row{display:grid;grid-template-columns:20px 1fr 2fr 60px 90px;gap:10px;align-items:center;padding:8px 10px;border-radius:6px;cursor:pointer;font-size:12px}
+.picker-row:hover{background:var(--bg2)}
+.picker-code{font-family:Consolas,monospace;font-size:11px;color:var(--blue2)}
+.picker-uom{color:#8892a4;text-align:right}
+.picker-rate{text-align:right;font-variant-numeric:tabular-nums}
+.picker-footer{padding:12px 18px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.picker-count{font-size:12px;color:#8892a4;margin-right:auto}
+.picker-manual{background:transparent;border:none;color:var(--blue2);font-size:12px;font-weight:600;cursor:pointer;padding:6px 4px;text-decoration:underline}
+.picker-add{background:var(--blue2);border:none;color:#fff;border-radius:6px;font-size:12.5px;font-weight:700;padding:8px 16px;cursor:pointer}
+.picker-add:disabled{background:var(--bg3);color:#8892a4;cursor:not-allowed}
+
+/* ── R&D tab — reuses --blue/--blue2/--green/--red/--amber/--border/--bg*
+   from the rest of the tool; --rd is the one new accent, used everywhere
+   (and only) to mark something as draft/sandbox rather than live data. */
+:root{--rd:#6B4FA0;--rd-bg:#F3EFFA}
+.rd-nav-item{position:relative}
+.rd-nav-tag{margin-left:auto;font-size:9px;background:var(--rd);color:#fff;padding:1px 6px;border-radius:8px;font-weight:700;letter-spacing:.03em}
+.rd-nav-item.active{background:var(--rd-bg);color:var(--rd);border-left-color:var(--rd)}
+.btn-rd{background:var(--rd);color:#fff}.btn-rd:hover{background:#57408a}
+.btn-outline-rd{background:transparent;color:var(--rd);border:1px solid var(--rd)}
+.btn-outline-rd:hover{background:var(--rd-bg)}
+.status-rd{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;background:var(--rd-bg);color:var(--rd)}
+.status-pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;text-transform:uppercase;letter-spacing:.03em}
+.status-pill.status-draft{background:var(--rd-bg);color:var(--rd)}
+.status-pill.status-pending_review{background:#FFF3D6;color:var(--amber)}
+.status-pill.status-approved{background:#E8F5E9;color:var(--green)}
+
+.rd-screen{display:none}
+.rd-screen.active{display:block}
+.rd-crumbs{font-size:11px;color:#8892a4;margin:0 0 10px}
+.rd-crumbs a{color:var(--blue2);cursor:pointer;text-decoration:none}
+
+.rd-mode-choice{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rd-mode-card{border:2px solid var(--border);border-radius:10px;padding:18px;cursor:pointer;background:#fff;transition:border-color .15s,box-shadow .15s}
+.rd-mode-card:hover{border-color:var(--rd);box-shadow:0 2px 10px rgba(107,79,160,.12)}
+.rd-mode-icon{width:36px;height:36px;border-radius:8px;background:var(--rd-bg);color:var(--rd);display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:10px;font-weight:700}
+.rd-mode-card h3{margin:0 0 6px;font-size:14px;color:var(--blue)}
+.rd-mode-card p{margin:0;font-size:12px;color:#667;line-height:1.5}
+
+.rd-draft-list{display:flex;flex-direction:column;gap:8px}
+.rd-draft-item{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:6px;background:#fff}
+.rd-draft-item .di-name{font-weight:600;flex:1;cursor:pointer}
+.rd-draft-item .di-name:hover{color:var(--rd)}
+.rd-draft-item .di-meta{font-size:11px;color:#8892a4}
+
+.rd-new-form{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-top:8px}
+.rd-new-form .ffield input{min-width:220px}
+.rd-dummy-note{font-size:10.5px;color:var(--amber);margin:8px 0 0}
+.rd-hint{font-size:11.5px;color:#8892a4;line-height:1.5;margin:4px 0 10px}
+#rd-picker-body tr,#rd-npicker-body tr{cursor:pointer}
+#rd-picker-body tr:hover,#rd-npicker-body tr:hover{background:var(--bg3)}
+
+.rd-banner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:var(--rd-bg);border:1px solid var(--rd);border-radius:8px;padding:10px 14px;margin-bottom:12px}
+.rd-banner-main{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rd-banner-name-input{border:1px solid transparent;background:transparent;font-size:14px;font-weight:700;color:var(--rd);padding:3px 6px;border-radius:4px;min-width:220px}
+.rd-banner-name-input:hover,.rd-banner-name-input:focus{border-color:var(--rd);background:#fff}
+.rd-banner-base{font-size:11px;color:#667}
+.rd-banner-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+.rd-compare-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.rd-compare-toolbar h2{margin:0;font-size:15px;color:var(--blue)}
+.rd-compare-grid{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;overflow-x:auto}
+.rd-cg-col{display:flex;flex-direction:column;border-right:1px solid var(--border);min-width:180px}
+.rd-cg-col:last-child{border-right:none}
+.rd-cg-cell{padding:9px 12px;border-bottom:1px solid var(--border);font-size:12px}
+.rd-cg-label-col .rd-cg-cell{background:var(--bg2);font-size:10.5px;font-weight:700;color:#8892a4;text-transform:uppercase;letter-spacing:.04em}
+.rd-cg-hd{background:var(--rd-bg);font-weight:700;color:var(--rd)}
+.rd-cg-hd input{border:none;background:transparent;font-weight:700;color:var(--rd);font-size:12px;width:100%}
+.rd-cg-metric{font-weight:700;font-family:Consolas,monospace;font-variant-numeric:tabular-nums}
+.rd-cg-best{background:#E8F5E9;color:var(--green)}
 </style>
 </head>
 <body>
@@ -121,7 +289,6 @@ tbody td{padding:6px 8px;white-space:nowrap}
 <div class="topbar">
   <h1>Peps Industries &nbsp;—&nbsp; Product Contribution Tool</h1>
   <div class="topbar-right">
-    <span class="badge" id="rate-badge">Rates: Current</span>
     <button class="btn btn-outline btn-sm" onclick="resetAll()">Reset All</button>
     <button class="btn btn-success" onclick="exportExcel()">Export Excel</button>
   </div>
@@ -134,28 +301,28 @@ tbody td{padding:6px 8px;white-space:nowrap}
     <div class="nav-group-view">
       <div class="nav-item active" onclick="showPage('nm')">NM Abstract</div>
       <div class="nav-item" onclick="showPage('params')">Commercial Rates</div>
+      <div class="nav-item" onclick="showPage('material')">Material Costing</div>
+      <div class="nav-item rd-nav-item" onclick="showPage('rd')">R&amp;D <span class="rd-nav-tag">NEW</span></div>
     </div>
 
-    <div class="sidebar-section mt-8">Brands</div>
-    <div class="nav-group-brand">
-      <div class="nav-item active" onclick="filterBrand('all')"><span class="nav-dot nd-all"></span>All Brands</div>
-      <div class="nav-item" onclick="filterBrand('peps')"><span class="nav-dot nd-peps"></span>Peps Spring</div>
-      <div class="nav-item" onclick="filterBrand('cirrus')"><span class="nav-dot nd-cirrus"></span>Cirrus Foam</div>
-      <div class="nav-item" onclick="filterBrand('italiano')"><span class="nav-dot nd-it"></span>Italiano</div>
-      <div class="nav-item" onclick="filterBrand('accessories')"><span class="nav-dot nd-acc"></span>Accessories</div>
+    <div id="sidebar-nm-filters">
+      <div class="sidebar-section mt-8">Brands</div>
+      <div class="nav-group-brand">
+        <div class="nav-item active" onclick="filterBrand('all')"><span class="nav-dot nd-all"></span>All Brands</div>
+        <div class="nav-item" onclick="filterBrand('peps')"><span class="nav-dot nd-peps"></span>Peps Spring</div>
+        <div class="nav-item" onclick="filterBrand('cirrus')"><span class="nav-dot nd-cirrus"></span>Cirrus Foam</div>
+        <div class="nav-item" onclick="filterBrand('italiano')"><span class="nav-dot nd-it"></span>Italiano</div>
+        <div class="nav-item" onclick="filterBrand('accessories')"><span class="nav-dot nd-acc"></span>Accessories</div>
+      </div>
+
+      <div class="sidebar-section mt-8">Filters</div>
+      <div class="nav-group-filter">
+        <div class="nav-item" onclick="filterNM('below6')">⚠ NM below 6%</div>
+        <div class="nav-item" onclick="filterNM('changed')">✎ MRP changed</div>
+        <div class="nav-item active" onclick="filterNM('all')">Show all</div>
+      </div>
     </div>
 
-    <div class="sidebar-section mt-8">Filters</div>
-    <div class="nav-group-filter">
-      <div class="nav-item" onclick="filterNM('below6')">⚠ NM below 6%</div>
-      <div class="nav-item" onclick="filterNM('changed')">✎ MRP changed</div>
-      <div class="nav-item active" onclick="filterNM('all')">Show all</div>
-    </div>
-
-    <div class="sidebar-section mt-8">Engine Status</div>
-    <div class="ramco-zone">
-      <div class="ramco-status" id="ramco-status">Connecting to engine…</div>
-    </div>
   </div>
 
   <!-- Main -->
@@ -205,6 +372,265 @@ tbody td{padding:6px 8px;white-space:nowrap}
       </div>
     </div>
 
+    <!-- Material Costing page -->
+    <div class="page" id="page-material">
+      <!-- R&D draft banner — hidden unless a draft is open (rdOpenWorkspace).
+           Reuses the exact same Materials-subtab DOM/logic below for the
+           actual waterfall + BOM editor; this banner just marks the
+           context and swaps in R&D-specific actions. -->
+      <div class="rd-banner mc-hidden" id="rd-banner">
+        <div class="rd-banner-main">
+          <input id="rd-banner-name" class="rd-banner-name-input" aria-label="Draft name" oninput="rdRenameDraft(this.value)">
+          <span class="status-pill" id="rd-banner-status"></span>
+          <span class="rd-banner-base" id="rd-banner-base"></span>
+        </div>
+        <div class="rd-banner-actions">
+          <button type="button" class="btn btn-sm btn-outline-rd" onclick="rdOpenCompare()">Compare variants</button>
+          <button type="button" class="btn btn-sm btn-outline-rd" onclick="rdSaveVariant()">Save draft</button>
+          <button type="button" class="btn btn-sm btn-rd" onclick="rdSetStatus('pending_review')">Submit for admin review</button>
+          <button type="button" class="btn btn-sm btn-outline-rd" onclick="rdCleanupWorkspace();showPage('rd')">Exit draft</button>
+        </div>
+      </div>
+      <div class="mc-filterbar" id="mc-filterbar-real">
+        <div class="ffield">
+          <label for="mc-f-cat">Category</label>
+          <select id="mc-f-cat" onchange="mcApplyFilters()">
+            <option value="all">All Categories</option>
+            <option value="Peps">Peps</option>
+            <option value="Cirrus Foam">Cirrus Foam</option>
+            <option value="Cirrus Coir">Cirrus Coir</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+        </div>
+        <div class="ffield">
+          <label for="mc-f-line">Product Line</label>
+          <select id="mc-f-line" onchange="mcApplyFilters()"><option value="all">All Product Lines</option></select>
+        </div>
+        <div class="ffield">
+          <label for="mc-f-height">Height</label>
+          <select id="mc-f-height" onchange="mcApplyFilters()"><option value="all">All Heights</option></select>
+        </div>
+        <div class="ffield">
+          <label for="mc-f-size">Size</label>
+          <select id="mc-f-size" onchange="mcApplyFilters()"><option value="all">All Sizes</option></select>
+        </div>
+        <div class="ffield">
+          <label for="mc-f-colour">Colour <span class="parsed-tag" title="Parsed from the item's own Ramco ledger description (e.g. 'Comfort Normal Beige' -> Beige) — blank for SKUs whose description doesn't state a colour (all current Italiano SKUs).">parsed</span></label>
+          <select id="mc-f-colour" onchange="mcApplyFilters()"><option value="all">All Colours</option></select>
+        </div>
+        <div class="ffield grow">
+          <label for="mc-f-search">Search</label>
+          <input id="mc-f-search" type="text" placeholder="Item code or product name…" oninput="mcApplyFilters()">
+        </div>
+        <div class="scale-note" id="mc-scale-note"></div>
+      </div>
+
+      <div class="mc-main">
+          <div class="mc-panel-hdr">
+            <h2><span id="mc-panel-title">—</span> <span class="title-sub" id="mc-item-code"></span></h2>
+          </div>
+
+          <div class="mc-subtabs">
+            <div class="mc-subtab active" data-page="mc-sub-abstract" onclick="mcShowSubtab('mc-sub-abstract')">Abstract</div>
+            <div class="mc-subtab" data-page="mc-sub-materials" onclick="mcShowSubtab('mc-sub-materials')">Materials</div>
+          </div>
+
+          <!-- ══ ABSTRACT (read-only) ══ -->
+          <div class="mc-subpage active" id="mc-sub-abstract">
+            <div class="mc-section-label">Full Net Margin Waterfall — South DIS Channel <span class="mc-section-note">(read-only — the product's actual, as-loaded figures; to try what-if changes, use the Materials tab)</span></div>
+            <div class="mc-card mc-scroll">
+              <table class="wf">
+                <thead><tr><th>Particulars</th><th class="pctcol">Percentage</th><th class="num">Amount (₹)</th></tr></thead>
+                <tbody id="mc-abs-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ══ MATERIALS (editable) ══ -->
+          <div class="mc-subpage" id="mc-sub-materials">
+            <div class="mc-section-label">Product Details</div>
+            <div class="mc-card">
+              <div class="mc-hstat-grid">
+                <div class="mc-hstat"><span class="k">Product</span><span class="v" id="mc-pd-product">—</span></div>
+                <div class="mc-hstat"><span class="k">Item Code</span><span class="v item-code" id="mc-pd-code">—</span></div>
+                <div class="mc-hstat"><span class="k">Category</span><span class="v" id="mc-pd-cat">—</span></div>
+                <div class="mc-hstat"><span class="k">Product Line</span><span class="v" id="mc-pd-line">—</span></div>
+                <div class="mc-hstat"><span class="k">Height</span><span class="v" id="mc-pd-height">—</span></div>
+                <div class="mc-hstat"><span class="k">Colour</span><span class="v" id="mc-pd-colour">—</span></div>
+                <div class="mc-hstat"><span class="k">Total Components</span><span class="v" id="mc-pd-comp">—</span></div>
+                <div class="mc-hstat"><span class="k">SFG Sub-Assemblies</span><span class="v" id="mc-pd-sfg">—</span></div>
+                <div class="mc-hstat"><span class="k">Total RM Cost</span><span class="v" id="mc-pd-rmcost">—</span></div>
+                <div class="mc-hstat"><span class="k">Source</span><span class="v" id="mc-pd-source">—</span></div>
+                <div class="mc-hstat"><span class="k">Status</span><span class="v" id="mc-pd-status">—</span></div>
+              </div>
+            </div>
+
+            <div class="mc-section-label">Net Margin — South DIS Channel <span class="mc-section-note">(every % and ₹ amount is editable — try changing any of them)</span></div>
+            <div class="mc-card mc-scroll">
+              <table class="wf mc-wf-transposed">
+                <thead><tr>
+                  <th>Particulars</th>
+                  <th class="num">MRP</th>
+                  <th class="num">Dealer Margin</th>
+                  <th class="num">Dist Margin</th>
+                  <th class="num">Net Billing Rate</th>
+                  <th class="num">RM Cost</th>
+                  <th class="num">Net Sales</th>
+                  <th class="num">EBITDA</th>
+                  <th class="num">Net Margin</th>
+                  <th class="num">NM/sqft (₹)</th>
+                  <th class="num">vs Base</th>
+                </tr></thead>
+                <tbody id="mc-mat-tbody"></tbody>
+              </table>
+            </div>
+
+            <div class="mc-bom-header">
+              <div class="mc-section-label mc-bom-header-label" id="mc-bom-count">Bill of Materials</div>
+              <div class="mc-bom-actions" id="mc-bom-actions-real">
+                <button type="button" class="btn btn-sm btn-outline-blue" onclick="mcRevertBom()">Revert to ledger</button>
+                <button type="button" class="btn btn-sm btn-primary" onclick="mcSaveBom()">Save BOM changes</button>
+              </div>
+            </div>
+            <div class="mc-card" id="mc-bom-placeholder">
+              <div class="placeholder-note" id="mc-bom-placeholder-text">Loading…</div>
+            </div>
+            <div id="mc-bom-real" class="mc-hidden">
+              <div class="mc-card mc-scroll">
+                <table>
+                  <thead><tr>
+                    <th class="col-kebab"></th><th class="col-narrow">#</th><th>Item Code</th><th>Description</th><th>Warehouse</th>
+                    <th class="num">Qty</th><th>UOM</th><th class="num">Rate&nbsp;(₹)</th><th class="num">Cost&nbsp;(₹)</th>
+                  </tr></thead>
+                  <tbody id="mc-bom-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          </div>
+        </div>
+    </div>
+
+    <!-- R&D page -->
+    <div class="page" id="page-rd">
+
+      <!-- Screen 1: entry -->
+      <div class="rd-screen active" id="rd-screen-entry">
+        <div class="mc-card">
+          <div class="mc-section-label">Start R&amp;D work</div>
+          <div class="rd-mode-choice">
+            <div class="rd-mode-card" onclick="rdOpenExistingPicker()">
+              <div class="rd-mode-icon">E</div>
+              <h3>Work from an Existing product</h3>
+              <p>Pick a real product from the catalog, open its actual Bill of Materials, and
+                 experiment — swap a fabric, tweak a quantity, see the cost/margin impact.
+                 The real product is never touched; your changes save as a separate draft.</p>
+            </div>
+            <div class="rd-mode-card" onclick="rdOpenNewSetup()">
+              <div class="rd-mode-icon">N</div>
+              <h3>Build a New product from scratch</h3>
+              <p>Give it a name and a dummy item code, pick an existing BOM to start from
+                 (nothing is built from a blank page), then edit freely — add, remove or
+                 swap any line.</p>
+            </div>
+          </div>
+        </div>
+        <div class="mc-card">
+          <div class="mc-section-label">Your R&amp;D drafts</div>
+          <div class="rd-draft-list" id="rd-draft-list"><div class="placeholder-note">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- Screen 2: Existing-product picker -->
+      <div class="rd-screen" id="rd-screen-existing">
+        <p class="rd-crumbs"><a onclick="rdShowScreen('rd-screen-entry')">R&amp;D</a> / Work from Existing</p>
+        <div class="mc-filterbar">
+          <div class="ffield"><label for="rd-f-cat">Category</label><select id="rd-f-cat" onchange="rdApplyPickerFilters()">
+            <option value="all">All Categories</option><option value="Peps">Peps</option>
+            <option value="Cirrus Foam">Cirrus Foam</option><option value="Cirrus Coir">Cirrus Coir</option>
+            <option value="Accessories">Accessories</option></select></div>
+          <div class="ffield"><label for="rd-f-line">Product Line</label><select id="rd-f-line" onchange="rdApplyPickerFilters()"><option value="all">All Product Lines</option></select></div>
+          <div class="ffield"><label for="rd-f-height">Height</label><select id="rd-f-height" onchange="rdApplyPickerFilters()"><option value="all">All Heights</option></select></div>
+          <div class="ffield"><label for="rd-f-size">Size</label><select id="rd-f-size" onchange="rdApplyPickerFilters()"><option value="all">All Sizes</option></select></div>
+          <div class="ffield"><label for="rd-f-colour">Colour</label><select id="rd-f-colour" onchange="rdApplyPickerFilters()"><option value="all">All Colours</option></select></div>
+          <div class="ffield grow"><label for="rd-f-search">Search</label><input id="rd-f-search" type="text" placeholder="Item code or product name…" oninput="rdApplyPickerFilters()"></div>
+          <div class="scale-note" id="rd-picker-count"></div>
+        </div>
+        <div class="mc-card mc-scroll">
+          <table>
+            <thead><tr><th>Product</th><th>Item Code</th><th>Category</th><th>Height</th><th class="num">RM Cost</th><th class="num">MRP</th></tr></thead>
+            <tbody id="rd-picker-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Screen 3: New-product setup -->
+      <div class="rd-screen" id="rd-screen-new">
+        <p class="rd-crumbs"><a onclick="rdShowScreen('rd-screen-entry')">R&amp;D</a> / Build New</p>
+        <div class="mc-card" id="rd-new-step1">
+          <div class="mc-section-label">Step 1 — Name this draft product</div>
+          <div class="rd-new-form">
+            <div class="ffield"><label for="rd-new-name">Draft product name</label><input id="rd-new-name" placeholder="e.g. Cloudline Pocketed 6&quot;"></div>
+            <div class="ffield"><label for="rd-new-code">Dummy item code</label><input id="rd-new-code" placeholder="e.g. DR-NEW-015"></div>
+            <button type="button" class="btn btn-rd" onclick="rdSubmitNewSetup()">Continue →</button>
+          </div>
+          <p class="rd-dummy-note">⚠ This is a placeholder code for draft tracking only — not a real Ramco item code.</p>
+        </div>
+        <div class="mc-card mc-hidden" id="rd-new-step2">
+          <div class="mc-section-label">Step 2 — Pick a starting Bill of Materials</div>
+          <p class="rd-hint">You're not starting from a blank page — pick the closest existing product's BOM as your base, then edit freely from there.</p>
+          <div class="mc-filterbar">
+            <div class="ffield"><label for="rd-nf-cat">Category</label><select id="rd-nf-cat" onchange="rdApplyPickerFilters()">
+              <option value="all">All Categories</option><option value="Peps">Peps</option>
+              <option value="Cirrus Foam">Cirrus Foam</option><option value="Cirrus Coir">Cirrus Coir</option>
+              <option value="Accessories">Accessories</option></select></div>
+            <div class="ffield"><label for="rd-nf-line">Product Line</label><select id="rd-nf-line" onchange="rdApplyPickerFilters()"><option value="all">All Product Lines</option></select></div>
+            <div class="ffield"><label for="rd-nf-height">Height</label><select id="rd-nf-height" onchange="rdApplyPickerFilters()"><option value="all">All Heights</option></select></div>
+            <div class="ffield"><label for="rd-nf-size">Size</label><select id="rd-nf-size" onchange="rdApplyPickerFilters()"><option value="all">All Sizes</option></select></div>
+            <div class="ffield"><label for="rd-nf-colour">Colour</label><select id="rd-nf-colour" onchange="rdApplyPickerFilters()"><option value="all">All Colours</option></select></div>
+            <div class="ffield grow"><label for="rd-nf-search">Search</label><input id="rd-nf-search" type="text" placeholder="Item code or product name…" oninput="rdApplyPickerFilters()"></div>
+            <div class="scale-note" id="rd-npicker-count"></div>
+          </div>
+          <div class="mc-card mc-scroll">
+            <table>
+              <thead><tr><th>Product</th><th>Item Code</th><th>Category</th><th>Height</th><th class="num">RM Cost</th><th class="num">MRP</th></tr></thead>
+              <tbody id="rd-npicker-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 4: compare variants -->
+      <div class="rd-screen" id="rd-screen-compare">
+        <p class="rd-crumbs"><a onclick="rdShowScreen('rd-screen-entry')">R&amp;D</a> / <a onclick="rdBackToWorkspace()">Draft workspace</a> / Compare</p>
+        <div class="rd-compare-toolbar">
+          <h2 id="rd-compare-title">Comparing variants</h2>
+          <button type="button" class="btn btn-rd btn-sm" onclick="rdAddVariant()">+ Add variant</button>
+        </div>
+        <div class="rd-compare-grid" id="rd-compare-grid"></div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Item Master search picker — opened by "Add line" in the Material Costing BOM -->
+<div id="picker-overlay" class="picker-overlay mc-hidden">
+  <div class="picker-modal">
+    <div class="picker-header">
+      <h3>Add from Item Master</h3>
+      <input id="picker-search" class="picker-search" type="text" placeholder="Search item code or description… (e.g. RM-THRD or Thread)" title="Search Item Master" aria-label="Search Item Master">
+      <button type="button" id="picker-close" class="picker-close" title="Close" aria-label="Close">✕</button>
+    </div>
+    <div class="picker-subnote">Live search against the full Ramco Item Master — type at least 2 characters</div>
+    <div id="picker-results" class="picker-results"></div>
+    <div class="picker-footer">
+      <span id="picker-count" class="picker-count">0 selected</span>
+      <button type="button" id="picker-manual" class="picker-manual">Can't find it? Add manually</button>
+      <button type="button" id="picker-add" class="picker-add" disabled>Add selected</button>
+    </div>
   </div>
 </div>
 
@@ -240,10 +666,28 @@ let COMM = {
   peps_dealer:0.30, peps_dist_vat:0.016364, peps_dist:0.10,
   peps_cd:0.030, peps_dct:0.040, peps_tod:0.030,
   peps_sr:0.015, peps_scheme:0.132431,
+  peps_sanibel_dealer:0.33, peps_sanibel_dist_vat:0.016364, peps_sanibel_dist:0.10,
+  peps_sanibel_cd:0.030, peps_sanibel_dct:0.040, peps_sanibel_tod:0.040,
+  peps_sanibel_sr:0.015, peps_sanibel_scheme:0.14732,
+  peps_spk_ct_dealer:0.30, peps_spk_ct_scheme:0.130647,
+  peps_zenimo_dealer:0.33, peps_zenimo_scheme:0.162025,
+  peps_organica_crystal_dealer:0.35, peps_organica_crystal_scheme:0.162608,
+  peps_grand_palais_dealer:0.40, peps_grand_palais_scheme:0.185171,
+  peps_vivah_dealer:0.40, peps_vivah_scheme:0.177812,
+  peps_dd_dealer:0.40, peps_dd_scheme:0.185171,
   cirrus_dealer:0.30, cirrus_dist_vat:0.016364, cirrus_dist:0.10,
   cirrus_cd:0.030, cirrus_dct:0.0285, cirrus_tod:0.040,
   cirrus_sr:0.015, cirrus_scheme:0.133759,
   inspree_dealer:0.35, inspree_scheme:0.148600,
+  vista_dealer:0.20, vista_dist_vat:0.016364, vista_dist:0.10,
+  vista_cd:0.030, vista_dct:0.0, vista_tod:0.040,
+  vista_sr:0.015, vista_scheme:0.279337,
+  caprina_dealer:0.20, caprina_dist_vat:0.016364, caprina_dist:0.10,
+  caprina_cd:0.030, caprina_dct:0.0, caprina_tod:0.040,
+  caprina_sr:0.015, caprina_scheme:0.134466,
+  cirlatex_dealer:0.35, cirlatex_dist_vat:0.016364, cirlatex_dist:0.10,
+  cirlatex_cd:0.030, cirlatex_dct:0.030, cirlatex_tod:0.040,
+  cirlatex_sr:0.015, cirlatex_scheme:0.1237,
   it_dealer:0.40, it_dist_vat:0.016364, it_dist:0.10,
   it_cd:0.030, it_dct:0.040, it_tod:0.030,
   it_sr:0.015, it_scheme:0.183736,
@@ -258,16 +702,16 @@ const SKUS_RAW = [
   {b:"peps",ic:"",p:"Peps Supreme 6\"",sqft:32.5,mrp:18999,rm:3295.50,fr:431.03,cs:105},
   {b:"peps",ic:"",p:"Peps Supreme 8\"",sqft:32.5,mrp:21555,rm:3867.17,fr:574.71,cs:105},
   {b:"peps",ic:"",p:"Peps Supreme 10\"",sqft:32.5,mrp:24999,rm:4473.30,fr:714.29,cs:105},
-  {b:"peps",ic:"",p:"Sanibel NL 6\"",sqft:32.5,mrp:25198,rm:4200.00,fr:431.03,cs:105},
-  {b:"peps",ic:"",p:"Sanibel MF 6\"",sqft:32.5,mrp:26999,rm:4850.00,fr:431.03,cs:105},
-  {b:"peps",ic:"",p:"Sanibel MF 8\"",sqft:32.5,mrp:30555,rm:5620.00,fr:574.71,cs:105},
-  {b:"peps",ic:"",p:"Sanibel MF 10\"",sqft:32.5,mrp:32999,rm:6180.00,fr:714.29,cs:105},
-  {b:"peps",ic:"",p:"Sanibel MF PT 6\"",sqft:32.5,mrp:33599,rm:5200.00,fr:431.03,cs:105},
-  {b:"peps",ic:"",p:"Sanibel MF PT 8\"",sqft:32.5,mrp:35999,rm:5900.00,fr:574.71,cs:105},
-  {b:"peps",ic:"",p:"Sanibel MF PT 10\"",sqft:32.5,mrp:39499,rm:6500.00,fr:714.29,cs:105},
-  {b:"peps",ic:"",p:"Sanibel MF ET 6\"",sqft:32.5,mrp:34599,rm:5500.00,fr:431.03,cs:105},
-  {b:"peps",ic:"",p:"Sanibel MF ET 8\"",sqft:32.5,mrp:36999,rm:6200.00,fr:574.71,cs:105},
-  {b:"peps",ic:"",p:"Sanibel MF ET 10\"",sqft:32.5,mrp:40499,rm:6800.00,fr:714.29,cs:105},
+  {b:"peps",ic:"RTBNSNBG78X60X06",p:"Sanibel NL 6\"",sqft:32.5,mrp:25198,rm:4155.58,fr:431.03,cs:313,cst:"premium"},
+  {b:"peps",ic:"RTBNSNPLMFNLPR78X60X06",p:"Sanibel MF 6\"",sqft:32.5,mrp:26999,rm:4532.33,fr:431.03,cs:313,cst:"premium"},
+  {b:"peps",ic:"RTBNSNPLMFNLGR78X60X08",p:"Sanibel MF 8\"",sqft:32.5,mrp:30555,rm:5044.76,fr:574.71,cs:313,cst:"premium"},
+  {b:"peps",ic:"RTBNSNPLMFNLGR78X60X10",p:"Sanibel MF 10\"",sqft:32.5,mrp:32999,rm:5658.88,fr:714.29,cs:313,cst:"premium"},
+  {b:"peps",ic:"RTBNSNPLMFPTPR78X60X06",p:"Sanibel MF PT 6\"",sqft:32.5,mrp:33599,rm:5016.70,fr:431.03,cs:313,cst:"premium"},
+  {b:"peps",ic:"RTBNSNPLMFPTPR78X60X08",p:"Sanibel MF PT 8\"",sqft:32.5,mrp:35999,rm:5158.37,fr:574.71,cs:313,cst:"premium"},
+  {b:"peps",ic:"RTBNSNPLMFPTPR78X60X10",p:"Sanibel MF PT 10\"",sqft:32.5,mrp:39499,rm:5767.43,fr:714.29,cs:313,cst:"premium"},
+  {b:"peps",ic:"RTBNSNPLMFETGR78X60X06",p:"Sanibel MF ET 6\"",sqft:32.5,mrp:34599,rm:4986.68,fr:431.03,cs:313,cst:"premium"},
+  {b:"peps",ic:"RTBNSNPLMFETGR78X60X08",p:"Sanibel MF ET 8\"",sqft:32.5,mrp:36999,rm:5126.72,fr:574.71,cs:313,cst:"premium"},
+  {b:"peps",ic:"RTBNSNPLMFETPR78X60X10",p:"Sanibel MF ET 10\"",sqft:32.5,mrp:40499,rm:5784.54,fr:714.29,cs:313,cst:"premium"},
   {b:"cirrus",ic:"HYPKBRZFMDB78X60X04",p:"Kozybreeze 4\"",sqft:32.5,mrp:9942,rm:2688.40,fr:287.36,cs:60},
   {b:"cirrus",ic:"HYPKBRZFMDB78X60X05",p:"Kozybreeze 5\"",sqft:32.5,mrp:12414,rm:2976.48,fr:357.14,cs:60},
   {b:"cirrus",ic:"HYPKBRZFMDB78X60X06",p:"Kozybreeze 6\"",sqft:32.5,mrp:15341,rm:3288.86,fr:431.03,cs:60},
@@ -322,7 +766,7 @@ const SKUS_RAW = [
   {b:"accessories",ic:"",p:"Tufted Pillow 24x15x05",sqft:1,mrp:1649,rm:190.66,fr:37.50,cs:0,mt:"Manuf"},
   {b:"accessories",ic:"",p:"Natural Latex Pillow 20x11",sqft:1,mrp:1869,rm:386.97,fr:15.79,cs:0,mt:"Manuf"},
   {b:"accessories",ic:"",p:"Fitted Sheets 78x60",sqft:1,mrp:1782,rm:451.20,fr:9.38,cs:0,mt:"BO"},
-  {b:"accessories",ic:"",p:"Micro Polyester Comforter",sqft:1,mrp:3506,rm:858.80,fr:55.56,cs:0,mt:"BO"},
+  {b:"accessories",ic:"",p:"Micro Polyester Comforter 90x100",sqft:1,mrp:3506,rm:858.80,fr:55.56,cs:0,mt:"BO"},
   {b:"accessories",ic:"",p:"Fleece Blanket 90x100",sqft:1,mrp:1649,rm:546.20,fr:27.27,cs:0,mt:"BO"}
 ];
 
@@ -346,11 +790,37 @@ const COMM_PATH = {
   peps_dist:['peps','dis_south','dist_margin'], peps_cd:['peps','dis_south','cd'],
   peps_dct:['peps','dis_south','dct'], peps_tod:['peps','dis_south','tod'],
   peps_sr:['peps','dis_south','sales_return'], peps_scheme:['peps','dis_south','scheme_rm_pct'],
+  peps_sanibel_dealer:['peps','sanibel','dealer_margin'], peps_sanibel_dist_vat:['peps','sanibel','dist_vat_diff'],
+  peps_sanibel_dist:['peps','sanibel','dist_margin'], peps_sanibel_cd:['peps','sanibel','cd'],
+  peps_sanibel_dct:['peps','sanibel','dct'], peps_sanibel_tod:['peps','sanibel','tod'],
+  peps_sanibel_sr:['peps','sanibel','sales_return'], peps_sanibel_scheme:['peps','sanibel','scheme_rm_pct'],
+  // spk_ct/zenimo/organica_crystal/grand_palais/vivah/dd share sanibel's
+  // dist_vat/dist_margin/cd/dct/tod/sales_return exactly (verified real
+  // source data, 2026-08-08) — only dealer_margin and scheme_rm_pct
+  // actually differ per line, so only those are pulled per bucket.
+  peps_spk_ct_dealer:['peps','spk_ct','dealer_margin'], peps_spk_ct_scheme:['peps','spk_ct','scheme_rm_pct'],
+  peps_zenimo_dealer:['peps','zenimo','dealer_margin'], peps_zenimo_scheme:['peps','zenimo','scheme_rm_pct'],
+  peps_organica_crystal_dealer:['peps','organica_crystal','dealer_margin'], peps_organica_crystal_scheme:['peps','organica_crystal','scheme_rm_pct'],
+  peps_grand_palais_dealer:['peps','grand_palais','dealer_margin'], peps_grand_palais_scheme:['peps','grand_palais','scheme_rm_pct'],
+  peps_vivah_dealer:['peps','vivah','dealer_margin'], peps_vivah_scheme:['peps','vivah','scheme_rm_pct'],
+  peps_dd_dealer:['peps','dd','dealer_margin'], peps_dd_scheme:['peps','dd','scheme_rm_pct'],
   cirrus_dealer:['cirrus','dis_south','dealer_margin'], cirrus_dist_vat:['cirrus','dis_south','dist_vat_diff'],
   cirrus_dist:['cirrus','dis_south','dist_margin'], cirrus_cd:['cirrus','dis_south','cd'],
   cirrus_dct:['cirrus','dis_south','dct'], cirrus_tod:['cirrus','dis_south','tod'],
   cirrus_sr:['cirrus','dis_south','sales_return'], cirrus_scheme:['cirrus','dis_south','scheme_rm_pct'],
   inspree_dealer:['cirrus','inspree','dealer_margin'], inspree_scheme:['cirrus','inspree','scheme_rm_pct'],
+  vista_dealer:['cirrus','vista_foam','dealer_margin'], vista_dist_vat:['cirrus','vista_foam','dist_vat_diff'],
+  vista_dist:['cirrus','vista_foam','dist_margin'], vista_cd:['cirrus','vista_foam','cd'],
+  vista_dct:['cirrus','vista_foam','dct'], vista_tod:['cirrus','vista_foam','tod'],
+  vista_sr:['cirrus','vista_foam','sales_return'], vista_scheme:['cirrus','vista_foam','scheme_rm_pct'],
+  caprina_dealer:['cirrus','caprina','dealer_margin'], caprina_dist_vat:['cirrus','caprina','dist_vat_diff'],
+  caprina_dist:['cirrus','caprina','dist_margin'], caprina_cd:['cirrus','caprina','cd'],
+  caprina_dct:['cirrus','caprina','dct'], caprina_tod:['cirrus','caprina','tod'],
+  caprina_sr:['cirrus','caprina','sales_return'], caprina_scheme:['cirrus','caprina','scheme_rm_pct'],
+  cirlatex_dealer:['cirrus','cirrus_latex','dealer_margin'], cirlatex_dist_vat:['cirrus','cirrus_latex','dist_vat_diff'],
+  cirlatex_dist:['cirrus','cirrus_latex','dist_margin'], cirlatex_cd:['cirrus','cirrus_latex','cd'],
+  cirlatex_dct:['cirrus','cirrus_latex','dct'], cirlatex_tod:['cirrus','cirrus_latex','tod'],
+  cirlatex_sr:['cirrus','cirrus_latex','sales_return'], cirlatex_scheme:['cirrus','cirrus_latex','scheme_rm_pct'],
   it_dealer:['italiano','dis_south','dealer_margin'], it_dist_vat:['italiano','dis_south','dist_vat_diff'],
   it_dist:['italiano','dis_south','dist_margin'], it_cd:['italiano','dis_south','cd'],
   it_dct:['italiano','dis_south','dct'], it_tod:['italiano','dis_south','tod'],
@@ -378,9 +848,17 @@ function applyServerSkus(list){
     byProduct[item.product]=item;
   });
   let updated = 0;
+  const matched = new Set();
   SKUS_BASE.forEach(s=>{
     const item = (s.ic && byCode[s.ic]) || byProduct[s.p];
     if(item){
+      matched.add(item);
+      // MRP is a mutable, month-to-month figure (server.py/sku_master.py
+      // is the source of truth) — must be refreshed here too, not just
+      // rm_cost, or the page keeps showing whatever MRP was baked into
+      // SKUS_RAW at last build time even after a real MRP update.
+      s.mrp = item.mrp;
+      if(item.item_code) s.ic = item.item_code;
       s.rm = item.rm_cost;
       // rm_source: "ledger:<month>" (Ramco-verified) or "estimated:..."
       // (no item_code, or item_code with no ledger match yet) — never
@@ -388,34 +866,87 @@ function applyServerSkus(list){
       s.rm_source = item.rm_source;
       s.rm_from_ramco = (item.rm_source||'').startsWith('ledger');
       if(item.rm_source && item.rm_source.startsWith('ledger')) updated++;
+      // Real colour, parsed server-side from the item's own ledger
+      // description (colour_lookup.py) — null for SKUs whose ledger
+      // description doesn't state one (e.g. Italiano), never guessed.
+      s.colour = item.colour || null;
+      // cost_structure ("premium" = Sanibel/Ardene-tier 33% dealer margin
+      // policy, see calcSKU()) — sync from the server when present so a
+      // sku_master.py-side change doesn't require an HTML rebuild too.
+      if(item.cost_structure) s.cst = item.cost_structure;
+      // channel_key (ck) — selects a Cirrus sub-branch (inspree/vista_foam/
+      // caprina/cirrus_latex), see calcSKU(). BUG FIXED 2026-08-08: this was
+      // never synced here at all, so every appended (non-embedded) Cirrus
+      // sub-branch SKU silently fell through to the plain-Cirrus 30% policy
+      // instead of its real one — affected ~800 new Inspree-family size
+      // variants plus all of Vista Foam/Soft/Caprina Gel/HR/Cirrus Latex.
+      // Matched entries already had ck hardcoded correctly in SKUS_RAW
+      // (e.g. the original Inspree 4" tracked SKUs), so this only matters
+      // for entries that reach this matched branch via a real ck update.
+      if(item.channel_key) s.ck = item.channel_key;
+      // rate_group (rg) — selects a South-line-specific commercial policy
+      // (SPK-CT/Zenimo/Organica+Crystal/Grand Palais/Vivah/DD), see
+      // calcSKU(). Only present on lines that don't share Sanibel's exact
+      // policy — absent (undefined) is correct for Sanibel/Ardene itself.
+      if(item.rg) s.rg = item.rg;
+      // freight_south/consumer_scheme are real per-line, per-height ₹
+      // figures (verified 2026-08-08) — must sync on ALREADY-matched
+      // entries too, not just newly-appended ones, or a sku_master.py-side
+      // correction to an SKU that predates this session (e.g. the
+      // original 9 tracked Sanibel entries) would never reach the page.
+      if(item.freight_south!=null) s.fr = item.freight_south;
+      if(item.consumer_scheme!=null) s.cs = item.consumer_scheme;
     }
   });
-  skus = SKUS_BASE.map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:s.rm_from_ramco||false, rm_source:s.rm_source}));
+  // Any server SKU with no match in the embedded fallback is genuinely
+  // new (e.g. the size-variant expansions) — append it so the product
+  // count and filters reflect the full live catalog instead of silently
+  // capping at whatever was baked into the page at last build time.
+  // cost_structure carries the "premium" tier flag through for lines
+  // like Sanibel/Ardene/SPK CT/etc. — without it, new premium-tier
+  // variants would silently price at the standard Peps commercial
+  // policy instead of their real (higher dealer-margin) one.
+  list.forEach(item=>{
+    if(matched.has(item)) return;
+    SKUS_BASE.push({
+      b:item.brand, ic:item.item_code||"", p:item.product, sqft:item.sqft,
+      mrp:item.mrp, rm:item.rm_cost, fr:item.freight_south, cs:item.consumer_scheme,
+      rm_source:item.rm_source, rm_from_ramco:(item.rm_source||'').startsWith('ledger'),
+      colour:item.colour||null, cst:item.cost_structure||undefined, rg:item.rg||undefined,
+      ck:item.channel_key||undefined,
+    });
+    if(item.rm_source && item.rm_source.startsWith('ledger')) updated++;
+  });
+  skus = SKUS_BASE.map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:s.rm_from_ramco||false, rm_source:s.rm_source, colour:s.colour||null}));
   return updated;
 }
 
 async function connectToEngine(){
-  const badge = document.getElementById('rate-badge');
-  const status = document.getElementById('ramco-status');
   try{
+    // 15s, not 3s: this fetch now carries 275 SKUs (up from 72) plus a
+    // per-item RM-cost DB lookup server-side, and the browser may be on
+    // a different machine than the server over real LAN latency — a
+    // short timeout here silently strands the page on the stale
+    // embedded fallback data with no visible sign anything went wrong.
     const [skuResp, cfgResp] = await Promise.all([
-      fetch('/api/skus', {signal: AbortSignal.timeout(3000)}),
-      fetch('/api/config', {signal: AbortSignal.timeout(3000)}),
+      fetch('/api/skus', {signal: AbortSignal.timeout(15000)}),
+      fetch('/api/config', {signal: AbortSignal.timeout(15000)}),
     ]);
     if(!skuResp.ok || !cfgResp.ok) throw new Error('non-200 response');
     const [skuData, cfgData] = await Promise.all([skuResp.json(), cfgResp.json()]);
     applyServerConfig(cfgData);
-    const updated = applyServerSkus(skuData);
-    if(badge){ badge.textContent = 'Rates: Live (engine)'; badge.title = 'Connected to server.py — RM cost pulled from Ramco ledger where available'; }
-    if(status){
-      status.innerHTML = `<strong class="msg-success">Connected to engine</strong><br>${updated} SKUs have Ramco-ledger RM cost; others use the last known value.`;
-    }
+    applyServerSkus(skuData);
   }catch(e){
-    if(badge){ badge.textContent = 'Rates: Static (offline)'; badge.title = 'server.py not reachable — showing values embedded in this file'; }
-    if(status){ status.textContent = 'Engine server not reachable — using manual/embedded RM costs'; }
+    // Server not reachable (or timed out) — falls back to the embedded
+    // static data, but this is a real, diagnosable condition, not a
+    // silent one: log it and tell the user, so "why does this show old
+    // data" is never a mystery again.
+    console.warn('connectToEngine: could not load live data from the server, using embedded fallback data.', e);
+    toast('Could not reach the engine server — showing built-in fallback data, not live figures');
   }
   render();
   if(document.getElementById('page-params').classList.contains('active')) renderParams();
+  if(document.getElementById('page-material').classList.contains('active')) mcApplyFilters();
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -424,11 +955,34 @@ async function connectToEngine(){
 function calcSKU(s){
   const f = FINANCE; const gst = f.gst_pct;
   const mrp = s.mrp_live; const rm = s.rm_live;
-  const b = s.b; const ck = s.ck||null;
+  const b = s.b; const ck = s.ck||null; const rg = s.rg||null;
 
   // Channel policy
   let p;
-  if(b==="peps"){
+  if(b==="peps"&&rg){
+    // South-line-specific rate group (SPK-CT/Zenimo/Organica+Crystal/
+    // Grand Palais/Vivah/Double Decker) — each has its own real dealer
+    // margin + scheme rate, verified 2026-08-08 against Contribution/1 -
+    // Peps Product Contribution dt 14-07-2026.xlsx. dist_vat/dist_margin/
+    // cd/dct/tod/sales_return are identical to the sanibel bucket for all
+    // of these (confirmed in the same source), only dealer_margin and
+    // scheme_rm differ per group — reused from the sanibel bucket rather
+    // than duplicated per group.
+    const rgDealer = {spk_ct:COMM.peps_spk_ct_dealer, zenimo:COMM.peps_zenimo_dealer,
+      organica_crystal:COMM.peps_organica_crystal_dealer, grand_palais:COMM.peps_grand_palais_dealer,
+      vivah:COMM.peps_vivah_dealer, dd:COMM.peps_dd_dealer}[rg];
+    const rgScheme = {spk_ct:COMM.peps_spk_ct_scheme, zenimo:COMM.peps_zenimo_scheme,
+      organica_crystal:COMM.peps_organica_crystal_scheme, grand_palais:COMM.peps_grand_palais_scheme,
+      vivah:COMM.peps_vivah_scheme, dd:COMM.peps_dd_scheme}[rg];
+    p={dm:rgDealer,dv:COMM.peps_sanibel_dist_vat,di:COMM.peps_sanibel_dist,
+       cd:COMM.peps_sanibel_cd,dct:COMM.peps_sanibel_dct,tod:COMM.peps_sanibel_tod,
+       sr:COMM.peps_sanibel_sr,scheme_rm:rgScheme};
+  } else if(b==="peps"&&s.cst==="premium"){
+    // Sanibel/Ardene family — 33% dealer margin, not Peps' standard 30%
+    p={dm:COMM.peps_sanibel_dealer,dv:COMM.peps_sanibel_dist_vat,di:COMM.peps_sanibel_dist,
+       cd:COMM.peps_sanibel_cd,dct:COMM.peps_sanibel_dct,tod:COMM.peps_sanibel_tod,
+       sr:COMM.peps_sanibel_sr,scheme_rm:COMM.peps_sanibel_scheme};
+  } else if(b==="peps"){
     p={dm:COMM.peps_dealer,dv:COMM.peps_dist_vat,di:COMM.peps_dist,
        cd:COMM.peps_cd,dct:COMM.peps_dct,tod:COMM.peps_tod,
        sr:COMM.peps_sr,scheme_rm:COMM.peps_scheme};
@@ -436,6 +990,27 @@ function calcSKU(s){
     p={dm:COMM.inspree_dealer,dv:COMM.cirrus_dist_vat,di:COMM.cirrus_dist,
        cd:COMM.cirrus_cd,dct:COMM.cirrus_dct,tod:COMM.cirrus_tod,
        sr:COMM.cirrus_sr,scheme_rm:COMM.inspree_scheme};
+  } else if(b==="cirrus"&&ck==="vista_foam"){
+    // Vista Foam — real 20% dealer margin + its own DCT/scheme rate,
+    // derived from source_data/2 - Cirrus Foam Product Contribution
+    // dt 06-02-2026.xlsx (2026-08-08), not the standard Cirrus terms.
+    p={dm:COMM.vista_dealer,dv:COMM.vista_dist_vat,di:COMM.vista_dist,
+       cd:COMM.vista_cd,dct:COMM.vista_dct,tod:COMM.vista_tod,
+       sr:COMM.vista_sr,scheme_rm:COMM.vista_scheme};
+  } else if(b==="cirrus"&&ck==="caprina"){
+    // Vista Soft/Caprina Gel/Caprina HR — same 20% dealer margin family
+    // as Vista Foam but a distinct (lower) scheme rate; see vista_foam.
+    p={dm:COMM.caprina_dealer,dv:COMM.caprina_dist_vat,di:COMM.caprina_dist,
+       cd:COMM.caprina_cd,dct:COMM.caprina_dct,tod:COMM.caprina_tod,
+       sr:COMM.caprina_sr,scheme_rm:COMM.caprina_scheme};
+  } else if(b==="cirrus"&&ck==="cirrus_latex"){
+    // Cirrus Latex ("Pin Core Latex") — real rates verified 2026-08-08
+    // against Contribution/2 - Cirrus Foam Product Contribution dt
+    // 14-07-2026.xlsx's " Cirrus Latex Mattress" tab. DCT (3%) is its
+    // own distinct rate, not the standard Cirrus 2.85%.
+    p={dm:COMM.cirlatex_dealer,dv:COMM.cirlatex_dist_vat,di:COMM.cirlatex_dist,
+       cd:COMM.cirlatex_cd,dct:COMM.cirlatex_dct,tod:COMM.cirlatex_tod,
+       sr:COMM.cirlatex_sr,scheme_rm:COMM.cirlatex_scheme};
   } else if(b==="cirrus"){
     p={dm:COMM.cirrus_dealer,dv:COMM.cirrus_dist_vat,di:COMM.cirrus_dist,
        cd:COMM.cirrus_cd,dct:COMM.cirrus_dct,tod:COMM.cirrus_tod,
@@ -469,10 +1044,38 @@ function calcSKU(s){
   const net_sales     = nbr-sales_return-cd-dct-tod-scheme;
 
   // Costs
-  let dl,admin_ohs,mkt_ohs,adv,dep,tax_rate;
-  if(b==="peps"){
+  let dl,admin_ohs,mkt_ohs,adv,dep,tax_rate,mfgOhsPctOverride,financeCostPctOverride;
+  if(b==="peps"&&rg){
+    // South lines (SPK-CT/Zenimo/Organica+Crystal/Grand Palais/Vivah/DD)
+    // — %-of-RM overheads verified 2026-08-08 against the real Contribution
+    // file. All share the same direct labour/mfg ohs/marketing/advt/
+    // finance cost/depreciation rate; admin OHS is the one that splits
+    // (SPK-CT matches Sanibel/Ardene's 23.71%, the rest use 12.52%).
+    dl=rm*f.direct_labour_pct_south;
+    admin_ohs=rm*(rg==="spk_ct"?f.admin_ohs_pct_it:f.admin_ohs_pct_south);
+    mkt_ohs=rm*f.mktg_salary_pct_south; adv=rm*f.adv_promo_pct_south;
+    dep=rm*f.depreciation_pct_south; tax_rate=f.direct_tax_rate;
+    mfgOhsPctOverride=f.mfg_ohs_pct_south; financeCostPctOverride=f.finance_cost_pct_south;
+  } else if(b==="peps"&&s.cst==="premium"){
+    // Sanibel/Ardene family — %-of-RM overheads, real rates verified
+    // 2026-08-08 against Contribution/1 - Peps Product Contribution dt
+    // 14-07-2026.xlsx (previously approximated from Italiano's rates).
+    dl=rm*f.direct_labour_pct_south; admin_ohs=rm*f.admin_ohs_pct_it;
+    mkt_ohs=rm*f.mktg_salary_pct_south; adv=rm*f.adv_promo_pct_south;
+    dep=rm*f.depreciation_pct_south; tax_rate=f.direct_tax_rate;
+    mfgOhsPctOverride=f.mfg_ohs_pct_south; financeCostPctOverride=f.finance_cost_pct_south;
+  } else if(b==="peps"){
     dl=f.direct_labour_spring; admin_ohs=f.admin_ohs_lump;
     mkt_ohs=f.mktg_ohs_lump; adv=0; dep=0; tax_rate=0;
+  } else if(b==="cirrus"&&ck==="cirrus_latex"){
+    // Cirrus Latex — real %s verified 2026-08-08 match the "south" set
+    // (Peps South lines), not plain Cirrus's own rates. Advertising is
+    // genuinely 0 for this line in the source (matches plain cirrus's
+    // adv=0 too, just not the rest of its percentages).
+    dl=rm*f.direct_labour_pct_south; admin_ohs=rm*f.admin_ohs_pct_south;
+    mkt_ohs=rm*f.mktg_salary_pct_south; adv=0;
+    dep=rm*f.depreciation_pct_south; tax_rate=f.direct_tax_rate;
+    mfgOhsPctOverride=f.mfg_ohs_pct_south; financeCostPctOverride=f.finance_cost_pct_south;
   } else if(b==="cirrus"){
     dl=rm*f.direct_labour_pct_cirrus; admin_ohs=rm*f.admin_ohs_pct;
     mkt_ohs=rm*f.mktg_salary_pct; adv=0; dep=rm*f.depreciation_pct_cirrus; tax_rate=f.direct_tax_rate;
@@ -499,10 +1102,10 @@ function calcSKU(s){
            fc,dep,ebt,taxes,nm,nm_pct,nm_sqft:s.sqft?nm/s.sqft:0};
   }
 
-  const mfg_ohs = rm*f.mfg_ohs_pct;
+  const mfg_ohs = rm*(mfgOhsPctOverride!==undefined?mfgOhsPctOverride:f.mfg_ohs_pct);
   const gross   = net_sales-dl-rm-s.cs-mfg_ohs;
   const ebitda  = gross-mkt_ohs-adv-s.fr-admin_ohs;
-  const fc      = rm*f.finance_cost_pct;
+  const fc      = rm*(financeCostPctOverride!==undefined?financeCostPctOverride:f.finance_cost_pct);
   const ebt     = ebitda-fc-dep;
   const taxes   = ebt*tax_rate;
   const nm      = ebt-taxes;
@@ -513,7 +1116,31 @@ function calcSKU(s){
          fc,dep,ebt,taxes,nm,nm_pct,nm_sqft:s.sqft?nm/s.sqft:0};
 }
 
-function runAll(){return skus.map(s=>({...s,...calcSKU(s)}));}
+// Peps South-line display order — must follow Contribution/1 - Peps
+// Product Contribution dt 14-07-2026.xlsx's own "Abstract" sheet order
+// (user-specified 2026-08-08), not insertion/alphabetical order. Listed
+// longest-pattern-first so e.g. "Sanibel MF ET" matches before the
+// shorter "Sanibel MF" (which would otherwise catch it first as a
+// prefix). Products not matching any pattern keep their existing
+// relative order (stable sort), appended after the South lines.
+const SOUTH_LINE_ORDER = [
+  ['Peps Comfort',0], ['Peps Supreme',1], ['SPK-CT',2], ['SPK CT',2],
+  ['Sanibel MF ET',5], ['Sanibel MF PT',4], ['Sanibel MF',3],
+  ['Ardene MF ET',8], ['Ardene MF PT',7], ['Ardene MF',6],
+  ['Spine Guard',9],
+  ['Organica',10], ['Zenimo PT',12], ['Zenimo',11],
+  ['Crystal',13], ['Grand Palais',14], ['Vivah',15], ['Double Decker',16],
+].sort((a,b)=>b[0].length-a[0].length);
+function southLineOrder(product){
+  for(const [pat,ord] of SOUTH_LINE_ORDER){ if(product.startsWith(pat)) return ord; }
+  return 999;
+}
+function runAll(){
+  return skus.map(s=>({...s,...calcSKU(s)}))
+    .map((r,i)=>({r,i,ord:southLineOrder(r.p)}))
+    .sort((a,b)=>a.ord-b.ord || a.i-b.i)
+    .map(x=>x.r);
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // RENDER
@@ -747,14 +1374,31 @@ function closeDetail(e){
 // versa, since both apply simultaneously to the table (see currentFilter).
 function _setActiveInGroup(groupSelector){
   document.querySelectorAll(groupSelector+' .nav-item').forEach(x=>x.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  // Only a real click carries a live `event` — programmatic calls (e.g. R&D
+  // opening the Materials subtab after an await) have none; skip the
+  // highlight rather than throw.
+  if(typeof event !== 'undefined' && event && event.currentTarget) event.currentTarget.classList.add('active');
 }
 
-function showPage(p){
+function showPage(p, skipRdCleanup){
+  // Leaving the R&D workspace for a different top-level tab must restore
+  // whatever product Material Costing had selected before the R&D detour
+  // — mcState/mcBomLines are shared globals, reused (not forked) by R&D
+  // so its BOM editor/waterfall are the exact same code, not a copy.
+  // R&D's own internal navigation (opening/reopening a workspace, hopping
+  // to Compare and back) also routes through here to reuse the Materials
+  // subtab — that must NOT trigger this same cleanup, or it would tear
+  // down the very draft context it's trying to enter. Those call sites
+  // pass skipRdCleanup=true; real user nav (sidebar clicks) never does.
+  if(!skipRdCleanup && p!=='rd' && typeof rdCleanupWorkspace==='function') rdCleanupWorkspace();
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   _setActiveInGroup('.nav-group-view');
+  // The Brands/Filters sidebar sections only apply to the NM Abstract table.
+  document.getElementById('sidebar-nm-filters').classList.toggle('mc-hidden', p==='material'||p==='rd');
   if(p==='params')renderParams();
+  if(p==='material')mcApplyFilters();
+  if(p==='rd')rdInit();
 }
 
 function filterBrand(b){
@@ -869,6 +1513,1429 @@ function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MATERIAL COSTING TAB — Abstract (read-only) + Materials (fully
+// editable what-if) waterfall, plus an editable Bill of Materials backed
+// by /api/bom/<item_code> and /api/item-search. The override-cascade
+// engine below (MC_ROW_SPEC/mcEvalWaterfall) is ported from
+// Material_Costing_Tab_Mockup.html, already verified line-for-line
+// against engine.py there. Kept entirely separate from calcSKU() above
+// on purpose — editing this can never change the existing NM Abstract
+// tab's numbers.
+// ═══════════════════════════════════════════════════════════════════
+const MC_ROW_SPEC = [
+  {key:'mrp', label:'A. MRP', group:'Revenue', pct:'dash', neg:false},
+  {key:'dealermargin', label:'B. Dealer margin', pct:'input', neg:true},
+  {key:'dealerprice', label:'C. Dealer price', pct:'dash', neg:false},
+  {key:'distvat', label:'Dist. VAT diff', pct:'input', neg:true},
+  {key:'distmargin', label:'Dist. margin', pct:'input', neg:true},
+  {key:'distprice', label:'Dist. price', pct:'dash', neg:false},
+  {key:'cgst', label:'CGST', pct:'input', neg:true},
+  {key:'sgst', label:'SGST', pct:'dash', neg:true},
+  {key:'nbr', label:'Net Billing Rate', pct:'ratio', ratioOf:(s)=>s.mrp?s.nbr/s.mrp*100:0, neg:false, subtotal:true},
+
+  {key:'salesreturn', label:'Sales return', group:'Deductions', pct:'input', neg:true},
+  {key:'cd', label:'Cash discount (CD)', pct:'input', neg:true},
+  {key:'dct', label:'DCT', pct:'input', neg:true},
+  {key:'tod', label:'TOD', pct:'input', neg:true},
+  {key:'scheme', label:'Scheme', pct:'input', neg:true},
+  {key:'netsales', label:'Net Sales', pct:'ratio', ratioOf:(s)=>s.mrp?s.netsales/s.mrp*100:0, neg:false, subtotal:true},
+
+  {key:'directlabour', label:'Direct labour', group:'Costs', pct:'variable', neg:true},
+  {key:'rm', label:'RM cost', pct:'ratio', ratioOf:(s)=>s.rmPct, neg:true},
+  {key:'consumerscheme', label:'Consumer scheme', pct:'dash', neg:true},
+  {key:'mfgohs', label:'Mfg overhead', pct:'input', neg:true},
+  {key:'grossmargin', label:'Gross Margin', pct:'dash', neg:false, subtotal:true},
+  {key:'mktgohs', label:'Marketing OHS', pct:'variable', neg:true},
+  {key:'advpromo', label:'Adv & Promo', pct:'input', neg:true},
+  {key:'freightohs', label:'Freight OHS', pct:'dash', neg:true},
+  {key:'adminohs', label:'Admin OHS', pct:'variable', neg:true},
+  {key:'ebitda', label:'EBITDA', pct:'ratio', ratioOf:(s)=>s.mrp?s.ebitda/s.mrp*100:0, neg:false, subtotal:true},
+
+  {key:'financecost', label:'Finance cost', group:'Below EBITDA', pct:'input', neg:true},
+  {key:'depreciation', label:'Depreciation', pct:'input', neg:true},
+  {key:'ebt', label:'EBT', pct:'dash', neg:false, subtotal:true},
+  {key:'directtaxes', label:'Direct taxes', pct:'input', neg:true},
+  {key:'nm', label:'Net Margin', pct:'ratio', ratioOf:(s)=>s.netMarginPct*100, pill:true, neg:false, final:true},
+];
+
+// Converts a real sku (an entry of `skus`, as consumed by calcSKU) into
+// the ROW_SPEC engine's expected shape. Mirrors calcSKU()'s per-brand
+// branching field-for-field (same COMM/FINANCE sources) so the two never
+// drift apart in intent, but is a fully separate function — it can never
+// alter calcSKU()'s own output.
+function mcAdapt(s){
+  const f = FINANCE;
+  const b = s.b, ck = s.ck||null, rg = s.rg||null;
+  let pol, dealerPct, distPct;
+  let directLabour=null, directLabourPct=null, mfgOhsPct=0, mktgLump=null, mktgPct=null,
+      advPromoPct=0, adminLump=null, adminPct=null, depreciationPct=0, taxRate=0,
+      financeCostPct=f.finance_cost_pct;
+
+  if(b==="peps" && rg){
+    // South lines (SPK-CT/Zenimo/Organica+Crystal/Grand Palais/Vivah/DD)
+    // — see calcSKU()'s matching branch for the source citation.
+    const rgDealer = {spk_ct:COMM.peps_spk_ct_dealer, zenimo:COMM.peps_zenimo_dealer,
+      organica_crystal:COMM.peps_organica_crystal_dealer, grand_palais:COMM.peps_grand_palais_dealer,
+      vivah:COMM.peps_vivah_dealer, dd:COMM.peps_dd_dealer}[rg];
+    const rgScheme = {spk_ct:COMM.peps_spk_ct_scheme, zenimo:COMM.peps_zenimo_scheme,
+      organica_crystal:COMM.peps_organica_crystal_scheme, grand_palais:COMM.peps_grand_palais_scheme,
+      vivah:COMM.peps_vivah_scheme, dd:COMM.peps_dd_scheme}[rg];
+    pol={dv:COMM.peps_sanibel_dist_vat, cd:COMM.peps_sanibel_cd, dct:COMM.peps_sanibel_dct,
+         tod:COMM.peps_sanibel_tod, salesReturn:COMM.peps_sanibel_sr, schemeRmPct:rgScheme};
+    dealerPct=rgDealer*100; distPct=COMM.peps_sanibel_dist*100;
+    directLabourPct=f.direct_labour_pct_south;
+    adminPct=(rg==="spk_ct"?f.admin_ohs_pct_it:f.admin_ohs_pct_south);
+    mfgOhsPct=f.mfg_ohs_pct_south; mktgPct=f.mktg_salary_pct_south;
+    advPromoPct=f.adv_promo_pct_south; depreciationPct=f.depreciation_pct_south;
+    taxRate=f.direct_tax_rate; financeCostPct=f.finance_cost_pct_south;
+  } else if(b==="peps" && s.cst==="premium"){
+    pol={dv:COMM.peps_sanibel_dist_vat, cd:COMM.peps_sanibel_cd, dct:COMM.peps_sanibel_dct,
+         tod:COMM.peps_sanibel_tod, salesReturn:COMM.peps_sanibel_sr, schemeRmPct:COMM.peps_sanibel_scheme};
+    dealerPct=COMM.peps_sanibel_dealer*100; distPct=COMM.peps_sanibel_dist*100;
+    directLabourPct=f.direct_labour_pct_south; mfgOhsPct=f.mfg_ohs_pct_south;
+    adminPct=f.admin_ohs_pct_it; mktgPct=f.mktg_salary_pct_south;
+    advPromoPct=f.adv_promo_pct_south; depreciationPct=f.depreciation_pct_south; taxRate=f.direct_tax_rate;
+    financeCostPct=f.finance_cost_pct_south;
+  } else if(b==="peps"){
+    pol={dv:COMM.peps_dist_vat, cd:COMM.peps_cd, dct:COMM.peps_dct,
+         tod:COMM.peps_tod, salesReturn:COMM.peps_sr, schemeRmPct:COMM.peps_scheme};
+    dealerPct=COMM.peps_dealer*100; distPct=COMM.peps_dist*100;
+    directLabour=f.direct_labour_spring; mfgOhsPct=f.mfg_ohs_pct;
+    adminLump=f.admin_ohs_lump; mktgLump=f.mktg_ohs_lump;
+  } else if(b==="cirrus" && ck==="inspree"){
+    pol={dv:COMM.cirrus_dist_vat, cd:COMM.cirrus_cd, dct:COMM.cirrus_dct,
+         tod:COMM.cirrus_tod, salesReturn:COMM.cirrus_sr, schemeRmPct:COMM.inspree_scheme};
+    dealerPct=COMM.inspree_dealer*100; distPct=COMM.cirrus_dist*100;
+    directLabourPct=f.direct_labour_pct_cirrus; mfgOhsPct=f.mfg_ohs_pct;
+    adminPct=f.admin_ohs_pct; mktgPct=f.mktg_salary_pct;
+    depreciationPct=f.depreciation_pct_cirrus; taxRate=f.direct_tax_rate;
+  } else if(b==="cirrus" && ck==="vista_foam"){
+    pol={dv:COMM.vista_dist_vat, cd:COMM.vista_cd, dct:COMM.vista_dct,
+         tod:COMM.vista_tod, salesReturn:COMM.vista_sr, schemeRmPct:COMM.vista_scheme};
+    dealerPct=COMM.vista_dealer*100; distPct=COMM.vista_dist*100;
+    directLabourPct=f.direct_labour_pct_cirrus; mfgOhsPct=f.mfg_ohs_pct;
+    adminPct=f.admin_ohs_pct; mktgPct=f.mktg_salary_pct;
+    depreciationPct=f.depreciation_pct_cirrus; taxRate=f.direct_tax_rate;
+  } else if(b==="cirrus" && ck==="caprina"){
+    pol={dv:COMM.caprina_dist_vat, cd:COMM.caprina_cd, dct:COMM.caprina_dct,
+         tod:COMM.caprina_tod, salesReturn:COMM.caprina_sr, schemeRmPct:COMM.caprina_scheme};
+    dealerPct=COMM.caprina_dealer*100; distPct=COMM.caprina_dist*100;
+    directLabourPct=f.direct_labour_pct_cirrus; mfgOhsPct=f.mfg_ohs_pct;
+    adminPct=f.admin_ohs_pct; mktgPct=f.mktg_salary_pct;
+    depreciationPct=f.depreciation_pct_cirrus; taxRate=f.direct_tax_rate;
+  } else if(b==="cirrus" && ck==="cirrus_latex"){
+    pol={dv:COMM.cirlatex_dist_vat, cd:COMM.cirlatex_cd, dct:COMM.cirlatex_dct,
+         tod:COMM.cirlatex_tod, salesReturn:COMM.cirlatex_sr, schemeRmPct:COMM.cirlatex_scheme};
+    dealerPct=COMM.cirlatex_dealer*100; distPct=COMM.cirlatex_dist*100;
+    directLabourPct=f.direct_labour_pct_south; mfgOhsPct=f.mfg_ohs_pct_south;
+    adminPct=f.admin_ohs_pct_south; mktgPct=f.mktg_salary_pct_south;
+    depreciationPct=f.depreciation_pct_south; taxRate=f.direct_tax_rate;
+    financeCostPct=f.finance_cost_pct_south;
+  } else if(b==="cirrus"){
+    pol={dv:COMM.cirrus_dist_vat, cd:COMM.cirrus_cd, dct:COMM.cirrus_dct,
+         tod:COMM.cirrus_tod, salesReturn:COMM.cirrus_sr, schemeRmPct:COMM.cirrus_scheme};
+    dealerPct=COMM.cirrus_dealer*100; distPct=COMM.cirrus_dist*100;
+    directLabourPct=f.direct_labour_pct_cirrus; mfgOhsPct=f.mfg_ohs_pct;
+    adminPct=f.admin_ohs_pct; mktgPct=f.mktg_salary_pct;
+    depreciationPct=f.depreciation_pct_cirrus; taxRate=f.direct_tax_rate;
+  } else if(b==="italiano"){
+    pol={dv:COMM.it_dist_vat, cd:COMM.it_cd, dct:COMM.it_dct,
+         tod:COMM.it_tod, salesReturn:COMM.it_sr, schemeRmPct:COMM.it_scheme};
+    dealerPct=COMM.it_dealer*100; distPct=COMM.it_dist*100;
+    directLabourPct=f.direct_labour_pct_it; mfgOhsPct=f.mfg_ohs_pct;
+    adminPct=f.admin_ohs_pct_it; mktgPct=f.mktg_salary_pct_it;
+    advPromoPct=f.adv_promo_pct_it; depreciationPct=f.depreciation_pct_cirrus; taxRate=f.direct_tax_rate;
+  } else {
+    const isBO = (s.mt==="BO");
+    pol={dv:0, cd:COMM.acc_cd, dct:0, tod:0, salesReturn:COMM.acc_sr, schemeRmPct:0};
+    dealerPct=COMM.acc_dealer*100; distPct=0;
+    directLabourPct=isBO?0:f.direct_labour_pct_acc; mfgOhsPct=isBO?0:f.mfg_ohs_pct;
+    adminPct=f.admin_ohs_pct; mktgPct=f.mktg_salary_pct;
+    depreciationPct=f.depreciation_pct; taxRate=f.direct_tax_rate;
+  }
+
+  return {mrp:s.mrp_live, rm:s.rm_live, sqft:s.sqft, policy:pol, dealerPct, distPct,
+          directLabour, directLabourPct, consumerScheme:s.cs, mfgOhsPct,
+          mktgLump, mktgPct, advPromoPct, freightOhs:s.fr,
+          adminLump, adminPct, depreciationPct, taxRate, financeCostPct};
+}
+
+function mcDefaultPctFor(p, key){
+  const pol=p.policy;
+  switch(key){
+    case 'dealermargin': return p.dealerPct;
+    case 'distvat': return pol.dv*100;
+    case 'distmargin': return p.distPct;
+    case 'cgst': return FINANCE.gst_pct*100;
+    case 'salesreturn': return pol.salesReturn*100;
+    case 'cd': return pol.cd*100;
+    case 'dct': return pol.dct*100;
+    case 'tod': return pol.tod*100;
+    case 'scheme': return pol.schemeRmPct*100;
+    case 'mfgohs': return p.mfgOhsPct*100;
+    case 'advpromo': return p.advPromoPct*100;
+    case 'financecost': return p.financeCostPct*100;
+    case 'depreciation': return p.depreciationPct*100;
+    case 'directtaxes': return p.taxRate*100;
+    case 'directlabour': return p.directLabourPct!=null ? p.directLabourPct*100 : null;
+    case 'mktgohs': return p.mktgPct!=null ? p.mktgPct*100 : null;
+    case 'adminohs': return p.adminPct!=null ? p.adminPct*100 : null;
+    default: return null;
+  }
+}
+
+// Same math as calcSKU()/engine.py, but every line can be pinned by the
+// user as a % or as a direct ₹ amount; anything downstream of a pinned
+// line uses the pinned value instead of recomputing it.
+function mcEvalWaterfall(p, ov){
+  ov = ov || {};
+  const s={}, pol=p.policy, GST=FINANCE.gst_pct;
+  const amtOf=(key,computed)=>(ov[key]&&ov[key].kind==='amt')?ov[key].value:computed;
+  const pctOf=(key,def)=>(ov[key]&&ov[key].kind==='pct')?ov[key].value/100:def;
+
+  s.mrp = amtOf('mrp', p.mrp);
+  s.rm  = amtOf('rm', p.rm);
+
+  s.dealermargin = amtOf('dealermargin', s.mrp*pctOf('dealermargin', p.dealerPct/100));
+  s.dealerprice  = amtOf('dealerprice', s.mrp - s.dealermargin);
+
+  const dvPct = pctOf('distvat', pol.dv);
+  s.distvat = amtOf('distvat', dvPct ? s.dealerprice*dvPct/(1+dvPct) : 0);
+  const afterVat = s.dealerprice - s.distvat;
+
+  const dmPct = pctOf('distmargin', p.distPct/100);
+  s.distmargin = amtOf('distmargin', dmPct ? afterVat*dmPct/(1+dmPct) : 0);
+  s.distprice  = amtOf('distprice', afterVat - s.distmargin);
+
+  const gstPct = pctOf('cgst', GST);
+  s.cgst = amtOf('cgst', s.distprice*(gstPct/2)/(1+gstPct));
+  s.sgst = amtOf('sgst', s.cgst);
+  s.nbr  = amtOf('nbr', s.distprice - s.cgst - s.sgst);
+
+  s.salesreturn = amtOf('salesreturn', s.rm*pctOf('salesreturn', pol.salesReturn));
+  s.cd  = amtOf('cd', s.distprice*pctOf('cd', pol.cd));
+  s.dct = amtOf('dct', (s.dealerprice/(1+GST))*pctOf('dct', pol.dct));
+  s.tod = amtOf('tod', s.nbr*pctOf('tod', pol.tod));
+  s.scheme = amtOf('scheme', s.rm*pctOf('scheme', pol.schemeRmPct));
+  s.netsales = amtOf('netsales', s.nbr - s.salesreturn - s.cd - s.dct - s.tod - s.scheme);
+
+  s.directlabour = amtOf('directlabour', p.directLabourPct!=null ? s.rm*pctOf('directlabour', p.directLabourPct) : p.directLabour);
+  s.consumerscheme = amtOf('consumerscheme', p.consumerScheme);
+  s.mfgohs = amtOf('mfgohs', s.rm*pctOf('mfgohs', p.mfgOhsPct));
+  s.grossmargin = amtOf('grossmargin', s.netsales - s.directlabour - s.rm - s.consumerscheme - s.mfgohs);
+
+  s.mktgohs = amtOf('mktgohs', p.mktgPct!=null ? s.rm*pctOf('mktgohs', p.mktgPct) : p.mktgLump);
+  s.advpromo = amtOf('advpromo', s.rm*pctOf('advpromo', p.advPromoPct));
+  s.freightohs = amtOf('freightohs', p.freightOhs);
+  s.adminohs = amtOf('adminohs', p.adminPct!=null ? s.rm*pctOf('adminohs', p.adminPct) : p.adminLump);
+  s.ebitda = amtOf('ebitda', s.grossmargin - s.mktgohs - s.advpromo - s.freightohs - s.adminohs);
+
+  s.financecost = amtOf('financecost', s.rm*pctOf('financecost', p.financeCostPct));
+  s.depreciation = amtOf('depreciation', s.rm*pctOf('depreciation', p.depreciationPct));
+  s.ebt = amtOf('ebt', s.ebitda - s.financecost - s.depreciation);
+  s.directtaxes = amtOf('directtaxes', s.ebt*pctOf('directtaxes', p.taxRate));
+  s.nm = amtOf('nm', s.ebt - s.directtaxes);
+
+  s.netMarginPct = s.netsales ? s.nm/s.netsales : 0;
+  const sqft = p.sqft || 32.5;
+  s.nmSqft = sqft ? s.nm/sqft : 0;
+  s.rmPct = s.mrp ? s.rm/s.mrp*100 : 0;
+  return s;
+}
+
+function mcFmtDelta(v, isPct){
+  const tol = isPct ? 0.0005 : 0.5;
+  if(Math.abs(v) < tol) return '<span class="dim-note">Base</span>';
+  const arrow = v>0 ? '▲' : '▼';
+  const cls = v>0 ? 'mc-delta-pos' : 'mc-delta-neg';
+  const amt = isPct ? Math.abs(v*100).toFixed(1)+'pp' : Math.round(Math.abs(v)).toLocaleString('en-IN');
+  return `<span class="${cls}">${arrow} ${amt}</span>`;
+}
+function mcVsBaseHTML(s, base){
+  if(!base) return '<span class="dim-note">Base</span>';
+  const dNm=s.nm-base.nm, dPct=s.netMarginPct-base.netMarginPct;
+  if(Math.abs(dNm)<0.5 && Math.abs(dPct)<0.0005) return '<span class="dim-note">Base</span>';
+  return `${mcFmtDelta(dNm,false)} <span class="dim-note">/</span> ${mcFmtDelta(dPct,true)}`;
+}
+
+function mcPctCell(p, ov, key, s, readOnly){
+  const spec = MC_ROW_SPEC.find(r=>r.key===key);
+  let kind = spec.pct;
+  if(kind==='variable') kind = mcDefaultPctFor(p,key)!=null ? 'input' : 'lump';
+  if(kind==='lump') return '<td class="pctcol">lump</td>';
+  if(kind==='dash') return '<td class="pctcol">—</td>';
+  if(kind==='ratio'){
+    const val = spec.ratioOf(s);
+    const text = val.toFixed(1)+'%';
+    if(spec.pill){
+      const pillClass = val/100>=0.12?'pill-g':val/100>=0.06?'pill-a':'pill-r';
+      return `<td class="pctcol"><span class="pill ${pillClass}">${text}</span></td>`;
+    }
+    return `<td class="pctcol">${text}</td>`;
+  }
+  const curPct = (ov[key]&&ov[key].kind==='pct') ? ov[key].value : mcDefaultPctFor(p,key);
+  if(readOnly) return `<td class="pctcol">${curPct.toFixed(2)}%</td>`;
+  return `<td class="pctcol"><input class="mc-pct" data-key="${key}" data-kind="pct" type="number" step="0.5" value="${curPct.toFixed(2)}" title="${spec.label} %" aria-label="${spec.label} percent"></td>`;
+}
+function mcAmtCell(s, key, negClass, readOnly){
+  const cls = 'num' + (negClass?' v-neg':'');
+  if(readOnly) return `<td class="${cls}">${Math.round(s[key]).toLocaleString('en-IN')}</td>`;
+  return `<td class="${cls}"><input class="mc-amt" data-key="${key}" data-kind="amt" type="number" step="1" value="${Math.round(s[key])}" title="${key} amount" aria-label="${key} amount"></td>`;
+}
+
+// Abstract (readOnly=true, prefix 'mc-abs') and Materials (readOnly=false,
+// prefix 'mc-mat') share this same renderer, exactly like the mockup.
+function mcRenderWaterfall(prefix, readOnly){
+  const p = mcState.p;
+  if(!p) return;
+  const ov = readOnly ? {} : mcState.overrides;
+  const s = mcEvalWaterfall(p, ov), base = mcState.base;
+  const tbody = document.getElementById(prefix+'-tbody');
+  if(!tbody) return;
+
+  const active = document.activeElement;
+  let fKey=null, fKind=null, selS=null, selE=null;
+  if(!readOnly && active && tbody.contains(active) && active.tagName==='INPUT'){
+    fKey=active.dataset.key; fKind=active.dataset.kind; selS=active.selectionStart; selE=active.selectionEnd;
+  }
+
+  let html = '';
+  MC_ROW_SPEC.forEach(row=>{
+    if(row.group) html += `<tr class="wf-group"><td colspan="3">${row.group}</td></tr>`;
+    const trClass = row.subtotal?' class="wf-subtotal"':row.final?' class="wf-final"':'';
+    html += `<tr${trClass}><td>${row.label}</td>${mcPctCell(p,ov,row.key,s,readOnly)}${mcAmtCell(s,row.key,row.neg,readOnly)}</tr>`;
+  });
+  html += `<tr><td>NM / sq.ft (₹)</td><td class="pctcol">—</td><td class="num">${Math.round(s.nmSqft).toLocaleString('en-IN')}</td></tr>`;
+  if(!readOnly){
+    html += `<tr class="wf-vsbase"><td>vs Base <span class="dim-note">(as loaded)</span></td><td class="pctcol">—</td><td class="num">${mcVsBaseHTML(s,base)}</td></tr>`;
+  }
+  tbody.innerHTML = html;
+  if(fKey){
+    const sel = tbody.querySelector(`[data-key="${fKey}"][data-kind="${fKind}"]`);
+    if(sel){ sel.focus(); try{ sel.setSelectionRange(selS, selE); }catch(e){} }
+  }
+}
+
+// Materials tab uses this compact transposed layout (metrics as columns,
+// just a Percentage row and an Amount row) instead of the full vertical
+// waterfall — matches the approved mockup's renderTransposedRows().
+const MC_MATERIALS_LEFT = ['mrp','dealermargin','distmargin','nbr','rm'];
+const MC_MATERIALS_RIGHT = ['netsales','ebitda','nm'];
+function mcRenderTransposed(prefix){
+  const p = mcState.p;
+  if(!p) return;
+  const ov = mcState.overrides;
+  const s = mcEvalWaterfall(p, ov), base = mcState.base;
+  const tbody = document.getElementById(prefix+'-tbody');
+  if(!tbody) return;
+
+  const active = document.activeElement;
+  let fKey=null, fKind=null, selS=null, selE=null;
+  if(active && tbody.contains(active) && active.tagName==='INPUT'){
+    fKey=active.dataset.key; fKind=active.dataset.kind; selS=active.selectionStart; selE=active.selectionEnd;
+  }
+
+  // RM cost is never directly editable here — it's a computed total of
+  // the Bill of Materials below (see mcRenderBom(), which pins it via
+  // mcState.overrides.rm on every BOM change). Editing the BOM is the
+  // only way to change RM cost, same as a real costing sheet.
+  let pctRow = '<td>Percentage</td>', amtRow = '<td>Amount (₹)</td>';
+  MC_MATERIALS_LEFT.forEach(k=>{ pctRow += mcPctCell(p,ov,k,s,false); amtRow += mcAmtCell(s,k,false,k==='rm'); });
+  MC_MATERIALS_RIGHT.forEach(k=>{ pctRow += mcPctCell(p,ov,k,s,false); amtRow += mcAmtCell(s,k,false,false); });
+
+  pctRow += '<td class="num">—</td><td class="num">—</td>';
+  amtRow += `<td class="num">${Math.round(s.nmSqft).toLocaleString('en-IN')}</td>`;
+  amtRow += `<td class="num">${mcVsBaseHTML(s,base)}</td>`;
+
+  tbody.innerHTML = `<tr>${pctRow}</tr><tr class="wf-final">${amtRow}</tr>`;
+  if(fKey){
+    const sel = tbody.querySelector(`[data-key="${fKey}"][data-kind="${fKind}"]`);
+    if(sel){ sel.focus(); try{ sel.setSelectionRange(selS, selE); }catch(e){} }
+  }
+}
+
+function mcHandleWaterfallInput(e){
+  const el = e.target;
+  if(!el.matches('input[data-key]')) return;
+  const key = el.dataset.key, kind = el.dataset.kind;
+  const v = parseFloat(el.value);
+  if(isNaN(v)) delete mcState.overrides[key];
+  else mcState.overrides[key] = {kind, value:v};
+  mcRenderTransposed('mc-mat');
+}
+
+// ── Editable Bill of Materials — real /api/bom/<item_code> data ───────
+// Component rows come from bom_extractor.py: {code,desc,wh,qty,uom,rate,
+// cost,children?}. 'children' (only on wh==='SFG' rows) is the flat list
+// of raw materials that make up that sub-assembly — the real ledger data
+// only ever nests one level deep, unlike the mockup's fixed named seeds.
+let mcBomLines = [];
+let mcOpenMenu = null;      // "top:<i>" or "child:<parentIdx>:<i>"
+let mcSfgOpen = {};         // top-level row index -> is its sub-assembly expanded
+let mcBomSource = null;     // 'override' | 'ledger:<month>' | null
+// Qty/UOM on a verified (ledger/master) row are locked read-only text by
+// default — only editable once the user explicitly clicks "Edit" from its
+// kebab menu (menuKey -> true while unlocked). Newly-added rows (isNew /
+// fromMaster) are always editable regardless, since there's nothing
+// "locked" about a line the user just added.
+let mcEditingRows = {};
+
+// origQty/origCost freeze the verified ledger Qty->Cost ratio so qty edits
+// scale cost proportionally (see bom_extractor.py's docstring on the
+// spool-pricing "hidden conversion factor" trap) — never applied to
+// isNew/fromMaster rows, which have no verified ratio and use plain
+// Qty×Rate instead, forever (matches the mockup's resetBomData()).
+function mcHydrate(row){
+  const r = {...row};
+  if(!r.isNew && !r.fromMaster){
+    if(r.origQty == null) r.origQty = r.qty;
+    if(r.origCost == null) r.origCost = r.cost;
+  }
+  if(r.children) r.children = r.children.map(mcHydrate);
+  return r;
+}
+function mcLineCost(row){
+  if(row.origQty != null && row.origCost != null){
+    return row.origQty ? (row.qty/row.origQty) * row.origCost : 0;
+  }
+  return row.qty * row.rate;
+}
+function mcSfgRate(row){
+  if(row.children && row.children.length) return row.children.reduce((sum,k)=>sum+mcLineCost(k),0);
+  return row.rate;
+}
+function mcFmtRs(v){ return v.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function mcFmtQty(v){ return (Math.round(v*1000)/1000).toString(); }
+
+function mcKebabCell(scope, parentIdx, idx, isSfgRow, isLockable, isEditing){
+  const menuKey = scope==='child' ? `child:${parentIdx}:${idx}` : `top:${idx}`;
+  const isOpen = mcOpenMenu === menuKey;
+  const dataAttrs = `data-scope="${scope}" data-parent="${parentIdx==null?'':parentIdx}" data-idx="${idx}"`;
+  let items = `<button type="button" class="kebab-item" data-action="addAbove" ${dataAttrs}>+ Add line above</button>
+    <button type="button" class="kebab-item" data-action="addBelow" ${dataAttrs}>+ Add line below</button>`;
+  if(isLockable){
+    items += `<button type="button" class="kebab-item" data-action="toggleEdit" ${dataAttrs}>${isEditing?'Lock Qty/UOM':'Edit Qty/UOM'}</button>`;
+  }
+  if(isSfgRow){
+    items += `<button type="button" class="kebab-item" data-action="toggleSfg" ${dataAttrs}>${mcSfgOpen[idx]?'Close sub-assembly':'Edit sub-assembly'}</button>`;
+  }
+  items += `<button type="button" class="kebab-item kebab-danger" data-action="delete" ${dataAttrs}>Delete line</button>`;
+  return `<td class="col-kebab"><div class="kebab-wrap">
+    <button type="button" class="kebab-btn" data-action="toggleMenu" ${dataAttrs} aria-haspopup="true" aria-expanded="${isOpen}" title="Row actions" aria-label="Row actions">⋮</button>
+    ${isOpen ? `<div class="kebab-menu">${items}</div>` : ''}
+  </div></td>`;
+}
+
+// Rows near the bottom of the BOM table (esp. the last line) would otherwise
+// open their kebab menu downward past the viewport edge, cutting off
+// "Edit Qty/UOM"/"Delete line" with no visual hint more options exist below.
+// Flip the menu to open upward when there isn't room below it.
+function mcFixKebabMenuPosition(){
+  const menu = document.querySelector('#mc-bom-body .kebab-menu');
+  if(!menu) return;
+  const rect = menu.getBoundingClientRect();
+  menu.classList.toggle('kebab-menu-up', rect.bottom > window.innerHeight);
+}
+
+function mcRenderBom(){
+  const tbody = document.getElementById('mc-bom-body');
+  if(!tbody) return;
+
+  const active = document.activeElement;
+  let fSel=null, selS=null, selE=null;
+  if(active && tbody.contains(active) && active.tagName==='INPUT'){
+    fSel = {scope:active.dataset.scope, parent:active.dataset.parent||'', idx:active.dataset.idx, field:active.dataset.field};
+    selS=active.selectionStart; selE=active.selectionEnd;
+  }
+
+  let html='', total=0;
+  mcBomLines.forEach((row,i)=>{
+    const isSfg = row.wh==='SFG';
+    const rate = isSfg ? mcSfgRate(row) : row.rate;
+    const cost = isSfg ? row.qty*rate : mcLineCost(row);
+    total += cost;
+    const whCell = row.isNew
+      ? `<select class="bom-wh" data-scope="top" data-idx="${i}" data-field="wh" title="Warehouse" aria-label="Warehouse"><option value="RM" ${row.wh==='RM'?'selected':''}>RM</option><option value="SFG" ${row.wh==='SFG'?'selected':''}>SFG</option></select>`
+      : `<span class="wh-tag ${isSfg?'wh-sfg':'wh-wip'}">${row.wh}</span>`;
+    const codeCell = row.isNew
+      ? `<input class="bom-code" data-scope="top" data-idx="${i}" data-field="code" value="${escAttr(row.code||'')}" placeholder="Item code" title="Item code" aria-label="Item code">`
+      : row.code;
+    const descCell = row.isNew
+      ? `<input class="bom-desc" data-scope="top" data-idx="${i}" data-field="desc" value="${escAttr(row.desc||'')}" placeholder="Description" title="Description" aria-label="Description">`
+      : row.desc;
+    const rateCell = (row.isNew && !isSfg)
+      ? `<input class="bom-rate" data-scope="top" data-idx="${i}" data-field="rate" type="number" step="0.01" value="${row.rate}" title="Rate" aria-label="Rate">`
+      : mcFmtRs(rate);
+    const isLockable = !row.isNew && !row.fromMaster;
+    const isEditing = !isLockable || !!mcEditingRows[`top:${i}`];
+    const qtyCell = isEditing
+      ? `<input class="bom-qty" data-scope="top" data-idx="${i}" data-field="qty" type="number" step="0.001" value="${row.qty}" title="Quantity" aria-label="Quantity">`
+      : mcFmtQty(row.qty);
+    const uomCell = isEditing
+      ? `<input class="bom-uom" data-scope="top" data-idx="${i}" data-field="uom" value="${escAttr(row.uom||'')}" title="UOM" aria-label="Unit of measure">`
+      : row.uom;
+
+    html += `<tr>
+      ${mcKebabCell('top', null, i, isSfg, isLockable, isEditing)}
+      <td>${i+1}</td>
+      <td class="item-code">${codeCell}</td>
+      <td>${descCell}</td>
+      <td>${whCell}</td>
+      <td class="num">${qtyCell}</td>
+      <td>${uomCell}</td>
+      <td class="num">${rateCell}</td>
+      <td class="num">${mcFmtRs(cost)}</td>
+    </tr>`;
+
+    if(isSfg){
+      const kids = row.children || [];
+      let kidsHtml = '';
+      if(kids.length===0){
+        kidsHtml = `<tr class="placeholder-row"><td colspan="6">No raw materials recorded for this SFG code.</td>
+          <td><button type="button" class="add-row" data-addscope="child" data-parent="${i}">+ Add</button></td></tr>`;
+      } else {
+        kids.forEach((k,ki)=>{
+          const kCost = mcLineCost(k);
+          const kCodeCell = k.isNew
+            ? `<input class="bom-code" data-scope="child" data-parent="${i}" data-idx="${ki}" data-field="code" value="${escAttr(k.code||'')}" placeholder="Item code" title="Item code" aria-label="Item code">`
+            : k.code;
+          const kDescCell = k.isNew
+            ? `<input class="bom-desc" data-scope="child" data-parent="${i}" data-idx="${ki}" data-field="desc" value="${escAttr(k.desc||'')}" placeholder="Description" title="Description" aria-label="Description">`
+            : k.desc;
+          const kRateCell = k.isNew
+            ? `<input class="bom-rate" data-scope="child" data-parent="${i}" data-idx="${ki}" data-field="rate" type="number" step="0.01" value="${k.rate}" title="Rate" aria-label="Rate">`
+            : mcFmtRs(k.rate);
+          const kIsLockable = !k.isNew && !k.fromMaster;
+          const kIsEditing = !kIsLockable || !!mcEditingRows[`child:${i}:${ki}`];
+          const kQtyCell = kIsEditing
+            ? `<input class="bom-qty" data-scope="child" data-parent="${i}" data-idx="${ki}" data-field="qty" type="number" step="0.001" value="${k.qty}" title="Quantity" aria-label="Quantity">`
+            : mcFmtQty(k.qty);
+          const kUomCell = kIsEditing
+            ? `<input class="bom-uom" data-scope="child" data-parent="${i}" data-idx="${ki}" data-field="uom" value="${escAttr(k.uom||'')}" title="UOM" aria-label="Unit of measure">`
+            : k.uom;
+          kidsHtml += `<tr>
+            ${mcKebabCell('child', i, ki, false, kIsLockable, kIsEditing)}
+            <td class="item-code">${kCodeCell}</td>
+            <td>${kDescCell}</td>
+            <td class="num">${kQtyCell}</td>
+            <td>${kUomCell}</td>
+            <td class="num">${kRateCell}</td>
+            <td class="num">${mcFmtRs(kCost)}</td>
+          </tr>`;
+        });
+        kidsHtml += `<tr class="total-row"><td></td><td colspan="5">Total</td><td class="num">${mcFmtRs(rate)}</td></tr>`;
+      }
+      html += `<tr class="sfg-row ${mcSfgOpen[i]?'':'mc-hidden'}" data-sfgrow="${i}"><td colspan="9" class="sfg-detail">
+        <div class="sfg-inner">
+          <div class="label">↳ Raw materials for ${row.code}</div>
+          <table>
+            <thead><tr><th class="col-kebab"></th><th>Item Code</th><th>Description</th><th class="num">Qty</th><th>UOM</th><th class="num">Rate (₹)</th><th class="num">Cost (₹)</th></tr></thead>
+            <tbody>${kidsHtml}</tbody>
+          </table>
+        </div>
+      </td></tr>`;
+    }
+  });
+
+  tbody.innerHTML = html;
+
+  const old = document.getElementById('mc-bom-total-row');
+  if(old) old.remove();
+  const table = tbody.closest('table');
+  if(table){
+    const tfoot = document.createElement('tbody');
+    tfoot.id = 'mc-bom-total-row';
+    tfoot.innerHTML = `<tr class="total-row"><td></td><td colspan="6">Total RM Cost</td><td class="num">${mcFmtRs(total)}</td></tr>
+      <tr><td colspan="9"><button type="button" class="add-row" data-addscope="top">+ Add line</button></td></tr>`;
+    table.appendChild(tfoot);
+  }
+
+  const countEl = document.getElementById('mc-bom-count');
+  if(countEl){
+    const srcNote = mcBomSource==='override' ? ' (edited — not yet saved to server if you just changed something)' : mcBomSource ? ` (from ${mcBomSource})` : '';
+    countEl.textContent = `Bill of Materials — ${mcBomLines.length} line${mcBomLines.length===1?'':'s'}${srcNote}`;
+  }
+  mcUpdateBomSummary(total);
+
+  // RM cost in the Net Margin section is always the live BOM total, not
+  // a separately-editable figure — pin it via the same override
+  // mechanism a manual % or ₹ edit would use, so every downstream row
+  // (Gross Margin, EBITDA, Net Margin...) recalculates from it exactly
+  // like a real spreadsheet formula chain.
+  mcState.overrides.rm = {kind:'amt', value: total};
+  mcRenderTransposed('mc-mat');
+
+  if(fSel){
+    const sel = fSel.scope==='child'
+      ? document.querySelector(`[data-scope="child"][data-parent="${fSel.parent}"][data-idx="${fSel.idx}"][data-field="${fSel.field}"]`)
+      : document.querySelector(`[data-scope="top"][data-idx="${fSel.idx}"][data-field="${fSel.field}"]`);
+    if(sel){ sel.focus(); try{ sel.setSelectionRange(selS, selE); }catch(e){} }
+  }
+}
+
+function mcBlankLine(){ return {code:'', desc:'', wh:'RM', qty:0, uom:'', rate:0, cost:0, isNew:true}; }
+function mcMasterLine(item){
+  // Code/Description/Rate come from the verified Item Master, so they're
+  // locked (not isNew) — only Qty and UOM stay editable.
+  return {code:item.code, desc:item.desc, wh:'RM', qty:1, uom:item.uom, rate:item.rate, cost:item.rate, fromMaster:true};
+}
+
+// ── Item Master search picker — live against /api/item-search ────────
+let mcPickerTarget = null;   // {scope:'top'|'child', parent:number|null, insertIdx:number|null}
+let mcPickerSelected = {};   // code -> item, for checked rows
+let mcPickerSeq = 0;         // guards against an older in-flight search resolving after a newer one
+
+function mcOpenPicker(scope, parent, insertIdx){
+  mcPickerTarget = {scope, parent, insertIdx};
+  mcPickerSelected = {};
+  const overlay = document.getElementById('picker-overlay');
+  const search = document.getElementById('picker-search');
+  if(overlay) overlay.classList.remove('mc-hidden');
+  if(search){ search.value=''; search.focus(); }
+  mcRenderPicker();
+}
+function mcClosePicker(){
+  const overlay = document.getElementById('picker-overlay');
+  if(overlay) overlay.classList.add('mc-hidden');
+  mcPickerTarget = null;
+  mcPickerSelected = {};
+}
+async function mcRenderPicker(){
+  const results = document.getElementById('picker-results');
+  const countEl = document.getElementById('picker-count');
+  const addBtn = document.getElementById('picker-add');
+  if(!results) return;
+  const search = document.getElementById('picker-search');
+  const q = (search ? search.value : '').trim();
+  if(q.length < 2){
+    results.innerHTML = '<div class="picker-hint">Type at least 2 characters to search — e.g. <b>RM-THRD</b> (item code) or <b>Thread</b> (description).</div>';
+  } else {
+    const mySeq = ++mcPickerSeq;
+    results.innerHTML = '<div class="picker-hint">Searching…</div>';
+    let items = [];
+    try{
+      const resp = await fetch('/api/item-search?q=' + encodeURIComponent(q));
+      if(resp.ok) items = await resp.json();
+    }catch(e){ /* server unreachable — falls through to "no matches" below */ }
+    if(mySeq !== mcPickerSeq) return; // superseded by a newer keystroke's search
+    const escQ = q.replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+    if(items.length === 0){
+      results.innerHTML = `<div class="picker-hint">No matches in the Item Master for "${escQ}".</div>`;
+    } else {
+      results.dataset.items = JSON.stringify(items);
+      results.innerHTML = items.map(it => `<label class="picker-row">
+        <input type="checkbox" class="picker-check" data-code="${escAttr(it.code)}" ${mcPickerSelected[it.code]?'checked':''}>
+        <span class="picker-code">${it.code}</span>
+        <span class="picker-desc">${it.desc}</span>
+        <span class="picker-uom">${it.uom}</span>
+        <span class="picker-rate">₹${it.rate.toLocaleString('en-IN',{maximumFractionDigits:2})}</span>
+      </label>`).join('') + (items.length>=60 ? '<div class="picker-hint">Showing first 60 matches — narrow your search for more.</div>' : '');
+    }
+  }
+  const n = Object.keys(mcPickerSelected).length;
+  if(countEl) countEl.textContent = n + ' selected';
+  if(addBtn) addBtn.disabled = n === 0;
+}
+function mcAddSelectedFromPicker(){
+  if(!mcPickerTarget) return;
+  const items = Object.values(mcPickerSelected);
+  if(items.length === 0) return;
+  const list = mcPickerTarget.scope === 'child' ? mcBomLines[mcPickerTarget.parent].children : mcBomLines;
+  const rows = items.map(mcMasterLine);
+  const at = mcPickerTarget.insertIdx == null ? list.length : mcPickerTarget.insertIdx;
+  list.splice(at, 0, ...rows);
+  mcClosePicker();
+  mcRenderBom();
+}
+function mcAddManualFromPicker(){
+  if(!mcPickerTarget) return;
+  const list = mcPickerTarget.scope === 'child' ? mcBomLines[mcPickerTarget.parent].children : mcBomLines;
+  const row = mcBlankLine();
+  const at = mcPickerTarget.insertIdx == null ? list.length : mcPickerTarget.insertIdx;
+  list.splice(at, 0, row);
+  mcClosePicker();
+  mcRenderBom();
+}
+
+const mcPickerOverlayEl = document.getElementById('picker-overlay');
+if(mcPickerOverlayEl){
+  document.getElementById('picker-search').addEventListener('input', mcRenderPicker);
+  document.getElementById('picker-close').addEventListener('click', mcClosePicker);
+  document.getElementById('picker-manual').addEventListener('click', mcAddManualFromPicker);
+  document.getElementById('picker-add').addEventListener('click', mcAddSelectedFromPicker);
+  mcPickerOverlayEl.addEventListener('click', e=>{
+    if(e.target === mcPickerOverlayEl) mcClosePicker(); // click on the dimmed backdrop
+  });
+  document.getElementById('picker-results').addEventListener('change', e=>{
+    const cb = e.target.closest('.picker-check');
+    if(!cb) return;
+    const items = JSON.parse(document.getElementById('picker-results').dataset.items || '[]');
+    const item = items.find(it => it.code === cb.dataset.code);
+    if(!item) return;
+    if(cb.checked) mcPickerSelected[item.code] = item;
+    else delete mcPickerSelected[item.code];
+    const countEl = document.getElementById('picker-count'), addBtn = document.getElementById('picker-add');
+    const n = Object.keys(mcPickerSelected).length;
+    if(countEl) countEl.textContent = n + ' selected';
+    if(addBtn) addBtn.disabled = n === 0;
+  });
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape' && mcPickerTarget) mcClosePicker();
+  });
+}
+
+const mcBomBodyEl = document.getElementById('mc-bom-body');
+if(mcBomBodyEl){
+  mcBomBodyEl.addEventListener('click', e=>{
+    const kebabBtn = e.target.closest('.kebab-btn');
+    if(kebabBtn){
+      e.stopPropagation(); // handled here — don't let the document-level
+      // "close on outside click" listener also see it (by then mcRenderBom()
+      // has replaced this button, so contains() would wrongly say "outside").
+      const key = kebabBtn.dataset.scope==='child' ? `child:${kebabBtn.dataset.parent}:${kebabBtn.dataset.idx}` : `top:${kebabBtn.dataset.idx}`;
+      mcOpenMenu = (mcOpenMenu === key) ? null : key;
+      mcRenderBom();
+      mcFixKebabMenuPosition();
+      return;
+    }
+    const item = e.target.closest('.kebab-item');
+    if(item){
+      e.stopPropagation();
+      const scope = item.dataset.scope, parent = item.dataset.parent!=='' ? +item.dataset.parent : null, idx = +item.dataset.idx, action = item.dataset.action;
+      const list = scope === 'child' ? mcBomLines[parent].children : mcBomLines;
+      mcOpenMenu = null;
+      if(action === 'addAbove'){ mcRenderBom(); mcOpenPicker(scope, parent, idx); return; }
+      if(action === 'addBelow'){ mcRenderBom(); mcOpenPicker(scope, parent, idx+1); return; }
+      const editKey = scope === 'child' ? `child:${parent}:${idx}` : `top:${idx}`;
+      if(action === 'delete') list.splice(idx, 1);
+      else if(action === 'toggleSfg') mcSfgOpen[idx] = !mcSfgOpen[idx];
+      else if(action === 'toggleEdit') mcEditingRows[editKey] = !mcEditingRows[editKey];
+      mcRenderBom();
+      return;
+    }
+    const add = e.target.closest('.add-row');
+    if(add){
+      e.stopPropagation();
+      if(add.dataset.addscope === 'child'){
+        const parent = +add.dataset.parent;
+        if(!mcBomLines[parent].children) mcBomLines[parent].children = [];
+        mcOpenPicker('child', parent, null);
+      } else mcOpenPicker('top', null, null);
+      return;
+    }
+    if(mcOpenMenu && !e.target.closest('.kebab-wrap')){ mcOpenMenu = null; mcRenderBom(); }
+  });
+
+  function mcHandleBomEdit(e){
+    const el = e.target;
+    if(!el.matches('input[data-field], select[data-field]')) return;
+    const scope = el.dataset.scope, field = el.dataset.field, idx = +el.dataset.idx;
+    const row = scope === 'child' ? mcBomLines[+el.dataset.parent].children[idx] : mcBomLines[idx];
+    if(!row) return;
+    if(field === 'qty' || field === 'rate'){
+      const v = parseFloat(el.value);
+      row[field] = isNaN(v) ? 0 : v;
+    } else {
+      row[field] = el.value;
+    }
+    mcRenderBom();
+  }
+  mcBomBodyEl.addEventListener('input', mcHandleBomEdit);
+  mcBomBodyEl.addEventListener('change', mcHandleBomEdit); // <select> (Warehouse) reliably fires change, not always input
+}
+document.addEventListener('click', e=>{
+  if(mcOpenMenu && mcBomBodyEl && !mcBomBodyEl.contains(e.target)){ mcOpenMenu = null; mcRenderBom(); }
+});
+
+// ── Product selector, page wiring & BOM load/save/revert ─────────────
+const mcState = {idx:null, p:null, base:null, overrides:{}};
+const MC_CAT_META = {
+  'Peps':{cls:'cat-peps', label:'PEPS'},
+  'Cirrus Foam':{cls:'cat-hypnos', label:'CIRRUS FOAM'},
+  'Cirrus Coir':{cls:'cat-coir', label:'CIRRUS COIR'},
+  'Accessories':{cls:'cat-ecom', label:'ACCESSORIES'},
+};
+// Category is exactly these 4 values, parsed from the SKU's own brand +
+// description text — not the raw internal `b` field (which still has a
+// separate 'italiano' bucket used elsewhere in the app for its own
+// commercial-rate branching). Italiano rolls up under "Peps" here since
+// that's how the real MRP workbook organizes it (Italiano is one of the
+// product-line sheets inside the Peps South MRP file, not a file of its
+// own). Cirrus splits into Foam vs Coir by checking for "coir" in the
+// product name — every currently-tracked Cirrus SKU is foam-type, so
+// Cirrus Coir has no matches yet, but the rule is ready for when it does.
+function mcParseCategory(s){
+  if(s.b === 'accessories') return 'Accessories';
+  if(s.b === 'cirrus') return /coir/i.test(s.p) ? 'Cirrus Coir' : 'Cirrus Foam';
+  return 'Peps'; // peps + italiano
+}
+function mcCategoryOf(s){ return mcParseCategory(s); }
+
+// Product Line / Height / Size are parsed straight out of the product
+// NAME (e.g. "Peps Comfort 6\"" -> line "Comfort", height "6\""), same
+// approach the mockup used ("parsed from PS Desc", not a structured
+// Ramco field) — so, like the mockup, this is approximate: it'll be
+// blank or off for any SKU whose name doesn't follow the usual
+// "[Peps ]<Line> [<Variant>] <Height>\"" pattern. Colour has no
+// equivalent free-text source loaded into this tool yet, so its filter
+// stays disabled (see the "n/a" tag next to it in the HTML).
+//
+// "Size" follows BOM Tool's convention (Length x Width, kept separate
+// from Height). The item CODE is the most authoritative source when one
+// exists — Ramco encodes real Length x Width x Height right into it
+// (e.g. "PEPSBNCOMNLBG78X60X06" -> 78x60, height 06), so that's checked
+// first. Falls back to the product NAME for SKUs with no item code
+// (accessories spell out L x W directly, e.g. "Fitted Sheets 78x60"),
+// then finally to the sqft-based default (32.5 sqft == 78"x60" for every
+// mattress SKU currently tracked) if neither source has it.
+function mcParseHeight(name){
+  const m = name.match(/(\d+(?:\.\d+)?)"\s*$/);
+  return m ? m[1]+'"' : null;
+}
+function mcParseLine(name){
+  let s = name.replace(/\s*\d+(?:\.\d+)?"\s*$/,'').replace(/\s*[\d.]+x[\d.]+(?:x[\d.]+)?\s*$/i,'').trim();
+  let words = s.split(/\s+/).filter(Boolean);
+  if(words[0]==='Peps' && words.length>1) words = words.slice(1);
+  return words.join(' ') || name;
+}
+function mcParseSize(s){
+  if(s.ic){
+    const mCode = s.ic.match(/(\d+(?:\.\d+)?)X(\d+(?:\.\d+)?)X\d+(?:\.\d+)?(?:-\S+)?$/i);
+    if(mCode) return `${mCode[1]}x${mCode[2]}`;
+  }
+  const m = s.p.match(/(\d+(?:\.\d+)?)\s*[xX]\s*(\d+(?:\.\d+)?)(?:\s*[xX]\s*\d+(?:\.\d+)?)?\s*$/);
+  if(m) return `${m[1]}x${m[2]}`;
+  if(s.sqft === 32.5) return '78x60';
+  return null;
+}
+// Computed on demand rather than cached on the `skus` objects: the engine
+// server connection (connectToEngine -> applyServerSkus) REPLACES `skus`
+// with a fresh array of fresh objects shortly after page load, which
+// would silently wipe out any properties stashed on the old objects.
+function mcLineOf(s){ return mcParseLine(s.p); }
+function mcHeightOf(s){ return mcParseHeight(s.p); }
+function mcSizeOf(s){ return mcParseSize(s); }
+
+// All `skus` indices matching the filter bar's current Category/Product
+// Line/Height/Size/Search values.
+function mcVisibleIdx(){
+  const cat = document.getElementById('mc-f-cat').value;
+  const line = document.getElementById('mc-f-line').value;
+  const height = document.getElementById('mc-f-height').value;
+  const size = document.getElementById('mc-f-size').value;
+  const colour = document.getElementById('mc-f-colour').value;
+  const q = (document.getElementById('mc-f-search').value || '').trim().toLowerCase();
+  const out = [];
+  skus.forEach((s,i)=>{
+    if(cat !== 'all' && mcCategoryOf(s) !== cat) return;
+    if(line !== 'all' && mcLineOf(s) !== line) return;
+    if(height !== 'all' && mcHeightOf(s) !== height) return;
+    if(size !== 'all' && mcSizeOf(s) !== size) return;
+    if(colour !== 'all' && s.colour !== colour) return;
+    if(q && !(s.p.toLowerCase().includes(q) || (s.ic||'').toLowerCase().includes(q))) return;
+    out.push(i);
+  });
+  return out;
+}
+
+// Product Line options narrow to the selected Category; Height and Size
+// options narrow to Category + Product Line — same cascading dependency
+// the mockup's static filter bar implied.
+function mcPopulateFilterOptions(){
+  const cat = document.getElementById('mc-f-cat').value;
+  const lineSel = document.getElementById('mc-f-line');
+  const prevLine = lineSel.value;
+  const lines = [...new Set(skus.filter(s=>cat==='all'||mcCategoryOf(s)===cat).map(mcLineOf))].sort();
+  lineSel.innerHTML = '<option value="all">All Product Lines</option>' + lines.map(l=>`<option value="${escAttr(l)}">${l}</option>`).join('');
+  lineSel.value = lines.includes(prevLine) ? prevLine : 'all';
+
+  const line = lineSel.value;
+  const scoped = skus.filter(s=>(cat==='all'||mcCategoryOf(s)===cat) && (line==='all'||mcLineOf(s)===line));
+
+  const heightSel = document.getElementById('mc-f-height');
+  const prevHeight = heightSel.value;
+  const heights = [...new Set(scoped.map(mcHeightOf).filter(Boolean))]
+    .sort((a,b)=>parseFloat(a)-parseFloat(b));
+  heightSel.innerHTML = '<option value="all">All Heights</option>' + heights.map(h=>`<option value="${escAttr(h)}">${h}</option>`).join('');
+  heightSel.value = heights.includes(prevHeight) ? prevHeight : 'all';
+
+  const sizeSel = document.getElementById('mc-f-size');
+  const prevSize = sizeSel.value;
+  const sizes = [...new Set(scoped.map(mcSizeOf).filter(Boolean))].sort();
+  sizeSel.innerHTML = '<option value="all">All Sizes</option>' + sizes.map(sz=>`<option value="${escAttr(sz)}">${sz}</option>`).join('');
+  sizeSel.value = sizes.includes(prevSize) ? prevSize : 'all';
+
+  const size = sizeSel.value;
+  const colourSel = document.getElementById('mc-f-colour');
+  const prevColour = colourSel.value;
+  const colours = [...new Set(scoped.filter(s=>size==='all'||mcSizeOf(s)===size).map(s=>s.colour).filter(Boolean))].sort();
+  colourSel.innerHTML = '<option value="all">All Colours</option>' + colours.map(c=>`<option value="${escAttr(c)}">${c}</option>`).join('');
+  colourSel.value = colours.includes(prevColour) ? prevColour : 'all';
+}
+
+// Called on every filter-bar change (Category/Product Line/Height/Search)
+// — rebuilds the dependent dropdown options, updates the match count, and
+// keeps the current selection if it's still visible; otherwise the first
+// remaining match becomes the active product. The filter bar (down to
+// Search, which matches item code or product name) IS the product picker
+// — there's no separate list/dropdown, so narrowing the filters to a
+// single match is how you select a specific product.
+function mcApplyFilters(){
+  mcPopulateFilterOptions();
+  const visible = mcVisibleIdx();
+  const noteEl = document.getElementById('mc-scale-note');
+  if(noteEl) noteEl.textContent = `${visible.length} of ${skus.length} products match these filters`;
+  if(visible.length && !(mcState.idx != null && visible.includes(mcState.idx))){
+    mcSelectProduct(visible[0]);
+  } else if(visible.length){
+    mcRefreshCalc(); // pick up any Commercial Rates edits made elsewhere
+  }
+}
+
+function mcShowSubtab(pageId){
+  document.querySelectorAll('#page-material .mc-subtab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#page-material .mc-subpage').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`#page-material .mc-subtab[data-page="${pageId}"]`).classList.add('active');
+  document.getElementById(pageId).classList.add('active');
+}
+
+function mcSelectProduct(idxStr){
+  const idx = parseInt(idxStr, 10);
+  if(isNaN(idx) || !skus[idx]) return;
+  mcState.idx = idx;
+  mcState.overrides = {};
+  mcRefreshCalc();
+  mcLoadBom();
+}
+
+// Recomputes the waterfall for the currently-selected product from the
+// LIVE COMM/FINANCE globals (so Commercial Rates edits made elsewhere are
+// reflected) without touching the BOM or the user's what-if overrides.
+function mcRefreshCalc(){
+  const s = skus[mcState.idx];
+  if(!s) return;
+  mcState.p = mcAdapt(s);
+  mcState.base = mcEvalWaterfall(mcState.p, {});
+  const titleEl = document.getElementById('mc-panel-title');
+  if(titleEl) titleEl.textContent = s.p;
+  const codeEl = document.getElementById('mc-item-code');
+  if(codeEl) codeEl.textContent = s.ic ? '— ' + s.ic : '— (no item code on this product)';
+  mcRenderProductDetails(s);
+  mcRenderWaterfall('mc-abs', true);
+  mcRenderTransposed('mc-mat');
+}
+
+// The static, per-SKU half of the Materials tab's "Product Details" card
+// (Category/Product Line/Height come from mcLineOf/mcHeightOf, same
+// parsed-from-name approach as the filter bar). The BOM-derived half
+// (Total Components/SFG count/Total RM Cost/Source/Status) is filled in
+// separately by mcUpdateBomSummary()/mcResetBomSummary() once the BOM
+// fetch resolves — that data isn't known yet at this point.
+function mcRenderProductDetails(s){
+  const set = (id, html) => { const el = document.getElementById(id); if(el) el.innerHTML = html; };
+  const cm = MC_CAT_META[mcCategoryOf(s)] || {cls:'', label:mcCategoryOf(s)};
+  const height = mcHeightOf(s);
+  set('mc-pd-product', s.p);
+  set('mc-pd-code', s.ic || '<span class="dim-note">no item code</span>');
+  set('mc-pd-cat', `<span class="cat-chip ${cm.cls}">${cm.label}</span>`);
+  set('mc-pd-line', mcLineOf(s));
+  set('mc-pd-height', height || '<span class="dim-note">—</span>');
+  set('mc-pd-colour', s.colour || '<span class="dim-note">not stated in ledger description</span>');
+}
+
+function mcResetBomSummary(statusText){
+  const set = (id, html) => { const el = document.getElementById(id); if(el) el.innerHTML = html; };
+  set('mc-pd-comp', '—');
+  set('mc-pd-sfg', '—');
+  set('mc-pd-rmcost', '—');
+  set('mc-pd-source', '—');
+  set('mc-pd-status', `<span class="status-partial">${statusText}</span>`);
+}
+
+function mcUpdateBomSummary(total){
+  const set = (id, html) => { const el = document.getElementById(id); if(el) el.innerHTML = html; };
+  set('mc-pd-comp', String(mcBomLines.length));
+  set('mc-pd-sfg', String(mcBomLines.filter(r=>r.wh==='SFG').length));
+  set('mc-pd-rmcost', '₹' + mcFmtRs(total));
+  if(mcBomSource === 'override'){
+    set('mc-pd-source', 'User-edited');
+    set('mc-pd-status', '<span class="status-ok">Edited</span>');
+  } else if((mcBomSource||'').startsWith('ledger:')){
+    set('mc-pd-source', mcBomSource.slice('ledger:'.length));
+    set('mc-pd-status', '<span class="status-ok">Ledger-verified</span>');
+  } else if(mcBomSource === 'draft'){
+    set('mc-pd-source', 'R&D draft');
+    set('mc-pd-status', '<span class="status-rd">Sandbox — not live</span>');
+  } else {
+    set('mc-pd-source', '—');
+    set('mc-pd-status', '—');
+  }
+}
+
+async function mcLoadBom(){
+  const s = skus[mcState.idx];
+  const placeholder = document.getElementById('mc-bom-placeholder');
+  const placeholderText = document.getElementById('mc-bom-placeholder-text');
+  const real = document.getElementById('mc-bom-real');
+  mcBomLines = []; mcSfgOpen = {}; mcOpenMenu = null; mcBomSource = null; mcEditingRows = {};
+  // R&D draft in progress — load the draft variant's own saved BOM
+  // instead of hitting /api/bom/<ic> (which would fetch the REAL base
+  // product's ledger BOM, not this sandbox copy). See rdOpenWorkspace().
+  if(rdActiveContext){
+    mcBomLines = rdActiveContext.lines.map(mcHydrate);
+    mcBomSource = 'draft';
+    if(placeholder) placeholder.classList.add('mc-hidden');
+    if(real) real.classList.remove('mc-hidden');
+    mcRenderBom();
+    return;
+  }
+  if(!s.ic){
+    if(real) real.classList.add('mc-hidden');
+    if(placeholder) placeholder.classList.remove('mc-hidden');
+    if(placeholderText) placeholderText.textContent = 'This product has no Ramco item code recorded, so its Bill of Materials cannot be looked up in the ledger.';
+    mcResetBomSummary('No item code');
+    return;
+  }
+  if(placeholder) placeholder.classList.remove('mc-hidden');
+  if(placeholderText) placeholderText.textContent = 'Loading Bill of Materials…';
+  if(real) real.classList.add('mc-hidden');
+  mcResetBomSummary('Loading…');
+  const myIdx = mcState.idx;
+  try{
+    const resp = await fetch('/api/bom/' + encodeURIComponent(s.ic));
+    if(myIdx !== mcState.idx) return; // product switched again before this returned
+    const data = await resp.json();
+    if(!resp.ok || !data.lines){
+      if(placeholderText) placeholderText.textContent = 'Not yet extracted from the Ramco ledger for this product.';
+      mcResetBomSummary('Not yet extracted');
+      return;
+    }
+    mcBomLines = data.lines.map(mcHydrate);
+    mcBomSource = data.source;
+    if(placeholder) placeholder.classList.add('mc-hidden');
+    if(real) real.classList.remove('mc-hidden');
+    mcRenderBom();
+  }catch(e){
+    if(myIdx !== mcState.idx) return;
+    if(placeholderText) placeholderText.textContent = 'Could not reach the engine server to load the Bill of Materials.';
+    mcResetBomSummary('Server unreachable');
+  }
+}
+
+async function mcSaveBom(){
+  if(rdActiveContext){ await rdSaveVariant(); return; }
+  const s = skus[mcState.idx];
+  if(!s || !s.ic){ toast('This product has no item code — nothing to save'); return; }
+  try{
+    const resp = await fetch('/api/bom/' + encodeURIComponent(s.ic), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({lines: mcBomLines})
+    });
+    if(!resp.ok) throw new Error('save failed');
+    const data = await resp.json();
+    mcBomSource = data.source;
+    mcRenderBom();
+    toast('Bill of Materials saved');
+  }catch(e){ toast('Could not save — engine server unreachable'); }
+}
+async function mcRevertBom(){
+  if(rdActiveContext){ toast('R&D drafts revert by re-opening — use "Discard changes" in the draft banner'); return; }
+  const s = skus[mcState.idx];
+  if(!s || !s.ic) return;
+  try{
+    await fetch('/api/bom/' + encodeURIComponent(s.ic), {method:'DELETE'});
+    toast('Reverted to the ledger baseline');
+    mcLoadBom();
+  }catch(e){ toast('Could not revert — engine server unreachable'); }
+}
+
+const mcMatTbodyEl = document.getElementById('mc-mat-tbody');
+if(mcMatTbodyEl) mcMatTbodyEl.addEventListener('input', mcHandleWaterfallInput);
+
+// ═══════════════════════════════════════════════════════════════════
+// R&D TAB — sandbox BOM experiments (rd_store.py / /api/rd/... on the
+// server). Never writes to sku_master.py or the real skus[] catalog:
+// a draft's synthetic SKU is pushed onto skus[] only while its workspace
+// is open (so the existing waterfall/BOM-editor code can run completely
+// unmodified — see rdOpenWorkspace()), then popped off again on exit
+// (rdCleanupWorkspace()). The actual editor IS the real Materials
+// subtab's own DOM/JS (mcRenderBom, kebab menus, Item Master search) —
+// mcLoadBom()/mcSaveBom() have small early-return branches for
+// `rdActiveContext` (see above) rather than this file duplicating that
+// ~350 lines of tightly-coupled rendering/event code a second time.
+// ═══════════════════════════════════════════════════════════════════
+let rdActiveContext = null;   // {draftId, variantId, lines, draft} while a workspace is open
+let rdSyntheticIdx = null;    // index this draft's synthetic SKU occupies in skus[], while open
+let rdPrevMcIdx = undefined;  // Material Costing's own selection, to restore on exit ('undefined' = none yet)
+let rdDraftsCache = [];
+let rdPendingNew = null;      // {name, dummyCode} between New-setup steps 1 and 2
+
+function rdShowScreen(id){
+  document.querySelectorAll('#page-rd .rd-screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+async function rdInit(){
+  rdShowScreen('rd-screen-entry');
+  const list = document.getElementById('rd-draft-list');
+  list.innerHTML = '<div class="placeholder-note">Loading…</div>';
+  try{
+    const resp = await fetch('/api/rd/drafts');
+    rdDraftsCache = resp.ok ? await resp.json() : [];
+  }catch(e){ rdDraftsCache = []; }
+  rdRenderDraftList();
+}
+function rdRenderDraftList(){
+  const list = document.getElementById('rd-draft-list');
+  if(!rdDraftsCache.length){
+    list.innerHTML = '<div class="placeholder-note">No R&amp;D drafts yet — start one above.</div>';
+    return;
+  }
+  const statusLabel = {draft:'Draft', pending_review:'Pending admin review', approved:'Approved'};
+  list.innerHTML = rdDraftsCache.map(d=>{
+    const modeNote = d.mode==='new' ? `new product · dummy code ${escAttr(d.dummy_item_code||'—')}` : `based on ${escAttr(d.base_item_code)}`;
+    const when = new Date(d.updated_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    return `<div class="rd-draft-item">
+      <span class="status-pill status-${d.status}">${statusLabel[d.status]||d.status}</span>
+      <span class="di-name" onclick="rdOpenWorkspace(${d.id})">${escAttr(d.name)}</span>
+      <span class="di-meta">${modeNote} · updated ${when} · ${d.variant_count} variant${d.variant_count===1?'':'s'}</span>
+      <button type="button" class="btn btn-outline-rd btn-sm" onclick="rdOpenWorkspace(${d.id})">Open</button>
+      <button type="button" class="btn btn-outline-rd btn-sm" onclick="rdDeleteDraft(${d.id})">Delete</button>
+    </div>`;
+  }).join('');
+}
+async function rdDeleteDraft(id){
+  if(!confirm('Delete this R&D draft? This cannot be undone.')) return;
+  await fetch('/api/rd/drafts/'+id, {method:'DELETE'});
+  rdInit();
+}
+
+// ── Existing/New pickers — reuse the same filter-cascade logic as
+// Material Costing's own filter bar (mcCategoryOf/mcLineOf/mcHeightOf/
+// mcSizeOf), parameterized by element-id prefix instead of hardcoded to
+// 'mc-f-*', since the picker is a genuinely different interaction (click
+// a row to pick one, vs narrow-until-one-match). ─────────────────────
+let rdPickerMode = null; // 'existing' | 'new-base'
+
+function rdOpenExistingPicker(){
+  rdPickerMode = 'existing';
+  rdShowScreen('rd-screen-existing');
+  rdApplyPickerFilters();
+}
+function rdOpenNewSetup(){
+  rdShowScreen('rd-screen-new');
+  document.getElementById('rd-new-step1').classList.remove('mc-hidden');
+  document.getElementById('rd-new-step2').classList.add('mc-hidden');
+  document.getElementById('rd-new-name').value = '';
+  document.getElementById('rd-new-code').value = '';
+}
+function rdSubmitNewSetup(){
+  const name = document.getElementById('rd-new-name').value.trim();
+  const code = document.getElementById('rd-new-code').value.trim();
+  if(!name || !code){ toast('Enter both a name and a dummy item code'); return; }
+  rdPendingNew = {name, dummyCode: code};
+  rdPickerMode = 'new-base';
+  document.getElementById('rd-new-step1').classList.add('mc-hidden');
+  document.getElementById('rd-new-step2').classList.remove('mc-hidden');
+  rdApplyPickerFilters();
+}
+
+function rdFilterPrefix(){ return rdPickerMode==='existing' ? 'rd-f' : 'rd-nf'; }
+function rdVisibleIdx(){
+  const p = rdFilterPrefix();
+  const cat = document.getElementById(p+'-cat').value;
+  const line = document.getElementById(p+'-line').value;
+  const height = document.getElementById(p+'-height').value;
+  const size = document.getElementById(p+'-size').value;
+  const colour = document.getElementById(p+'-colour').value;
+  const q = (document.getElementById(p+'-search').value || '').trim().toLowerCase();
+  const out = [];
+  skus.forEach((s,i)=>{
+    if(!s.ic) return; // R&D needs a real BOM to start from — SKUs with no item code can't seed a draft
+    if(s.rm_source === 'draft') return; // never let an open workspace's own synthetic SKU appear as a pickable base
+    if(cat !== 'all' && mcCategoryOf(s) !== cat) return;
+    if(line !== 'all' && mcLineOf(s) !== line) return;
+    if(height !== 'all' && mcHeightOf(s) !== height) return;
+    if(size !== 'all' && mcSizeOf(s) !== size) return;
+    if(colour !== 'all' && s.colour !== colour) return;
+    if(q && !(s.p.toLowerCase().includes(q) || (s.ic||'').toLowerCase().includes(q))) return;
+    out.push(i);
+  });
+  return out;
+}
+function rdPopulatePickerFilterOptions(){
+  const p = rdFilterPrefix();
+  const withCode = skus.filter(s=>s.ic && s.rm_source !== 'draft');
+  const cat = document.getElementById(p+'-cat').value;
+  const lineSel = document.getElementById(p+'-line');
+  const prevLine = lineSel.value;
+  const lines = [...new Set(withCode.filter(s=>cat==='all'||mcCategoryOf(s)===cat).map(mcLineOf))].sort();
+  lineSel.innerHTML = '<option value="all">All Product Lines</option>' + lines.map(l=>`<option value="${escAttr(l)}">${l}</option>`).join('');
+  lineSel.value = lines.includes(prevLine) ? prevLine : 'all';
+
+  const line = lineSel.value;
+  const scoped = withCode.filter(s=>(cat==='all'||mcCategoryOf(s)===cat) && (line==='all'||mcLineOf(s)===line));
+
+  const heightSel = document.getElementById(p+'-height');
+  const prevHeight = heightSel.value;
+  const heights = [...new Set(scoped.map(mcHeightOf).filter(Boolean))].sort((a,b)=>parseFloat(a)-parseFloat(b));
+  heightSel.innerHTML = '<option value="all">All Heights</option>' + heights.map(h=>`<option value="${escAttr(h)}">${h}</option>`).join('');
+  heightSel.value = heights.includes(prevHeight) ? prevHeight : 'all';
+
+  const sizeSel = document.getElementById(p+'-size');
+  const prevSize = sizeSel.value;
+  const sizes = [...new Set(scoped.map(mcSizeOf).filter(Boolean))].sort();
+  sizeSel.innerHTML = '<option value="all">All Sizes</option>' + sizes.map(sz=>`<option value="${escAttr(sz)}">${sz}</option>`).join('');
+  sizeSel.value = sizes.includes(prevSize) ? prevSize : 'all';
+
+  const size = sizeSel.value;
+  const colourSel = document.getElementById(p+'-colour');
+  const prevColour = colourSel.value;
+  const colours = [...new Set(scoped.filter(s=>size==='all'||mcSizeOf(s)===size).map(s=>s.colour).filter(Boolean))].sort();
+  colourSel.innerHTML = '<option value="all">All Colours</option>' + colours.map(c=>`<option value="${escAttr(c)}">${c}</option>`).join('');
+  colourSel.value = colours.includes(prevColour) ? prevColour : 'all';
+}
+function rdApplyPickerFilters(){
+  rdPopulatePickerFilterOptions();
+  const visible = rdVisibleIdx();
+  const bodyId = rdPickerMode==='existing' ? 'rd-picker-body' : 'rd-npicker-body';
+  const countId = rdPickerMode==='existing' ? 'rd-picker-count' : 'rd-npicker-count';
+  const countEl = document.getElementById(countId);
+  if(countEl) countEl.textContent = `${visible.length} of ${skus.filter(s=>s.ic && s.rm_source !== 'draft').length} products with a real BOM match these filters`;
+  const cm = MC_CAT_META;
+  document.getElementById(bodyId).innerHTML = visible.map(i=>{
+    const s = skus[i];
+    const cat = mcCategoryOf(s), meta = cm[cat]||{cls:'',label:cat};
+    const height = mcHeightOf(s) || '—';
+    return `<tr onclick="rdPickBase('${escAttr(s.ic)}')">
+      <td><b>${s.p}</b></td><td class="item-code">${s.ic}</td>
+      <td><span class="cat-chip ${meta.cls}">${meta.label}</span></td><td>${height}</td>
+      <td class="num">₹${Math.round(s.rm_live).toLocaleString('en-IN')}</td>
+      <td class="num">₹${Math.round(s.mrp_live).toLocaleString('en-IN')}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="6" class="placeholder-row">No products with a real BOM match these filters.</td></tr>';
+}
+
+async function rdPickBase(itemCode){
+  if(rdPickerMode === 'existing'){
+    const s = skus.find(x=>x.ic===itemCode);
+    await rdCreateDraft(s ? s.p : itemCode, 'existing', itemCode, null);
+  } else {
+    if(!rdPendingNew){ toast('Something went wrong — start over from R&D'); rdShowScreen('rd-screen-entry'); return; }
+    await rdCreateDraft(rdPendingNew.name, 'new', itemCode, rdPendingNew.dummyCode);
+    rdPendingNew = null;
+  }
+}
+
+async function rdCreateDraft(name, mode, baseItemCode, dummyCode){
+  try{
+    const resp = await fetch('/api/rd/drafts', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({name, mode, base_item_code: baseItemCode, dummy_item_code: dummyCode})
+    });
+    if(!resp.ok){ const err = await resp.json().catch(()=>({})); toast(err.error || 'Could not create draft'); return; }
+    const draft = await resp.json();
+    toast('Draft created');
+    rdOpenWorkspace(draft.id, draft);
+  }catch(e){ toast('Could not reach the engine server'); }
+}
+
+// ── Workspace — pushes a synthetic SKU onto skus[] so the existing
+// Materials-subtab machinery (mcSelectProduct/mcRefreshCalc/waterfall/
+// BOM editor) runs completely unmodified against this draft. ─────────
+async function rdOpenWorkspace(draftId, preloaded){
+  const draft = preloaded || await (await fetch('/api/rd/drafts/'+draftId)).json();
+  if(!draft || draft.error){ toast('Could not open that draft'); return; }
+  const base = draft.base_sku;
+  if(!base){ toast('This draft\'s base product no longer exists'); return; }
+
+  // Remember Material Costing's own current selection (only the first
+  // time we enter a workspace this "session", so nested draft-switching
+  // doesn't clobber the real original selection with a stale draft idx).
+  if(rdPrevMcIdx === undefined) rdPrevMcIdx = mcState.idx;
+
+  if(rdSyntheticIdx != null) skus.splice(rdSyntheticIdx, 1); // drop any previous draft's synthetic row first
+
+  const variant = draft.variants[0];
+  const displayName = draft.mode==='new' ? draft.name : `${draft.name} — R&D draft`;
+  // The backend's base_sku is only the raw sku_master record (mrp/rm_cost/
+  // brand/sqft/freight/consumer_scheme) — it has no rg/ck/cst classification,
+  // those are computed client-side only. Prefer the already-loaded real
+  // catalog entry (skus[], keyed by item_code) as the template so the draft
+  // inherits the exact same commercial-policy branch as the live product.
+  const realBase = skus.find(x=>x.ic===base.item_code); // previous synthetic (if any) was just spliced out above
+  if(!realBase) console.warn('R&D: no live catalog match for', base.item_code, '— waterfall may use incomplete policy fields');
+  const template = realBase || {b: base.brand, cst: undefined, rg: undefined, ck: undefined,
+    fr: base.freight_south, cs: base.consumer_scheme, sqft: base.sqft, colour: null};
+  const synthetic = {...template, p: displayName, ic: draft.mode==='new' ? (draft.dummy_item_code||'') : base.item_code,
+    mrp_live: base.mrp, rm_live: base.rm_cost, rm_from_ramco: false, rm_source: 'draft'};
+  rdSyntheticIdx = skus.length;
+  skus.push(synthetic);
+
+  rdActiveContext = {draftId: draft.id, variantId: variant.id, lines: variant.lines, draft};
+
+  showPage('material', true);
+  mcShowSubtab('mc-sub-materials');
+  document.getElementById('mc-filterbar-real').classList.add('mc-hidden');
+  document.getElementById('mc-bom-actions-real').classList.add('mc-hidden');
+  const banner = document.getElementById('rd-banner');
+  banner.classList.remove('mc-hidden');
+  rdRenderBanner(draft);
+
+  mcSelectProduct(rdSyntheticIdx);
+}
+
+function rdRenderBanner(draft){
+  const nameInput = document.getElementById('rd-banner-name');
+  nameInput.value = draft.name;
+  nameInput.dataset.draftId = draft.id;
+  const statusEl = document.getElementById('rd-banner-status');
+  const statusLabel = {draft:'Draft', pending_review:'Pending admin review', approved:'Approved'};
+  statusEl.className = 'status-pill status-'+draft.status;
+  statusEl.textContent = statusLabel[draft.status]||draft.status;
+  const baseEl = document.getElementById('rd-banner-base');
+  baseEl.innerHTML = draft.mode==='new'
+    ? `New product · dummy code <b>${escAttr(draft.dummy_item_code||'—')}</b> · started from <b>${escAttr(draft.base_item_code)}</b>`
+    : `Sandbox copy of <b>${escAttr(draft.base_item_code)}</b> — the real product is untouched`;
+}
+
+let rdRenameTimer = null;
+function rdRenameDraft(name){
+  if(!rdActiveContext) return;
+  clearTimeout(rdRenameTimer);
+  rdRenameTimer = setTimeout(async ()=>{
+    await fetch('/api/rd/drafts/'+rdActiveContext.draftId, {
+      method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name})
+    });
+  }, 500);
+}
+
+async function rdSaveVariant(){
+  if(!rdActiveContext) return;
+  try{
+    const resp = await fetch(`/api/rd/drafts/${rdActiveContext.draftId}/variants/${rdActiveContext.variantId}`, {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({lines: mcBomLines})
+    });
+    if(!resp.ok) throw new Error('save failed');
+    rdActiveContext.lines = mcBomLines;
+    toast('Draft saved');
+  }catch(e){ toast('Could not save draft — engine server unreachable'); }
+}
+
+async function rdSetStatus(status){
+  if(!rdActiveContext) return;
+  await rdSaveVariant();
+  const resp = await fetch('/api/rd/drafts/'+rdActiveContext.draftId, {
+    method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({status})
+  });
+  if(resp.ok){
+    const draft = await resp.json();
+    rdActiveContext.draft = draft;
+    rdRenderBanner(draft);
+    toast(status==='pending_review' ? 'Submitted for admin review' : 'Status updated');
+  }
+}
+
+function rdCleanupWorkspace(){
+  if(rdSyntheticIdx != null){
+    skus.splice(rdSyntheticIdx, 1);
+    rdSyntheticIdx = null;
+  }
+  rdActiveContext = null;
+  document.getElementById('rd-banner').classList.add('mc-hidden');
+  document.getElementById('mc-filterbar-real').classList.remove('mc-hidden');
+  document.getElementById('mc-bom-actions-real').classList.remove('mc-hidden');
+  if(rdPrevMcIdx !== undefined){
+    if(rdPrevMcIdx != null && skus[rdPrevMcIdx]) mcSelectProduct(rdPrevMcIdx);
+    else mcState.idx = null;
+    rdPrevMcIdx = undefined;
+  }
+}
+
+// ── Compare mode — read-only side-by-side waterfall of each variant,
+// computed with the same mcAdapt/mcEvalWaterfall math as everywhere else
+// in the tool (all variants share the base product's commercial policy —
+// only their BOM/RM cost differs), no separate calc engine. ──────────
+function rdBomTotal(lines){
+  let total = 0;
+  lines.forEach(row=>{
+    const hydrated = mcHydrate(row);
+    total += hydrated.wh==='SFG' ? hydrated.qty*mcSfgRate(hydrated) : mcLineCost(hydrated);
+  });
+  return total;
+}
+function rdOpenCompare(){
+  if(!rdActiveContext) return;
+  showPage('rd', true); // rdInit()'s reset to the entry screen runs synchronously first; rdShowScreen below then overrides it to compare
+  rdShowScreen('rd-screen-compare');
+  document.getElementById('rd-compare-title').textContent = `Comparing variants — ${rdActiveContext.draft.name}`;
+  rdRenderCompare();
+}
+function rdBackToWorkspace(){
+  showPage('material', true);
+  mcShowSubtab('mc-sub-materials');
+}
+async function rdRenderCompare(){
+  const resp = await fetch('/api/rd/drafts/'+rdActiveContext.draftId);
+  const draft = await resp.json();
+  rdActiveContext.draft = draft;
+  const pol = mcState.p; // shared commercial policy — identical for every variant
+  const grid = document.getElementById('rd-compare-grid');
+
+  const rows = ['__header__','RM Cost','Net Margin %','NM/Sq.ft','__actions__'];
+  const rowLabels = {'RM Cost':'RM Cost','Net Margin %':'Net Margin %','NM/Sq.ft':'NM/Sq.ft'};
+
+  const perVariant = draft.variants.map(v=>{
+    const total = rdBomTotal(v.lines);
+    const wf = mcEvalWaterfall(pol, {rm:{kind:'amt', value: total}});
+    return {variant:v, total, nmPct: wf.netMarginPct, nmSqft: wf.nmSqft};
+  });
+  const bestRm = Math.min(...perVariant.map(x=>x.total));
+  const bestNm = Math.max(...perVariant.map(x=>x.nmPct));
+  const bestNmSqft = Math.max(...perVariant.map(x=>x.nmSqft));
+
+  let html = `<div class="rd-cg-col rd-cg-label-col"><div class="rd-cg-cell">Option</div>
+    <div class="rd-cg-cell">Total RM Cost</div><div class="rd-cg-cell">Net Margin %</div>
+    <div class="rd-cg-cell">NM/Sq.ft</div><div class="rd-cg-cell"></div></div>`;
+  perVariant.forEach(({variant,total,nmPct,nmSqft})=>{
+    html += `<div class="rd-cg-col">
+      <div class="rd-cg-cell rd-cg-hd"><input value="${escAttr(variant.name)}" onchange="rdRenameVariant(${variant.id}, this.value)"></div>
+      <div class="rd-cg-cell rd-cg-metric ${total===bestRm?'rd-cg-best':''}">₹${Math.round(total).toLocaleString('en-IN')}</div>
+      <div class="rd-cg-cell rd-cg-metric ${nmPct===bestNm?'rd-cg-best':''}">${(nmPct*100).toFixed(1)}%</div>
+      <div class="rd-cg-cell rd-cg-metric ${nmSqft===bestNmSqft?'rd-cg-best':''}">₹${Math.round(nmSqft).toLocaleString('en-IN')}</div>
+      <div class="rd-cg-cell"><button type="button" class="btn btn-outline-rd btn-sm" onclick="rdEditVariant(${variant.id})">Open BOM</button></div>
+    </div>`;
+  });
+  grid.innerHTML = html;
+}
+async function rdAddVariant(){
+  if(!rdActiveContext) return;
+  const resp = await fetch(`/api/rd/drafts/${rdActiveContext.draftId}/variants`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({name: `Option ${rdActiveContext.draft.variants.length+1}`, copy_from_variant_id: rdActiveContext.variantId})
+  });
+  if(resp.ok){ const draft = await resp.json(); rdActiveContext.draft = draft; rdRenderCompare(); }
+}
+async function rdRenameVariant(variantId, name){
+  const variant = rdActiveContext.draft.variants.find(v=>v.id===variantId);
+  await fetch(`/api/rd/drafts/${rdActiveContext.draftId}/variants/${variantId}`, {
+    method:'PUT', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({name, lines: variant ? variant.lines : []})
+  });
+  rdRenderCompare();
+}
+function rdEditVariant(variantId){
+  const variant = rdActiveContext.draft.variants.find(v=>v.id===variantId);
+  if(!variant) return;
+  rdActiveContext.variantId = variantId;
+  rdActiveContext.lines = variant.lines;
+  showPage('material', true);
+  mcShowSubtab('mc-sub-materials');
+  mcLoadBom();
 }
 
 // Init — try the live engine server first, falling back to embedded data
