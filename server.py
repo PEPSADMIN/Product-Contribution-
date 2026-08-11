@@ -20,6 +20,16 @@ Endpoints:
                                      over the full Item Master (RM items by
                                      default; add &types=RAWMATERIAL,... to
                                      widen/narrow)
+  GET /api/rd/drafts             -> list all R&D drafts (sandbox BOM
+                                     experiments — never touch sku_master.py)
+  POST /api/rd/drafts            -> create a draft, seeded from a real
+                                     product's BOM
+  GET /api/rd/drafts/<id>        -> full draft + all its variants
+  PUT /api/rd/drafts/<id>        -> rename / change status
+  DELETE /api/rd/drafts/<id>     -> delete a draft and its variants
+  POST /api/rd/drafts/<id>/variants        -> add a variant (for compare mode)
+  PUT /api/rd/drafts/<id>/variants/<vid>   -> save a variant's edited BOM
+  DELETE /api/rd/drafts/<id>/variants/<vid> -> delete a variant
 """
 import os
 import sys
@@ -35,6 +45,7 @@ from sku_master import SKUS
 from config import FINANCE, COMMERCIAL
 import costing_store
 import bom_store
+import rd_store
 from item_master import search_items
 from colour_lookup import colour_for
 
@@ -182,6 +193,112 @@ def api_item_search():
     results = search_items(q, limit=60, item_types=item_types)
     return jsonify(results)
 
+
+# ── R&D drafts — sandbox BOM experiments, never written to sku_master.py ──
+# "Approved" is a status the user sets by hand once their admin signs off
+# in their own separate BOMAT Tool workflow; nothing here promotes a draft
+# into the live catalog automatically.
+
+_SKUS_BY_CODE = {s['item_code']: s for s in SKUS if s.get('item_code')}
+
+
+@app.route('/api/rd/drafts', methods=['GET'])
+def api_rd_list():
+    return jsonify(rd_store.list_drafts())
+
+
+@app.route('/api/rd/drafts', methods=['POST'])
+def api_rd_create():
+    body = request.get_json(silent=True) or {}
+    name = (body.get('name') or '').strip()
+    mode = body.get('mode')
+    base_item_code = body.get('base_item_code')
+    dummy_item_code = (body.get('dummy_item_code') or '').strip() or None
+    if not name or mode not in ('existing', 'new') or not base_item_code:
+        return jsonify({'error': "body must be {'name', 'mode': 'existing'|'new', 'base_item_code', "
+                                  "'dummy_item_code' (mode='new' only)}"}), 400
+    if base_item_code not in _SKUS_BY_CODE:
+        return jsonify({'error': f'{base_item_code} is not a real tracked item code'}), 400
+    lines, _source = bom_store.get_bom(base_item_code)
+    if lines is None:
+        return jsonify({'error': f'{base_item_code} has no extracted BOM to start a draft from'}), 400
+    draft_id = rd_store.create_draft(name, mode, base_item_code, lines, dummy_item_code)
+    logger.info(f'Created R&D draft {draft_id} "{name}" (mode={mode}) from {base_item_code}')
+    return jsonify(_with_base_sku(rd_store.get_draft(draft_id))), 201
+
+
+def _with_base_sku(draft):
+    # The draft's base product's real financial parameters (MRP, brand,
+    # freight, consumer scheme, sqft) ride along so the frontend can compute
+    # a real Net Margin waterfall for the draft — a draft has no financial
+    # identity of its own, it borrows its base's. (Commercial-policy keys
+    # like rate group / channel key aren't in sku_master.py at all — the
+    # frontend resolves those from its own already-loaded catalog instead.)
+    if draft is not None:
+        draft['base_sku'] = _SKUS_BY_CODE.get(draft['base_item_code'])
+    return draft
+
+
+@app.route('/api/rd/drafts/<int:draft_id>', methods=['GET'])
+def api_rd_get(draft_id):
+    draft = rd_store.get_draft(draft_id)
+    if draft is None:
+        return jsonify({'error': 'not found'}), 404
+    return jsonify(_with_base_sku(draft))
+
+
+@app.route('/api/rd/drafts/<int:draft_id>', methods=['PUT'])
+def api_rd_update(draft_id):
+    body = request.get_json(silent=True) or {}
+    if rd_store.get_draft(draft_id) is None:
+        return jsonify({'error': 'not found'}), 404
+    rd_store.update_draft(draft_id, name=body.get('name'), status=body.get('status'))
+    logger.info(f'Updated R&D draft {draft_id}: {body}')
+    return jsonify(rd_store.get_draft(draft_id))
+
+
+@app.route('/api/rd/drafts/<int:draft_id>', methods=['DELETE'])
+def api_rd_delete(draft_id):
+    rd_store.delete_draft(draft_id)
+    logger.info(f'Deleted R&D draft {draft_id}')
+    return jsonify({'deleted': draft_id})
+
+
+@app.route('/api/rd/drafts/<int:draft_id>/variants', methods=['POST'])
+def api_rd_variant_add(draft_id):
+    draft = rd_store.get_draft(draft_id)
+    if draft is None:
+        return jsonify({'error': 'not found'}), 404
+    body = request.get_json(silent=True) or {}
+    name = (body.get('name') or '').strip() or f'Option {len(draft["variants"]) + 1}'
+    copy_from = body.get('copy_from_variant_id')
+    lines = None
+    if copy_from is not None:
+        for v in draft['variants']:
+            if v['id'] == copy_from:
+                lines = v['lines']
+                break
+    if lines is None:
+        lines = draft['variants'][0]['lines'] if draft['variants'] else []
+    variant_id = rd_store.add_variant(draft_id, name, lines)
+    logger.info(f'Added variant "{name}" to R&D draft {draft_id}')
+    return jsonify(rd_store.get_draft(draft_id)), 201
+
+
+@app.route('/api/rd/drafts/<int:draft_id>/variants/<int:variant_id>', methods=['PUT'])
+def api_rd_variant_save(draft_id, variant_id):
+    body = request.get_json(silent=True) or {}
+    lines = body.get('lines')
+    if not isinstance(lines, list):
+        return jsonify({'error': "body must be {'lines': [...]}"}), 400
+    rd_store.save_variant(variant_id, lines, name=body.get('name'))
+    return jsonify(rd_store.get_draft(draft_id))
+
+
+@app.route('/api/rd/drafts/<int:draft_id>/variants/<int:variant_id>', methods=['DELETE'])
+def api_rd_variant_delete(draft_id, variant_id):
+    rd_store.delete_variant(variant_id)
+    return jsonify(rd_store.get_draft(draft_id))
 
 
 if __name__ == '__main__':
