@@ -4,6 +4,9 @@ __pycache__/
 # Generated/runtime data — rebuilt by refresh_rm_costs.py / server.py, not source
 costing_history.db
 server.log
+server_run.log
+server_run.err.log
+server_err.log
 refresh_output.log
 
 # One-off analysis/debug output from data extraction sessions
