@@ -178,6 +178,44 @@ table.mc-wf-transposed td:first-child{font-weight:600;white-space:nowrap;backgro
 .wh-wip{background:var(--bg3);color:#8892a4}
 .wh-sfg{background:#DCE6F5;color:var(--blue2)}
 
+/* ── History subtab ── */
+.mc-mt10{margin-top:10px}
+.mc-card-controls{overflow:visible} /* this card hosts the Months dropdown, which must render outside the card's own box */
+.hist-controls{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;padding:14px 16px}
+.hist-note{font-size:11px;color:#8892a4;margin-left:auto;max-width:360px;line-height:1.5;padding-top:2px}
+.hist-note b{color:var(--ink,#1a1a2e)}
+.multi-select-wrap{position:relative}
+.multi-select-btn{padding:7px 30px 7px 10px;border:1px solid var(--border);border-radius:5px;font-size:13px;font-family:inherit;
+  background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><rect x="3" y="4" width="18" height="17" rx="2" fill="none" stroke="%238892a4" stroke-width="1.6"/><line x1="3" y1="9" x2="21" y2="9" stroke="%238892a4" stroke-width="1.6"/><line x1="7" y1="2" x2="7" y2="6" stroke="%238892a4" stroke-width="1.6"/><line x1="17" y1="2" x2="17" y2="6" stroke="%238892a4" stroke-width="1.6"/></svg>') no-repeat right 8px center;
+  cursor:pointer;text-align:left;min-width:240px;color:#1a1a2e}
+.multi-select-btn:focus{outline:2px solid var(--blue2);outline-offset:1px}
+.multi-select-panel{position:absolute;top:calc(100% + 4px);left:0;z-index:30;background:#fff;border:1px solid var(--border);
+  border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.15);min-width:240px;padding:6px}
+.ms-search{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:4px;font-size:12.5px;font-family:inherit;margin-bottom:6px;box-sizing:border-box}
+.ms-search:focus{outline:2px solid var(--blue2);outline-offset:1px}
+.ms-empty{padding:6px 8px;font-size:12px;color:#8892a4;font-style:italic}
+.ms-option{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:4px;cursor:pointer;font-size:12.5px}
+.ms-option:hover{background:var(--bg2)}
+.ms-option input{cursor:pointer}
+.hist-tag,.hist-today-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;text-transform:uppercase;letter-spacing:.03em;margin-left:6px}
+.hist-today-tag{background:#E8F5E9;color:#1B5E20}
+.hist-tag{background:#EBF3FC;color:var(--blue2)}
+.hist-particulars-note{color:#8892a4;font-weight:400}
+.src-note{font-size:11px;color:#8892a4;padding:12px 16px;border-top:1px solid var(--border);background:var(--bg2)}
+.src-note b{color:var(--ink,#1a1a2e)}
+.rm-clickable{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#8892a4}
+.rm-clickable:hover{color:var(--blue2);text-decoration-color:var(--blue2)}
+.bom-toprow{display:flex;align-items:center;justify-content:space-between}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--blue2);
+  background:none;border:none;cursor:pointer;font-family:inherit;padding:4px 0;margin-bottom:10px}
+.back-link:hover{text-decoration:underline}
+.btn-download{font-size:11.5px;font-weight:700;color:var(--blue2);background:#fff;border:1px solid var(--blue2);
+  border-radius:5px;padding:5px 12px;cursor:pointer;font-family:inherit}
+.btn-download:hover{background:var(--blue2);color:#fff}
+.bom-hdr{display:flex;align-items:baseline;gap:10px;margin-bottom:2px}
+.bom-hdr .bh-title{font-size:14px;font-weight:700;color:var(--ink,#1a1a2e)}
+.bom-hdr .bh-sub{font-size:11.5px;color:#8892a4}
+
 .sfg-row td{background:var(--bg2)}
 .sfg-detail{padding:0}
 .sfg-inner{padding:10px 10px 12px 34px;background:var(--bg2)}
@@ -433,6 +471,7 @@ input.bom-rate{text-align:right;width:70px}
           <div class="mc-subtabs">
             <div class="mc-subtab active" data-page="mc-sub-abstract" onclick="mcShowSubtab('mc-sub-abstract')">Abstract</div>
             <div class="mc-subtab" data-page="mc-sub-materials" onclick="mcShowSubtab('mc-sub-materials')">Materials</div>
+            <div class="mc-subtab" data-page="mc-sub-history" onclick="mcShowSubtab('mc-sub-history')">Product History</div>
           </div>
 
           <!-- ══ ABSTRACT (read-only) ══ -->
@@ -508,6 +547,57 @@ input.bom-rate{text-align:right;width:70px}
             </div>
           </div>
 
+          <!-- ══ HISTORY (real per-month RM cost, vs today's live policy) ══ -->
+          <div class="mc-subpage" id="mc-sub-history">
+            <div id="mc-hist-compare-view">
+              <div class="mc-section-label">Compare a previous month against today</div>
+              <div class="mc-card mc-card-controls">
+                <div class="hist-controls">
+                  <div class="hfield">
+                    <label for="mc-hist-months-btn">Months</label>
+                    <div class="multi-select-wrap">
+                      <button type="button" id="mc-hist-months-btn" class="multi-select-btn"></button>
+                      <div id="mc-hist-months-panel" class="multi-select-panel mc-hidden">
+                        <input type="text" id="mc-hist-month-search" class="ms-search" placeholder="Search month or year…">
+                        <div id="mc-hist-month-options"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="hist-note">Only <b>RM Cost</b> is stored per month. MRP and margin policy below are <b>today's live values</b> for every column — only the RM Cost row and everything it flows into (EBITDA, Net Margin) reflects the selected month(s).</div>
+                </div>
+              </div>
+              <div class="mc-card" id="mc-hist-placeholder">
+                <div class="placeholder-note" id="mc-hist-placeholder-text">Loading…</div>
+              </div>
+              <div id="mc-hist-wf-wrap" class="mc-hidden">
+                <div class="mc-section-label" id="mc-hist-wf-label">Net Margin waterfall</div>
+                <div class="mc-card mc-scroll">
+                  <table>
+                    <thead><tr id="mc-hist-wf-head"></tr></thead>
+                    <tbody id="mc-hist-wf-body"></tbody>
+                  </table>
+                  <div class="src-note" id="mc-hist-src-note"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="mc-hist-bom-view" class="mc-hidden">
+              <div class="bom-toprow">
+                <button type="button" class="back-link" onclick="mcHistBackToCompare()">&larr; Back to Product History</button>
+                <button type="button" class="btn-download" onclick="mcHistDownloadCsv()">&#8681; Download CSV</button>
+              </div>
+              <div class="bom-hdr">
+                <span class="bh-title" id="mc-hist-bom-title"></span>
+                <span class="bh-sub" id="mc-hist-bom-sub"></span>
+              </div>
+              <div class="mc-card mc-scroll mc-mt10">
+                <table>
+                  <thead><tr><th>#</th><th>Item Code</th><th>Description</th><th>Warehouse</th><th class="num">Qty</th><th>UOM</th><th class="num">Rate&nbsp;(₹)</th><th class="num">Cost&nbsp;(₹)</th></tr></thead>
+                  <tbody id="mc-hist-bom-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
           </div>
         </div>
     </div>
@@ -2400,6 +2490,7 @@ function mcShowSubtab(pageId){
   document.querySelectorAll('#page-material .mc-subpage').forEach(p=>p.classList.remove('active'));
   document.querySelector(`#page-material .mc-subtab[data-page="${pageId}"]`).classList.add('active');
   document.getElementById(pageId).classList.add('active');
+  if(pageId==='mc-sub-history') mcHistOnShow();
 }
 
 function mcSelectProduct(idxStr){
@@ -2409,6 +2500,7 @@ function mcSelectProduct(idxStr){
   mcState.overrides = {};
   mcRefreshCalc();
   mcLoadBom();
+  if(document.getElementById('mc-sub-history').classList.contains('active')) mcHistOnShow();
 }
 
 // Recomputes the waterfall for the currently-selected product from the
@@ -2426,6 +2518,240 @@ function mcRefreshCalc(){
   mcRenderProductDetails(s);
   mcRenderWaterfall('mc-abs', true);
   mcRenderTransposed('mc-mat');
+}
+
+// ── History subtab — real per-month RM cost (costing_store snapshots) run
+// through the SAME mcEvalWaterfall engine as Abstract/Materials, via the
+// existing rm override mechanism (the identical pattern R&D's Compare
+// screen already uses) — so every other row (MRP, margins, GST…) reflects
+// today's live Commercial Rates, and only RM Cost/EBITDA/Net Margin move
+// per selected month. Nothing here is approximated. ───────────────────
+let mcHistState = {code:null, months:[], history:null, allowedMonths:[], currentMonth:null};
+let mcHistBomCache = null; // {productName, code, month, lines, total} — backs the CSV download
+let mcHistWired = false;
+
+function mcHistMonthLabel(m){
+  const match = /^(\d{4})-(\d{2})$/.exec(m);
+  if(!match) return m; // non-calendar snapshot tags (e.g. '2026-05-hcf') are shown as-is
+  const names = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return (names[parseInt(match[2],10)-1] || m) + ' ' + match[1];
+}
+
+function mcHistWireControls(){
+  if(mcHistWired) return;
+  mcHistWired = true;
+  const btn = document.getElementById('mc-hist-months-btn');
+  const panel = document.getElementById('mc-hist-months-panel');
+  const searchInput = document.getElementById('mc-hist-month-search');
+  searchInput.oninput = mcHistRenderMonthOptions;
+  btn.onclick = (e)=>{
+    e.stopPropagation();
+    panel.classList.toggle('mc-hidden');
+    if(!panel.classList.contains('mc-hidden')){ searchInput.value=''; mcHistRenderMonthOptions(); searchInput.focus(); }
+  };
+  document.addEventListener('click', (e)=>{
+    if(!panel.classList.contains('mc-hidden') && !panel.contains(e.target) && e.target!==btn) panel.classList.add('mc-hidden');
+  });
+}
+
+async function mcHistOnShow(){
+  mcHistWireControls();
+  const s = skus[mcState.idx];
+  document.getElementById('mc-hist-compare-view').classList.remove('mc-hidden');
+  document.getElementById('mc-hist-bom-view').classList.add('mc-hidden');
+  const btn = document.getElementById('mc-hist-months-btn');
+  const wrap = document.getElementById('mc-hist-wf-wrap');
+  const ph = document.getElementById('mc-hist-placeholder');
+  const phText = document.getElementById('mc-hist-placeholder-text');
+  if(!s || !s.ic){
+    wrap.classList.add('mc-hidden');
+    ph.classList.remove('mc-hidden');
+    phText.textContent = 'This product has no item code, so no ledger history is tracked for it.';
+    btn.textContent = 'No months available';
+    btn.disabled = true;
+    return;
+  }
+  const code = s.ic;
+  if(mcHistState.code === code && mcHistState.history){
+    mcHistRenderWaterfall();
+    return;
+  }
+  btn.disabled = false;
+  ph.classList.remove('mc-hidden');
+  phText.textContent = 'Loading…';
+  wrap.classList.add('mc-hidden');
+  try{
+    const resp = await fetch('/api/rm-history/' + encodeURIComponent(code));
+    const rows = await resp.json();
+    rows.sort((a,b)=> a.month < b.month ? -1 : a.month > b.month ? 1 : 0);
+    if(!rows.length){
+      mcHistState = {code, months:[], history:[], allowedMonths:[], currentMonth:null};
+      phText.textContent = 'No RM cost history tracked yet for this product.';
+      btn.textContent = 'No months available';
+      btn.disabled = true;
+      return;
+    }
+    const currentMonth = rows[rows.length-1].month;
+    const allowedMonths = rows.slice(0,-1).map(r=>r.month); // every month except the latest, which is "Today"
+    mcHistState = {
+      code, history: rows, currentMonth, allowedMonths,
+      months: allowedMonths.length ? [allowedMonths[allowedMonths.length-1]] : []
+    };
+    ph.classList.add('mc-hidden');
+    wrap.classList.remove('mc-hidden');
+    mcHistRenderMonthButton();
+    mcHistRenderMonthOptions();
+    mcHistRenderWaterfall();
+  }catch(e){
+    phText.textContent = 'Could not reach the engine server.';
+  }
+}
+
+function mcHistRenderMonthButton(){
+  const btn = document.getElementById('mc-hist-months-btn');
+  const n = mcHistState.months.length;
+  btn.textContent = n===0 ? 'Select a month…'
+    : n===1 ? mcHistMonthLabel(mcHistState.months[0])
+    : `${n} months selected`;
+}
+
+function mcHistRenderMonthOptions(){
+  const q = (document.getElementById('mc-hist-month-search').value||'').trim().toLowerCase();
+  const matches = mcHistState.allowedMonths.filter(m=>!q || mcHistMonthLabel(m).toLowerCase().includes(q) || m.toLowerCase().includes(q));
+  document.getElementById('mc-hist-month-options').innerHTML = matches.length ? matches.map(m=>{
+    const checked = mcHistState.months.includes(m);
+    return `<label class="ms-option"><input type="checkbox" value="${escAttr(m)}" ${checked?'checked':''} onchange="mcHistToggleMonth('${m}', this.checked)"> ${mcHistMonthLabel(m)}</label>`;
+  }).join('') : '<div class="ms-empty">No months match that search.</div>';
+}
+
+function mcHistToggleMonth(m, on){
+  if(on && !mcHistState.months.includes(m)) mcHistState.months.push(m);
+  if(!on) mcHistState.months = mcHistState.months.filter(x=>x!==m);
+  if(!mcHistState.months.length && mcHistState.allowedMonths.length){
+    mcHistState.months = [m]; // never allow zero months selected — re-check the box we just unchecked
+    mcHistRenderMonthOptions();
+  }
+  mcHistRenderMonthButton();
+  mcHistRenderWaterfall();
+}
+
+function mcHistFmt(n){ return Math.round(n).toLocaleString('en-IN'); }
+
+function mcHistRenderWaterfall(){
+  if(!mcState.p || !mcHistState.history || !mcHistState.currentMonth) return;
+  const months = [...mcHistState.months].sort();
+  const cur = mcHistState.currentMonth;
+  const cols = [...months, cur];
+  const rmByMonth = Object.fromEntries(mcHistState.history.map(r=>[r.month, r.rm_cost]));
+  const wf = {};
+  cols.forEach(m => { wf[m] = mcEvalWaterfall(mcState.p, {rm:{kind:'amt', value: rmByMonth[m]}}); });
+  const today = wf[cur];
+
+  document.getElementById('mc-hist-wf-label').innerHTML =
+    months.length === 1 ? `Net Margin waterfall — ${mcHistMonthLabel(months[0])} vs Today`
+                          : `Net Margin waterfall — comparing ${months.length} months vs Today`;
+
+  document.getElementById('mc-hist-wf-head').innerHTML = '<th>Particulars</th>' + cols.map(m =>
+    `<th class="num">${mcHistMonthLabel(m)}${m===cur?' <span class="hist-today-tag">Today</span>':''}</th>`
+  ).join('');
+
+  const rows = [
+    {sec:'Revenue'},
+    {label:'MRP', note:"(today's value, every column)", key:'mrp', kind:'flat'},
+    {label:'Dealer margin', key:'dealermargin', kind:'flat'},
+    {label:'Net Billing Rate', key:'nbr', kind:'flat'},
+    {sec:'Costs'},
+    {label:'RM Cost', note:"(that month's real ledger)", key:'rm', kind:'cost'},
+    {label:'Net Sales', key:'netsales', kind:'flat'},
+    {label:'EBITDA', key:'ebitda', kind:'result', total:true},
+    {label:'Net Margin', key:'nm', kind:'result', total:true},
+  ];
+  const deltaClass = (v, kind) => {
+    if(Math.abs(v) < 0.5) return 'delta-0';
+    if(kind === 'cost') return v>0 ? 'delta-dn' : 'delta-up';
+    return v>0 ? 'delta-up' : 'delta-dn';
+  };
+
+  document.getElementById('mc-hist-wf-body').innerHTML = rows.map(r=>{
+    if(r.sec) return `<tr class="section-row"><td colspan="${cols.length+1}"><b>${r.sec}</b></td></tr>`;
+    const noteHtml = r.note ? ` <span class="hist-particulars-note">${r.note}</span>` : '';
+    const cells = cols.map(m=>{
+      const v = wf[m][r.key];
+      const cls = (r.kind !== 'flat' && m !== cur) ? ` class="${deltaClass(v - today[r.key], r.kind)}"` : '';
+      const content = r.key==='rm'
+        ? `<span class="rm-clickable" onclick="mcHistShowBom('${escAttr(mcHistState.code)}','${m}')">${mcHistFmt(v)}</span>`
+        : mcHistFmt(v);
+      return `<td class="num"${cls}>${content}</td>`;
+    }).join('');
+    return `<tr${r.total?' class="total-row"':''}><td>${r.label}${noteHtml}</td>${cells}</tr>`;
+  }).join('') + `<tr class="total-row"><td>Net Margin %</td>${cols.map(m=>{
+    const v = wf[m].netMarginPct*100;
+    let cls = '';
+    if(m !== cur){
+      const d = v - today.netMarginPct*100;
+      if(Math.abs(d) > 0.05) cls = d>0?'delta-up':'delta-dn';
+    }
+    return `<td class="num${cls?' '+cls:''}">${v.toFixed(1)}%</td>`;
+  }).join('')}</tr>`;
+
+  const monthList = months.map(m => {
+    const rec = mcHistState.history.find(r=>r.month===m);
+    return `<b>${m}</b> (${rec?rec.line_count:'?'} lines)`;
+  }).join(', ');
+  const curRec = mcHistState.history.find(r=>r.month===cur);
+  document.getElementById('mc-hist-src-note').innerHTML =
+    `RM Cost sourced from ${monthList} ledger snapshot(s) vs <b>${cur}</b> (${curRec?curRec.line_count:'?'} lines). `+
+    `MRP, dealer margin and all other policy rows use today's live Commercial Rates in every column, so this isolates `+
+    `exactly how much of each deviation was RM-cost-driven. Click any RM Cost figure to see that month's itemized Bill of Materials.`;
+}
+
+async function mcHistShowBom(code, month){
+  try{
+    const resp = await fetch(`/api/bom-history/${encodeURIComponent(code)}/${encodeURIComponent(month)}`);
+    if(!resp.ok){ toast('No extracted BOM for that month'); return; }
+    const data = await resp.json();
+    const lines = data.lines || [];
+    const total = lines.reduce((sum,l)=>sum+(l.cost||0), 0);
+    const s = skus[mcState.idx];
+    mcHistBomCache = {productName: s.p, code, month, lines, total};
+    document.getElementById('mc-hist-bom-title').textContent = `${s.p} — Bill of Materials`;
+    document.getElementById('mc-hist-bom-sub').textContent = `${mcHistMonthLabel(month)} · ${lines.length} lines · Total RM Cost ₹${mcHistFmt(total)}`;
+    document.getElementById('mc-hist-bom-body').innerHTML = lines.map((l,i)=>`<tr>
+      <td>${i+1}</td><td class="item-code">${l.code}</td><td>${l.desc}</td>
+      <td><span class="wh-tag ${l.wh==='SFG'?'wh-sfg':'wh-wip'}">${l.wh}</span></td>
+      <td class="num">${l.qty}</td><td>${l.uom}</td>
+      <td class="num">${(l.rate||0).toFixed(2)}</td><td class="num">${(l.cost||0).toFixed(2)}</td>
+    </tr>`).join('') + `<tr class="total-row"><td colspan="7">Total RM Cost</td><td class="num">${total.toFixed(2)}</td></tr>`;
+    document.getElementById('mc-hist-compare-view').classList.add('mc-hidden');
+    document.getElementById('mc-hist-bom-view').classList.remove('mc-hidden');
+  }catch(e){ toast('Could not reach the engine server'); }
+}
+
+function mcHistBackToCompare(){
+  document.getElementById('mc-hist-bom-view').classList.add('mc-hidden');
+  document.getElementById('mc-hist-compare-view').classList.remove('mc-hidden');
+}
+
+function mcHistCsvCell(v){
+  const str = String(v);
+  return /[",\n]/.test(str) ? '"' + str.replace(/"/g,'""') + '"' : str;
+}
+function mcHistDownloadCsv(){
+  if(!mcHistBomCache) return;
+  const {productName, month, lines, total} = mcHistBomCache;
+  const header = ['#','Item Code','Description','Warehouse','Qty','UOM','Rate (Rs)','Cost (Rs)'];
+  const rows = lines.map((l,i)=>[i+1, l.code, l.desc, l.wh, l.qty, l.uom, (l.rate||0).toFixed(2), (l.cost||0).toFixed(2)]);
+  rows.push(['', '', '', '', '', '', 'Total RM Cost', total.toFixed(2)]);
+  const csv = [header, ...rows].map(r=>r.map(mcHistCsvCell).join(',')).join('\r\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${productName.replace(/[^\w-]+/g,'_')}_BOM_${month}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 // The static, per-SKU half of the Materials tab's "Product Details" card
