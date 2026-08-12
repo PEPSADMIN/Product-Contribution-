@@ -16,6 +16,10 @@ Endpoints:
                                      latest ledger-extracted snapshot
   POST /api/bom/<item_code>      -> save the user's edited BOM tree
   DELETE /api/bom/<item_code>    -> discard edits, revert to the ledger baseline
+  GET /api/rm-history/<item_code> -> every tracked month's RM cost snapshot
+                                     (Product History tab)
+  GET /api/bom-history/<item_code>/<month> -> that month's real itemized
+                                     BOM (Product History drill-down)
   GET /api/item-search?q=...     -> partial Item Code/Description search
                                      over the full Item Master (RM items by
                                      default; add &types=RAWMATERIAL,... to
@@ -183,6 +187,22 @@ def api_bom_revert(item_code):
     logger.info(f'Reverted BOM edits for {item_code} to ledger baseline')
     lines, source = bom_store.get_bom(item_code)
     return jsonify({'item_code': item_code, 'lines': lines, 'source': source})
+
+
+@app.route('/api/rm-history/<item_code>')
+def api_rm_history(item_code):
+    rows = costing_store.history(item_code)
+    return jsonify([{'month': m, 'rm_cost': rm, 'line_count': lc, 'source_file': sf}
+                     for m, rm, lc, sf in rows])
+
+
+@app.route('/api/bom-history/<item_code>/<month>')
+def api_bom_history(item_code, month):
+    lines = bom_store.get_snapshot(item_code, month)
+    if lines is None:
+        return jsonify({'item_code': item_code, 'month': month, 'lines': None,
+                         'message': f'No extracted BOM for {item_code} in {month}.'}), 404
+    return jsonify({'item_code': item_code, 'month': month, 'lines': lines})
 
 
 @app.route('/api/item-search')
