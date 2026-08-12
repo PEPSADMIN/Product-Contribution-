@@ -67,6 +67,18 @@ def latest_snapshot(item_code: str):
         return (row[0], json.loads(row[1])) if row else None
 
 
+def get_snapshot(item_code: str, month: str):
+    """Return the lines for one specific (item_code, month) snapshot, or None
+    if that month was never extracted for this item — used by the History
+    tab's drill-down, which needs a past month's real BOM, not just the latest."""
+    with _conn() as conn:
+        row = conn.execute(
+            "SELECT json_data FROM bom_snapshot WHERE item_code = ? AND month = ?",
+            (item_code, month)
+        ).fetchone()
+        return json.loads(row[0]) if row else None
+
+
 def save_override(item_code: str, lines: list) -> None:
     with _conn() as conn:
         conn.execute(
