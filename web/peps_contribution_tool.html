@@ -2357,12 +2357,20 @@ const MC_CAT_META = {
 // name — real Coir line names (Nimbo, Bond Plus, Eco Plus ET, Comfort
 // Plush, Luxury Memory...) never contain the word "coir", so a name-based
 // check silently hid every Coir SKU under Foam. Every real Coir item code
-// (sourced from the HCF ledger, see sku_master.py) starts with "CIR"; no
-// Foam/Latex code does — confirmed against the full catalog, zero
-// mismatches either direction.
+// starts with "CIR" — cross-checked against
+// D:\Hari JR. DATA\Development\Sales_Mobile\Excel\Category_Validation.xlsx
+// (the real Ramco item/category master, 890 Coir + 3375 Foam mattress
+// rows): zero exceptions on the Coir side. Two ECOM-only Foam sub-brands
+// (Luminous, Haven Memory) also happen to start with "CIR" — not in this
+// catalog yet, but excluded here so they don't silently misclassify if
+// added later.
 function mcParseCategory(s){
   if(s.b === 'accessories') return 'Accessories';
-  if(s.b === 'cirrus') return (s.ic && s.ic.startsWith('CIR')) ? 'Cirrus Coir' : 'Cirrus Foam';
+  if(s.b === 'cirrus'){
+    const ic = s.ic || '';
+    const isCoirPrefixed = ic.startsWith('CIR') && !ic.startsWith('CIRLUM') && !ic.startsWith('CIRHVN');
+    return isCoirPrefixed ? 'Cirrus Coir' : 'Cirrus Foam';
+  }
   return 'Peps'; // peps + italiano
 }
 function mcCategoryOf(s){ return mcParseCategory(s); }
