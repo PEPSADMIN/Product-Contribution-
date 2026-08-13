@@ -1854,7 +1854,7 @@ function mcPctCell(p, ov, key, s, readOnly){
   const spec = MC_ROW_SPEC.find(r=>r.key===key);
   let kind = spec.pct;
   if(kind==='variable') kind = mcDefaultPctFor(p,key)!=null ? 'input' : 'lump';
-  if(kind==='lump') return '<td class="pctcol">lump</td>';
+  if(kind==='lump') return '<td class="pctcol">—</td>';
   if(kind==='dash') return '<td class="pctcol">—</td>';
   if(kind==='ratio'){
     const val = spec.ratioOf(s);
