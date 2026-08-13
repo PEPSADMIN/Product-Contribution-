@@ -2353,12 +2353,16 @@ const MC_CAT_META = {
 // commercial-rate branching). Italiano rolls up under "Peps" here since
 // that's how the real MRP workbook organizes it (Italiano is one of the
 // product-line sheets inside the Peps South MRP file, not a file of its
-// own). Cirrus splits into Foam vs Coir by checking for "coir" in the
-// product name — every currently-tracked Cirrus SKU is foam-type, so
-// Cirrus Coir has no matches yet, but the rule is ready for when it does.
+// own). Cirrus splits into Foam vs Coir by item code prefix, not product
+// name — real Coir line names (Nimbo, Bond Plus, Eco Plus ET, Comfort
+// Plush, Luxury Memory...) never contain the word "coir", so a name-based
+// check silently hid every Coir SKU under Foam. Every real Coir item code
+// (sourced from the HCF ledger, see sku_master.py) starts with "CIR"; no
+// Foam/Latex code does — confirmed against the full catalog, zero
+// mismatches either direction.
 function mcParseCategory(s){
   if(s.b === 'accessories') return 'Accessories';
-  if(s.b === 'cirrus') return /coir/i.test(s.p) ? 'Cirrus Coir' : 'Cirrus Foam';
+  if(s.b === 'cirrus') return (s.ic && s.ic.startsWith('CIR')) ? 'Cirrus Coir' : 'Cirrus Foam';
   return 'Peps'; // peps + italiano
 }
 function mcCategoryOf(s){ return mcParseCategory(s); }
