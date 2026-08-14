@@ -22,16 +22,29 @@ body{font-family:Calibri,Arial,sans-serif;font-size:13px;background:#f0f2f5;colo
 
 /* ── Layout ── */
 .layout{display:flex;height:calc(100vh - 46px)}
-.sidebar{width:220px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar{width:220px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;overflow-x:hidden;transition:width .18s ease}
 .main{flex:1;overflow-y:auto;padding:0}
 
 /* ── Sidebar ── */
-.sidebar-section{font-size:10px;font-weight:700;color:#8892a4;padding:12px 14px 4px;text-transform:uppercase;letter-spacing:.08em}
-.nav-item{padding:8px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;border-left:3px solid transparent;font-size:13px;color:#444;transition:all .15s}
+.sidebar-toggle{display:flex;align-items:center;justify-content:center;height:34px;flex-shrink:0;cursor:pointer;color:#8892a4;border-bottom:1px solid var(--border)}
+.sidebar-toggle:hover{background:var(--bg2);color:var(--blue2)}
+.sidebar-toggle svg{width:15px;height:15px;transition:transform .18s ease}
+.sidebar-section{font-size:10px;font-weight:700;color:#8892a4;padding:12px 14px 4px;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.nav-item{padding:8px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;border-left:3px solid transparent;font-size:13px;color:#444;transition:background .15s,color .15s;white-space:nowrap}
 .nav-item:hover{background:var(--bg2);color:var(--blue)}
 .nav-item.active{background:#EBF3FC;color:var(--blue2);border-left-color:var(--blue2);font-weight:600}
-.nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.nd-peps{background:#2E75B6}.nd-cirrus{background:#1E5631}.nd-it{background:#BF8F00}.nd-acc{background:#C00000}
+.nav-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.nav-icon svg{width:16px;height:16px}
+
+/* Collapsed: icons only, centered, no section labels or text — the
+   symbol for each tab (see .nav-icon) stays visible so the sidebar is
+   still navigable, just narrower. title="" on each item covers the
+   label as a native tooltip. */
+.sidebar.collapsed{width:52px}
+.sidebar.collapsed .sidebar-section,
+.sidebar.collapsed .nav-label{display:none}
+.sidebar.collapsed .nav-item{justify-content:center;padding:10px 0}
+.sidebar.collapsed .sidebar-toggle svg{transform:rotate(180deg)}
 
 /* ── Cards ── */
 .page{padding:16px;display:none}.page.active{display:block}
@@ -98,7 +111,6 @@ tbody td{padding:6px 8px;white-space:nowrap}
 
 /* ── Utilities (replace inline styles) ── */
 .mt-8{margin-top:8px}
-.nd-all{background:#8892a4}
 .section-pad-top{padding:14px 16px 0}
 .section-pad-bottom{padding:0 16px 16px}
 .section-pad{padding:16px}
@@ -111,10 +123,18 @@ tbody td{padding:6px 8px;white-space:nowrap}
 
 /* ── Material Costing tab ── */
 .mc-filterbar{background:#fff;border-bottom:1px solid var(--border);padding:10px 16px;display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
+/* NM Abstract's filter bar sits between .section-pad-top/.section-pad-bottom,
+   which each add their own 16px side padding on top of .page's — so without
+   this, the bar's left/right edges land 16px outside the summary cards and
+   table card above/below it. Boxed to match their card style (border-radius
+   + full border), not the full-bleed bar look Material Costing uses, since
+   that's the existing aesthetic on this page. */
+#nm-filterbar{margin:0 16px 14px;border:1px solid var(--border);border-radius:8px}
 .ffield{display:flex;flex-direction:column;gap:4px;min-width:130px}
 .ffield.grow{flex:1;min-width:200px}
 .ffield label{font-size:10px;font-weight:700;color:#8892a4;text-transform:uppercase;letter-spacing:.06em}
 .ffield select,.ffield input{padding:6px 8px;border:1px solid var(--border);border-radius:5px;background:#fff;font-size:12.5px;font-family:inherit}
+.nm-margin-threshold-input{width:70px}
 .ffield select:focus,.ffield input:focus{outline:2px solid var(--blue2);outline-offset:1px}
 .scale-note{font-size:11px;color:#8892a4;white-space:nowrap;padding-bottom:7px}
 .parsed-tag{font-size:9.5px;color:#8892a4;border-bottom:1px dotted #8892a4;cursor:help;text-transform:none;font-weight:400;letter-spacing:0}
@@ -334,30 +354,27 @@ input.bom-rate{text-align:right;width:70px}
 
 <div class="layout">
   <!-- Sidebar -->
-  <div class="sidebar">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-toggle" onclick="toggleSidebar()" title="Collapse sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
     <div class="sidebar-section">Views</div>
     <div class="nav-group-view">
-      <div class="nav-item active" onclick="showPage('nm')">NM Abstract</div>
-      <div class="nav-item" onclick="showPage('params')">Commercial Rates</div>
-      <div class="nav-item" onclick="showPage('material')">Material Costing</div>
-      <div class="nav-item rd-nav-item" onclick="showPage('rd')">R&amp;D</div>
-    </div>
-
-    <div id="sidebar-nm-filters">
-      <div class="sidebar-section mt-8">Brands</div>
-      <div class="nav-group-brand">
-        <div class="nav-item active" onclick="filterBrand('all')"><span class="nav-dot nd-all"></span>All Brands</div>
-        <div class="nav-item" onclick="filterBrand('peps')"><span class="nav-dot nd-peps"></span>Peps Spring</div>
-        <div class="nav-item" onclick="filterBrand('cirrus')"><span class="nav-dot nd-cirrus"></span>Cirrus Foam</div>
-        <div class="nav-item" onclick="filterBrand('italiano')"><span class="nav-dot nd-it"></span>Italiano</div>
-        <div class="nav-item" onclick="filterBrand('accessories')"><span class="nav-dot nd-acc"></span>Accessories</div>
+      <div class="nav-item active" onclick="showPage('nm')" title="NM Abstract">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+        <span class="nav-label">NM Abstract</span>
       </div>
-
-      <div class="sidebar-section mt-8">Filters</div>
-      <div class="nav-group-filter">
-        <div class="nav-item" onclick="filterNM('below6')">⚠ NM below 6%</div>
-        <div class="nav-item" onclick="filterNM('changed')">✎ MRP changed</div>
-        <div class="nav-item active" onclick="filterNM('all')">Show all</div>
+      <div class="nav-item" onclick="showPage('params')" title="Commercial Rates">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span>
+        <span class="nav-label">Commercial Rates</span>
+      </div>
+      <div class="nav-item" onclick="showPage('material')" title="Material Costing">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
+        <span class="nav-label">Material Costing</span>
+      </div>
+      <div class="nav-item rd-nav-item" onclick="showPage('rd')" title="R&amp;D">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-5.5 9.5A1 1 0 0 0 5.4 20h13.2a1 1 0 0 0 .9-1.5L14 9V3"/><path d="M7 15h10"/></svg></span>
+        <span class="nav-label">R&amp;D</span>
       </div>
     </div>
 
@@ -370,6 +387,52 @@ input.bom-rate{text-align:right;width:70px}
     <div class="page active" id="page-nm">
       <div class="section-pad-top">
         <div class="summary-row" id="summary-row"></div>
+      </div>
+      <div class="mc-filterbar" id="nm-filterbar">
+        <div class="ffield">
+          <label for="nm-f-cat">Category</label>
+          <select id="nm-f-cat" onchange="nmApplyFilters()">
+            <option value="all">All Categories</option>
+            <option value="Peps">Peps</option>
+            <option value="Cirrus Foam">Cirrus Foam</option>
+            <option value="Cirrus Coir">Cirrus Coir</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+        </div>
+        <div class="ffield">
+          <label for="nm-f-line">Product Line</label>
+          <select id="nm-f-line" onchange="nmApplyFilters()"><option value="all">All Product Lines</option></select>
+        </div>
+        <div class="ffield">
+          <label for="nm-f-height">Height</label>
+          <select id="nm-f-height" onchange="nmApplyFilters()"><option value="all">All Heights</option></select>
+        </div>
+        <div class="ffield">
+          <label for="nm-f-size">Size</label>
+          <select id="nm-f-size" onchange="nmApplyFilters()"><option value="all">All Sizes</option></select>
+        </div>
+        <div class="ffield">
+          <label for="nm-f-colour">Colour <span class="parsed-tag" title="Parsed from the item's own Ramco ledger description (e.g. 'Comfort Normal Beige' -> Beige) — blank for SKUs whose description doesn't state a colour (all current Italiano SKUs).">parsed</span></label>
+          <select id="nm-f-colour" onchange="nmApplyFilters()"><option value="all">All Colours</option></select>
+        </div>
+        <div class="ffield">
+          <label for="nm-f-margin">Margin</label>
+          <select id="nm-f-margin" onchange="nmApplyFilters()">
+            <option value="all">Show all</option>
+            <option value="belowX">⚠ NM below…</option>
+            <option value="changed">✎ MRP changed</option>
+          </select>
+        </div>
+        <div class="ffield mc-hidden" id="nm-f-margin-threshold-wrap">
+          <label for="nm-f-margin-threshold">Threshold %</label>
+          <input id="nm-f-margin-threshold" type="number" min="0" max="100" step="0.5" value="6"
+            class="nm-margin-threshold-input" oninput="nmApplyFilters()" title="Show products with Net Margin % below this value">
+        </div>
+        <div class="ffield grow">
+          <label for="nm-f-search">Search</label>
+          <input id="nm-f-search" type="text" placeholder="Item code or product name…" oninput="nmApplyFilters()">
+        </div>
+        <div class="scale-note" id="nm-scale-note"></div>
       </div>
       <div class="section-pad-bottom">
         <div class="card">
@@ -865,7 +928,6 @@ const SKUS_RAW = [
 // static SKUS_RAW, so a server-loaded RM cost survives a reset.
 let SKUS_BASE = JSON.parse(JSON.stringify(SKUS_RAW));
 let skus = SKUS_BASE.map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:s.rm_from_ramco||false, rm_source:s.rm_source}));
-let currentFilter = {brand:'all', nm:'all'};
 let baseResults = null;
 
 // ═══════════════════════════════════════════════════════════════════
@@ -1271,17 +1333,86 @@ function renderSummary(results){
   document.getElementById('summary-row').innerHTML=html;
 }
 
+// Same 4 categories as Material Costing's Category filter (mcCategoryOf),
+// narrowed further by the rest of the NM Abstract filter bar — Product
+// Line/Height/Size/Colour/Search plus the relocated Margin filter
+// (below-X%/MRP-changed), which used to live in the sidebar as separate
+// Brands/Filters nav groups. "NM below…" threshold is user-typed, not a
+// fixed 6% — the KPI cards above still report against a fixed 6% since
+// that's the standing "thin margin" definition, but the filter itself
+// lets you check any cutoff.
+function nmVisibleFilter(r){
+  const cat = document.getElementById('nm-f-cat').value;
+  const line = document.getElementById('nm-f-line').value;
+  const height = document.getElementById('nm-f-height').value;
+  const size = document.getElementById('nm-f-size').value;
+  const margin = document.getElementById('nm-f-margin').value;
+  const colour = document.getElementById('nm-f-colour').value;
+  const q = (document.getElementById('nm-f-search').value || '').trim().toLowerCase();
+  if(cat !== 'all' && mcCategoryOf(r) !== cat) return false;
+  if(line !== 'all' && mcLineOf(r) !== line) return false;
+  if(height !== 'all' && mcHeightOf(r) !== height) return false;
+  if(size !== 'all' && mcSizeOf(r) !== size) return false;
+  if(margin === 'belowX'){
+    const threshold = parseFloat(document.getElementById('nm-f-margin-threshold').value);
+    if(!(r.nm_pct < (isNaN(threshold) ? 6 : threshold) / 100)) return false;
+  }
+  if(margin === 'changed' && !(r.mrp_live !== r.mrp)) return false;
+  if(colour !== 'all' && r.colour !== colour) return false;
+  if(q && !(r.p.toLowerCase().includes(q) || (r.ic||'').toLowerCase().includes(q))) return false;
+  return true;
+}
+
+// Product Line options narrow to the selected Category; Height/Size/Colour
+// narrow further — same cascading dependency as Material Costing's filter
+// bar (mcPopulateFilterOptions), kept separate so each tab's filter state
+// is independent.
+function nmPopulateFilterOptions(){
+  const cat = document.getElementById('nm-f-cat').value;
+  const lineSel = document.getElementById('nm-f-line');
+  const prevLine = lineSel.value;
+  const lines = [...new Set(skus.filter(s=>cat==='all'||mcCategoryOf(s)===cat).map(mcLineOf))].sort();
+  lineSel.innerHTML = '<option value="all">All Product Lines</option>' + lines.map(l=>`<option value="${escAttr(l)}">${l}</option>`).join('');
+  lineSel.value = lines.includes(prevLine) ? prevLine : 'all';
+
+  const line = lineSel.value;
+  const scoped = skus.filter(s=>(cat==='all'||mcCategoryOf(s)===cat) && (line==='all'||mcLineOf(s)===line));
+
+  const heightSel = document.getElementById('nm-f-height');
+  const prevHeight = heightSel.value;
+  const heights = [...new Set(scoped.map(mcHeightOf).filter(Boolean))]
+    .sort((a,b)=>parseFloat(a)-parseFloat(b));
+  heightSel.innerHTML = '<option value="all">All Heights</option>' + heights.map(h=>`<option value="${escAttr(h)}">${h}</option>`).join('');
+  heightSel.value = heights.includes(prevHeight) ? prevHeight : 'all';
+
+  const sizeSel = document.getElementById('nm-f-size');
+  const prevSize = sizeSel.value;
+  const sizes = [...new Set(scoped.map(mcSizeOf).filter(Boolean))].sort();
+  sizeSel.innerHTML = '<option value="all">All Sizes</option>' + sizes.map(sz=>`<option value="${escAttr(sz)}">${sz}</option>`).join('');
+  sizeSel.value = sizes.includes(prevSize) ? prevSize : 'all';
+
+  const size = sizeSel.value;
+  const colourSel = document.getElementById('nm-f-colour');
+  const prevColour = colourSel.value;
+  const colours = [...new Set(scoped.filter(s=>size==='all'||mcSizeOf(s)===size).map(s=>s.colour).filter(Boolean))].sort();
+  colourSel.innerHTML = '<option value="all">All Colours</option>' + colours.map(c=>`<option value="${escAttr(c)}">${c}</option>`).join('');
+  colourSel.value = colours.includes(prevColour) ? prevColour : 'all';
+}
+
+function nmApplyFilters(){
+  const isBelowX = document.getElementById('nm-f-margin').value === 'belowX';
+  document.getElementById('nm-f-margin-threshold-wrap').classList.toggle('mc-hidden', !isBelowX);
+  render(); // render() repopulates the filter options itself, then re-renders
+}
+
 function renderTable(results){
-  const brands=['peps','cirrus','italiano','accessories'];
-  const bLabels={peps:'PEPS SPRING',cirrus:'CIRRUS FOAM',italiano:'ITALIANO',accessories:'ACCESSORIES'};
+  const cats=['Peps','Cirrus Foam','Cirrus Coir','Accessories'];
+  const catLabels={'Peps':'PEPS','Cirrus Foam':'CIRRUS FOAM','Cirrus Coir':'CIRRUS COIR','Accessories':'ACCESSORIES'};
   let html='';
-  brands.forEach(b=>{
-    let rows=results.filter(r=>r.b===b);
-    if(currentFilter.brand!=='all'&&currentFilter.brand!==b)return;
-    if(currentFilter.nm==='below6') rows=rows.filter(r=>r.nm_pct<0.06);
-    if(currentFilter.nm==='changed') rows=rows.filter(r=>r.mrp_live!==r.mrp);
+  cats.forEach(cat=>{
+    let rows=results.filter(r=>mcCategoryOf(r)===cat && nmVisibleFilter(r));
     if(!rows.length)return;
-    html+=`<tr class="brand-header"><td colspan="13">${bLabels[b]}</td></tr>`;
+    html+=`<tr class="brand-header"><td colspan="13">${catLabels[cat]}</td></tr>`;
     rows.forEach((r,i)=>{
       const base=baseResults?baseResults.find(x=>x.p===r.p):null;
       const delta=base?r.nm_pct-base.nm_pct:0;
@@ -1319,13 +1450,19 @@ function renderTable(results){
       </tr>`;
     });
   });
-  document.getElementById('nm-tbody').innerHTML=html;
+  document.getElementById('nm-tbody').innerHTML = html || '<tr><td colspan="13" class="placeholder-row">No products match these filters.</td></tr>';
+  const noteEl = document.getElementById('nm-scale-note');
+  if(noteEl){
+    const visibleCount = results.filter(nmVisibleFilter).length;
+    noteEl.textContent = `${visibleCount} of ${results.length} products match these filters`;
+  }
 }
 
 function render(){
   const results=runAll();
   if(!baseResults) baseResults=JSON.parse(JSON.stringify(results));
   renderSummary(results);
+  nmPopulateFilterOptions();
   renderTable(results);
 }
 
@@ -1463,9 +1600,7 @@ function closeDetail(e){
     document.getElementById('detail-overlay').classList.remove('open');
 }
 
-// Each nav group (Views / Brands / Filters) highlights independently —
-// clicking a brand no longer clears which NM filter is active and vice
-// versa, since both apply simultaneously to the table (see currentFilter).
+// Used by the sidebar's Views nav group to highlight the active tab.
 function _setActiveInGroup(groupSelector){
   document.querySelectorAll(groupSelector+' .nav-item').forEach(x=>x.classList.remove('active'));
   // Only a real click carries a live `event` — programmatic calls (e.g. R&D
@@ -1488,22 +1623,9 @@ function showPage(p, skipRdCleanup){
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   _setActiveInGroup('.nav-group-view');
-  // The Brands/Filters sidebar sections only apply to the NM Abstract table.
-  document.getElementById('sidebar-nm-filters').classList.toggle('mc-hidden', p==='material'||p==='rd');
   if(p==='params')renderParams();
   if(p==='material')mcApplyFilters();
   if(p==='rd')rdInit();
-}
-
-function filterBrand(b){
-  currentFilter.brand=b;
-  _setActiveInGroup('.nav-group-brand');
-  render();
-}
-function filterNM(f){
-  currentFilter.nm=f;
-  _setActiveInGroup('.nav-group-filter');
-  render();
 }
 
 function resetAll(){
@@ -3279,6 +3401,17 @@ function rdEditVariant(variantId){
   mcShowSubtab('mc-sub-materials');
   mcLoadBom();
 }
+
+// Sidebar collapse/expand — icons (.nav-icon) stay visible either way;
+// only the text label and section header hide when collapsed. Persisted
+// across reloads via localStorage.
+function toggleSidebar(){
+  const sb = document.getElementById('sidebar');
+  const collapsed = sb.classList.toggle('collapsed');
+  localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
+  document.querySelector('.sidebar-toggle').title = collapsed ? 'Expand sidebar' : 'Collapse sidebar';
+}
+if(localStorage.getItem('sidebarCollapsed')==='1') document.getElementById('sidebar').classList.add('collapsed');
 
 // Init — try the live engine server first, falling back to embedded data
 connectToEngine();
