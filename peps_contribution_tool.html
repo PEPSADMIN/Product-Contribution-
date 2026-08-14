@@ -85,6 +85,7 @@ body{font-family:Calibri,Arial,sans-serif;font-size:13px;background:var(--bg-pag
 .topbar-role-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
                    background:rgba(255,255,255,.15);color:#fff;padding:2px 7px;border-radius:8px}
 .topbar-role-badge.role-admin{background:var(--amber);color:#fff}
+.topbar-role-badge.role-developer{background:var(--rd);color:#fff}
 .topbar-logout{display:flex;align-items:center;color:rgba(255,255,255,.6);text-decoration:none;transition:color .15s}
 .topbar-logout:hover{color:#fff}
 
@@ -117,6 +118,7 @@ html[data-ffam="arial"] body{font-family:Arial,sans-serif}
 html[data-ffam="verdana"] body{font-family:Verdana,Arial,sans-serif}
 .cms-role-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 7px;border-radius:8px;background:var(--bg3);color:var(--text-dim)}
 .cms-role-badge.role-admin{background:var(--amber);color:#fff}
+.cms-role-badge.role-developer{background:var(--rd);color:#fff}
 .cms-status-badge{font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:8px}
 .cms-status-badge.active{background:var(--tint-green-bg);color:var(--tint-green-text)}
 .cms-status-badge.inactive{background:var(--tint-red2-bg);color:var(--tint-red-text)}
@@ -124,6 +126,20 @@ html[data-ffam="verdana"] body{font-family:Verdana,Arial,sans-serif}
 .cms-tabs-check label{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--text);cursor:pointer}
 .cms-tabs-field-disabled .cms-tabs-check{opacity:.45;pointer-events:none}
 .cms-tabs-note{font-size:10px;color:var(--text-muted);margin-top:4px;max-width:220px;line-height:1.4}
+.history-filter-select{padding:6px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg);color:var(--text);font-size:12px;font-family:inherit}
+.history-table-wrap{overflow-x:auto}
+.history-table-wrap table{min-width:920px}
+.history-id{font-family:Consolas,monospace;font-weight:700;color:var(--text-muted)}
+.history-type-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.history-type-badge.type-commercial_rate{background:var(--tint-blue-bg);color:var(--tint-blue-text)}
+.history-type-badge.type-mrp{background:var(--tint-amber-bg);color:var(--tint-amber-text)}
+.history-type-badge.type-bom_line{background:var(--tint-green-bg);color:var(--tint-green-text)}
+.history-type-badge.type-rd_draft{background:var(--rd-bg);color:var(--rd)}
+.history-type-badge.type-user_mgmt,.history-type-badge.type-user_password_reset{background:var(--tint-orange-bg);color:var(--tint-orange-text)}
+.history-table-wrap td.history-summary{max-width:420px;font-size:12px;color:var(--text);white-space:normal;word-break:break-word}
+.history-status-badge{font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:8px}
+.history-status-badge.active{background:var(--tint-green-bg);color:var(--tint-green-text)}
+.history-status-badge.rolled_back{background:var(--bg3);color:var(--text-dim)}
 .cms-tabs-summary{font-size:11px;color:var(--text-dim)}
 
 /* ── Layout ── */
@@ -503,6 +519,10 @@ input.bom-rate{text-align:right;width:70px}
       <div class="nav-item rd-nav-item" data-tab="rd" onclick="showPage('rd')" title="R&amp;D">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-5.5 9.5A1 1 0 0 0 5.4 20h13.2a1 1 0 0 0 .9-1.5L14 9V3"/><path d="M7 15h10"/></svg></span>
         <span class="nav-label">R&amp;D</span>
+      </div>
+      <div class="nav-item mc-hidden" id="nav-history" onclick="showPage('history')" title="History">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></span>
+        <span class="nav-label">History</span>
       </div>
       <div class="nav-item" onclick="showPage('settings')" title="Settings">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
@@ -965,7 +985,7 @@ input.bom-rate{text-align:right;width:70px}
               <div class="ffield"><label for="cms-new-password">Password</label>
                 <input id="cms-new-password" type="password" placeholder="min. 6 characters" required minlength="6"></div>
               <div class="ffield"><label for="cms-new-role">Role</label>
-                <select id="cms-new-role" onchange="onCmsRoleChange()"><option value="user">User</option><option value="admin">Admin</option></select>
+                <select id="cms-new-role" onchange="onCmsRoleChange()"><option value="user">User</option><option value="admin">Admin</option><option value="developer">Developer</option></select>
               </div>
               <div class="ffield" id="cms-tabs-field">
                 <label>Visible Tabs</label>
@@ -975,7 +995,7 @@ input.bom-rate{text-align:right;width:70px}
                   <label><input type="checkbox" class="cms-tab-cb" value="material" checked> Material Costing</label>
                   <label><input type="checkbox" class="cms-tab-cb" value="rd" checked> R&amp;D</label>
                 </div>
-                <div class="cms-tabs-note" id="cms-tabs-note">Ignored for Admin role — admins always see every tab.</div>
+                <div class="cms-tabs-note" id="cms-tabs-note">Ignored for Admin/Developer roles — they always see every tab.</div>
               </div>
               <button type="submit" class="btn btn-primary">Add User</button>
             </form>
@@ -987,6 +1007,32 @@ input.bom-rate{text-align:right;width:70px}
             <thead><tr><th>Username</th><th>Role</th><th>Tabs</th><th>Status</th><th>Last Login</th><th></th></tr></thead>
             <tbody id="cms-users-tbody"></tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- History page (admin/developer only) -->
+    <div class="page" id="page-history">
+      <div class="section-pad">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">History</span>
+            <select id="history-filter" class="history-filter-select" onchange="renderHistory()">
+              <option value="">All types</option>
+              <option value="commercial_rate">Commercial Rate</option>
+              <option value="mrp">MRP</option>
+              <option value="bom_line">Material Costing BOM</option>
+              <option value="rd_draft">R&amp;D</option>
+              <option value="user_mgmt">User Management</option>
+              <option value="user_password_reset">Password Reset</option>
+            </select>
+          </div>
+          <div class="history-table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Time</th><th>User</th><th>Type</th><th>What changed</th><th>Status</th><th></th></tr></thead>
+              <tbody id="history-tbody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -1023,7 +1069,7 @@ input.bom-rate{text-align:right;width:70px}
       <div class="section-pad">
         <input type="hidden" id="edit-user-id">
         <div class="ffield"><label for="edit-user-role">Role</label>
-          <select id="edit-user-role" onchange="onEditRoleChange()"><option value="user">User</option><option value="admin">Admin</option></select>
+          <select id="edit-user-role" onchange="onEditRoleChange()"><option value="user">User</option><option value="admin">Admin</option><option value="developer">Developer</option></select>
         </div>
         <div class="ffield" id="edit-user-tabs-field">
           <label>Visible Tabs</label>
@@ -1033,7 +1079,7 @@ input.bom-rate{text-align:right;width:70px}
             <label><input type="checkbox" class="edit-user-tab-cb" value="material"> Material Costing</label>
             <label><input type="checkbox" class="edit-user-tab-cb" value="rd"> R&amp;D</label>
           </div>
-          <div class="cms-tabs-note">Ignored for Admin role — admins always see every tab.</div>
+          <div class="cms-tabs-note">Ignored for Admin/Developer roles — they always see every tab.</div>
         </div>
         <div class="ffield"><label for="edit-user-newpw">Reset Password</label>
           <input id="edit-user-newpw" type="password" placeholder="Leave blank to keep current password" minlength="6"></div>
@@ -1251,6 +1297,11 @@ function applyServerConfig(cfg){
     for(const p of path){ v = v ? v[p] : undefined; }
     if(typeof v === 'number') COMM[key] = v;
   }
+  // Persisted Commercial Rates edits (POST /api/commercial-rates, see
+  // applyParamGroup()) — layered on top of the finance_config.json
+  // baseline COMM_PATH just built, same overlay pattern applyServerSkus()
+  // uses for a persisted MRP edit.
+  if(cfg.COMMERCIAL_OVERRIDES) Object.assign(COMM, cfg.COMMERCIAL_OVERRIDES);
   Object.assign(COMM_BASE, JSON.parse(JSON.stringify(COMM)));
 }
 
@@ -1839,15 +1890,20 @@ function renderParams(){
 // Editing a field only stages it in paramPending (oninput above) — it does
 // NOT touch COMM or recalculate anything live. Nothing takes effect on any
 // actual product until this card's own Apply button is clicked, and only
-// this card's fields are applied, not the whole page at once.
-function applyParamGroup(btn){
+// this card's fields are applied, not the whole page at once. Applying also
+// persists to the server (POST /api/commercial-rates) so it survives a
+// reload, and logs a History entry — this used to be browser-only.
+async function applyParamGroup(btn){
   // Scoped to .param-apply-scope, not .param-group — the Peps card holds
   // two independently-appliable sub-sections (Peps Spring, Italiano), so
   // scoping to the whole card would apply both at once from either button.
   const scope=btn.closest('.param-apply-scope');
+  const before={}, after={};
   scope.querySelectorAll('.param-input').forEach(el=>{
     const k=el.dataset.key, mult=parseFloat(el.dataset.mult)||1;
-    COMM[k]=parseFloat(el.value)/mult;
+    before[k]=COMM[k];
+    after[k]=parseFloat(el.value)/mult;
+    COMM[k]=after[k];
     delete paramPending[k];
   });
   baseResults=null;
@@ -1855,17 +1911,44 @@ function applyParamGroup(btn){
   const groupTitle=btn.closest('.param-group').querySelector('.param-group-title').textContent;
   const subTitle=scope.querySelector('.param-subgroup-title');
   const label=subTitle ? `${groupTitle} — ${subTitle.textContent}` : groupTitle;
-  toast(`${label} rates applied — table recalculated`);
+  try{
+    const resp = await fetch('/api/commercial-rates', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({entity: label, values: after, before})
+    });
+    if(!resp.ok) throw new Error('save failed');
+    toast(`${label} rates applied and saved — table recalculated`);
+  }catch(e){
+    toast(`${label} rates applied, but could not save to the server`);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════
 // INTERACTIONS
 // ═══════════════════════════════════════════════════════════════════
-function updateMRP(prod,val){
+// Persists to the server (POST /api/mrp) and logs a History entry — this
+// used to be browser-only and reset on every reload. before is s.mrp (the
+// last saved-or-baseline value), not s.mrp_live, since mrp_live can churn
+// with in-progress typing that never gets this far.
+async function updateMRP(prod,val){
   const s=skus.find(x=>x.p===prod);
   if(!s)return;
-  s.mrp_live=parseFloat(val)||s.mrp;
+  const before=s.mrp;
+  const newMrp=parseFloat(val)||s.mrp;
+  s.mrp_live=newMrp;
   render();
+  if(newMrp===before) return; // no real change — don't spam a history entry
+  try{
+    const resp = await fetch('/api/mrp', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({product: prod, mrp: newMrp, before})
+    });
+    if(!resp.ok) throw new Error('save failed');
+    s.mrp=newMrp; // now the real saved baseline — clears the "changed" pill
+    render();
+  }catch(e){
+    toast('MRP updated locally, but could not save to the server');
+  }
 }
 
 function showDetail(prod){
@@ -1951,6 +2034,7 @@ function showPage(p, skipRdCleanup){
   if(p==='material')mcApplyFilters();
   if(p==='rd')rdInit();
   if(p==='cms')loadUsers();
+  if(p==='history')loadHistory();
   if(p==='settings')initThemeToggleUI();
 }
 
@@ -3797,12 +3881,18 @@ async function loadMe(){
     const roleBadge = document.getElementById('topbar-role-badge');
     roleBadge.textContent = currentUser.role || '';
     roleBadge.classList.toggle('role-admin', currentUser.role === 'admin');
-    document.getElementById('nav-cms').classList.toggle('mc-hidden', currentUser.role !== 'admin');
+    roleBadge.classList.toggle('role-developer', currentUser.role === 'developer');
+    // Developer is a superset of Admin here (see server.py's admin_required
+    // docstring) — same CMS/History access, the one Developer-only thing is
+    // the Rollback button in History (gated separately, see renderHistory()).
+    const isPrivileged = currentUser.role === 'admin' || currentUser.role === 'developer';
+    document.getElementById('nav-cms').classList.toggle('mc-hidden', !isPrivileged);
+    document.getElementById('nav-history').classList.toggle('mc-hidden', !isPrivileged);
 
-    // Per-user tab visibility — admin always sees everything regardless
-    // of allowed_tabs (see auth_store.py); 'user' role only sees what
-    // they were granted at creation (CMS "Visible Tabs" checkboxes).
-    const isAdmin = currentUser.role === 'admin';
+    // Per-user tab visibility — admin/developer always see everything
+    // regardless of allowed_tabs (see auth_store.py); 'user' role only sees
+    // what they were granted at creation (CMS "Visible Tabs" checkboxes).
+    const isAdmin = isPrivileged;
     const allowed = currentUser.allowed_tabs || [];
     let firstVisibleTab = null;
     document.querySelectorAll('.nav-item[data-tab]').forEach(el=>{
@@ -3885,14 +3975,14 @@ async function loadUsers(){
   const users = await resp.json();
   cmsUsersCache = users;
   document.getElementById('cms-users-tbody').innerHTML = users.map(u=>{
-    const tabsText = u.role === 'admin' ? 'All (admin)'
+    const tabsText = ['admin','developer'].includes(u.role) ? `All (${u.role})`
       : (u.allowed_tabs && u.allowed_tabs.length
           ? u.allowed_tabs.map(t=>CMS_TAB_LABELS[t]||t).join(', ')
           : 'None');
     return `
     <tr>
       <td>${escHtml(u.username)}</td>
-      <td><span class="cms-role-badge${u.role==='admin'?' role-admin':''}">${escHtml(u.role)}</span></td>
+      <td><span class="cms-role-badge${u.role==='admin'?' role-admin':u.role==='developer'?' role-developer':''}">${escHtml(u.role)}</span></td>
       <td><span class="cms-tabs-summary">${escHtml(tabsText)}</span></td>
       <td><span class="cms-status-badge ${u.is_active?'active':'inactive'}">${u.is_active?'Active':'Inactive'}</span></td>
       <td>${u.last_login ? new Date(u.last_login).toLocaleString('en-IN') : 'Never'}</td>
@@ -3906,7 +3996,7 @@ async function loadUsers(){
 }
 
 function onCmsRoleChange(){
-  const isAdmin = document.getElementById('cms-new-role').value === 'admin';
+  const isAdmin = ['admin','developer'].includes(document.getElementById('cms-new-role').value);
   document.getElementById('cms-tabs-field').classList.toggle('cms-tabs-field-disabled', isAdmin);
 }
 
@@ -3957,7 +4047,7 @@ function closeEditUser(){
 }
 
 function onEditRoleChange(){
-  const isAdmin = document.getElementById('edit-user-role').value === 'admin';
+  const isAdmin = ['admin','developer'].includes(document.getElementById('edit-user-role').value);
   document.getElementById('edit-user-tabs-field').classList.toggle('cms-tabs-field-disabled', isAdmin);
 }
 
@@ -3982,6 +4072,70 @@ async function saveEditUser(e){
   } else {
     toast(data.error || 'Could not update user');
   }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// HISTORY — unified audit trail for Commercial Rates, MRP, Material
+// Costing BOM edits, R&D drafts, and CMS user management. Real, working
+// rollback only exists for the first three (see history_store.py's
+// module docstring for why) and only Developer sees the button for them.
+// ═══════════════════════════════════════════════════════════════════
+let historyCache = [];
+const HISTORY_TYPE_LABELS = {
+  commercial_rate: 'Commercial Rate', mrp: 'MRP', bom_line: 'Material Costing BOM',
+  rd_draft: 'R&D', user_mgmt: 'User Management', user_password_reset: 'Password Reset'
+};
+const HISTORY_ROLLBACKABLE = new Set(['commercial_rate', 'mrp', 'bom_line']);
+
+async function loadHistory(){
+  try{
+    const resp = await fetch('/api/history');
+    if(!resp.ok){
+      document.getElementById('history-tbody').innerHTML = '<tr><td colspan="7" class="placeholder-row">Admin access required.</td></tr>';
+      return;
+    }
+    historyCache = await resp.json();
+    renderHistory();
+  }catch(e){
+    document.getElementById('history-tbody').innerHTML = '<tr><td colspan="7" class="placeholder-row">Could not reach the engine server.</td></tr>';
+  }
+}
+
+function renderHistory(){
+  const filterEl = document.getElementById('history-filter');
+  const filter = filterEl ? filterEl.value : '';
+  const canRollback = currentUser && currentUser.role === 'developer';
+  const rows = historyCache.filter(h => !filter || h.action === filter);
+  document.getElementById('history-tbody').innerHTML = rows.map(h=>{
+    const typeLabel = HISTORY_TYPE_LABELS[h.action] || h.action;
+    const time = new Date(h.created_at).toLocaleString('en-IN');
+    const canRollThis = canRollback && h.status === 'active' && HISTORY_ROLLBACKABLE.has(h.action);
+    return `
+    <tr>
+      <td class="history-id">#${h.id}</td>
+      <td>${time}</td>
+      <td>${escHtml(h.username)}</td>
+      <td><span class="history-type-badge type-${h.action}">${escHtml(typeLabel)}</span></td>
+      <td class="history-summary">${escHtml(h.summary)}</td>
+      <td><span class="history-status-badge ${h.status}">${h.status==='rolled_back'?'Rolled back':'Active'}</span></td>
+      <td>${canRollThis ? `<button type="button" class="btn btn-sm btn-outline-blue" onclick="rollbackHistory(${h.id},'${escAttr(h.summary)}')">Rollback</button>` : ''}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="7" class="placeholder-row">No history yet.</td></tr>';
+}
+
+async function rollbackHistory(id, entityLabel){
+  if(!confirm(`Roll back History #${id}?\n\n${entityLabel}\n\nThis restores the previous value.`)) return;
+  try{
+    const resp = await fetch(`/api/history/${id}/rollback`, {method:'POST'});
+    const data = await resp.json().catch(()=>({}));
+    if(resp.ok){
+      toast(`History #${id} rolled back`);
+      await connectToEngine();
+      loadHistory();
+    } else {
+      toast(data.error || 'Could not roll back');
+    }
+  }catch(e){ toast('Could not reach the engine server'); }
 }
 
 // Init — try the live engine server first, falling back to embedded data

@@ -39,12 +39,23 @@ Endpoints:
   GET/POST /login                -> login page / submit credentials
   GET /logout                    -> clear session, back to /login
   GET /api/me                    -> current session user (username, role)
-  GET /api/users                 -> list users (admin only)
-  POST /api/users                -> create a user (admin only)
-  PUT /api/users/<id>            -> change role / active status / tabs / reset password (admin only)
+  GET /api/users                 -> list users (admin/developer only)
+  POST /api/users                -> create a user (admin/developer only)
+  PUT /api/users/<id>            -> change role / active status / tabs / reset password (admin/developer only)
   POST /api/change-password      -> self-service password change
   GET /api/notifications         -> current user's notifications
   POST /api/notifications/read   -> mark all of the current user's notifications read
+
+  Persisted overrides (previously browser-only, reset on reload):
+  POST /api/commercial-rates     -> save a Commercial Rates card's edited
+                                     values (history_store logs before/after)
+  POST /api/mrp                  -> save one product's edited MRP
+
+  History / rollback:
+  GET /api/history                       -> the unified audit trail, newest first
+  POST /api/history/<id>/rollback        -> restore a 'commercial_rate' /
+                                     'mrp' / 'bom_line' entry's before-state
+                                     (developer role only)
 """
 import os
 import sys
@@ -65,6 +76,8 @@ import costing_store
 import bom_store
 import rd_store
 import auth_store
+import history_store
+import overrides_store
 from item_master import search_items
 from colour_lookup import colour_for
 
@@ -121,12 +134,26 @@ def login_required(f):
 
 
 def admin_required(f):
+    """Admin and Developer both get full CMS/settings access — Developer is a
+    superset of Admin in this tool (see developer_required below for the one
+    thing that's Developer-only: rolling back a history entry)."""
     @wraps(f)
     def decorated(*args, **kwargs):
         if not session.get('user_id'):
             return jsonify({'error': 'Unauthorised'}), 401
-        if session.get('role') != 'admin':
+        if session.get('role') not in ('admin', 'developer'):
             return jsonify({'error': 'Admin access required'}), 403
+        return f(*args, **kwargs)
+    return decorated
+
+
+def developer_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get('user_id'):
+            return jsonify({'error': 'Unauthorised'}), 401
+        if session.get('role') != 'developer':
+            return jsonify({'error': 'Developer access required'}), 403
         return f(*args, **kwargs)
     return decorated
 
@@ -226,12 +253,23 @@ def api_me():
 
 @app.route('/api/skus')
 def api_skus():
+    mrp_overrides = overrides_store.get_mrp_overrides()
+    # One query for every item's latest RM-cost snapshot, not one query per
+    # SKU (~3700 of them) — costing_store.latest() opens its own sqlite3
+    # connection per call, so calling it in this loop was ~3700 connect+
+    # query+close round-trips on every single page load, which is exactly
+    # what was behind "CMS tab takes 20 seconds to appear" (this route's
+    # response gates loadMe(), which is what reveals the CMS/History nav
+    # items — see connectToEngine() in the frontend).
+    rm_snapshots = costing_store.all_latest()
     out = []
     for s in SKUS:
         item = dict(s)
         code = s.get('item_code', '')
+        if item.get('product') in mrp_overrides:
+            item['mrp'] = mrp_overrides[item['product']]
         item['colour'] = colour_for(code) if code else None
-        snap = costing_store.latest(code) if code else None
+        snap = rm_snapshots.get(code) if code else None
         if snap:
             month, rm_cost, source_file = snap
             item['rm_cost'] = rm_cost
@@ -262,7 +300,63 @@ def api_skus():
 
 @app.route('/api/config')
 def api_config():
-    return jsonify({'FINANCE': FINANCE, 'COMMERCIAL': COMMERCIAL})
+    return jsonify({
+        'FINANCE': FINANCE,
+        'COMMERCIAL': COMMERCIAL,
+        # Flat key/value overrides on top of COMMERCIAL's nested baseline —
+        # the frontend already owns the flat-key<->nested-path mapping
+        # (COMM_PATH), so this just hands back whatever's been saved and
+        # lets applyServerConfig() overlay it the same way it builds COMM
+        # from COMMERCIAL in the first place.
+        'COMMERCIAL_OVERRIDES': overrides_store.get_commercial_overrides(),
+    })
+
+
+@app.route('/api/commercial-rates', methods=['POST'])
+def api_commercial_rates_save():
+    body = request.get_json(silent=True) or {}
+    entity = (body.get('entity') or 'Commercial Rates').strip()
+    values = body.get('values')
+    before = body.get('before') or {}
+    if not isinstance(values, dict) or not values:
+        return jsonify({'error': "body must be {'entity', 'values': {key: number}, 'before': {key: number}}"}), 400
+    username = session.get('username')
+    for key, value in values.items():
+        try:
+            overrides_store.set_commercial_override(key, float(value), username)
+        except (TypeError, ValueError):
+            return jsonify({'error': f'invalid value for {key}'}), 400
+    # Apply is card-scoped (every field in the card resubmits, not just the
+    # one the user actually typed into) — only log/show fields whose value
+    # genuinely moved, and skip the history entry entirely if none did
+    # (an Apply click with no real edits shouldn't spam the audit trail).
+    changed = {k: v for k, v in values.items() if before.get(k) != v}
+    if changed:
+        changes = ', '.join(f'{k}: {before.get(k)} → {v}' for k, v in changed.items())
+        history_store.record(username, 'commercial_rate', entity, f'{entity} — {changes}', before, values)
+    logger.info(f'Commercial Rates saved for {entity} by {username}: {values}')
+    return jsonify({'ok': True})
+
+
+@app.route('/api/mrp', methods=['POST'])
+def api_mrp_save():
+    body = request.get_json(silent=True) or {}
+    product = (body.get('product') or '').strip()
+    mrp = body.get('mrp')
+    before = body.get('before')
+    if not product or mrp is None:
+        return jsonify({'error': "body must be {'product', 'mrp', 'before'}"}), 400
+    try:
+        mrp = float(mrp)
+    except (TypeError, ValueError):
+        return jsonify({'error': 'invalid mrp value'}), 400
+    username = session.get('username')
+    overrides_store.set_mrp_override(product, mrp, username)
+    before_str = f'₹{before:,.0f}' if before is not None else 'baseline'
+    history_store.record(username, 'mrp', product, f'MRP {before_str} → ₹{mrp:,.0f}',
+                          {'mrp': before} if before is not None else None, {'mrp': mrp})
+    logger.info(f'MRP saved for "{product}" by {username}: {mrp}')
+    return jsonify({'ok': True})
 
 
 @app.route('/api/bom/<item_code>', methods=['GET'])
@@ -280,14 +374,24 @@ def api_bom_save(item_code):
     lines = body.get('lines')
     if not isinstance(lines, list):
         return jsonify({'error': "body must be {'lines': [...]}"}), 400
+    before_lines = bom_store.get_override(item_code)
     bom_store.save_override(item_code, lines)
+    history_store.record(session.get('username'), 'bom_line', item_code,
+                          f'BOM updated ({len(lines)} lines)',
+                          {'lines': before_lines} if before_lines is not None else None,
+                          {'lines': lines})
     logger.info(f'Saved BOM edit for {item_code}: {len(lines)} lines')
     return jsonify({'item_code': item_code, 'lines': lines, 'source': 'override'})
 
 
 @app.route('/api/bom/<item_code>', methods=['DELETE'])
 def api_bom_revert(item_code):
+    before_lines = bom_store.get_override(item_code)
     bom_store.clear_override(item_code)
+    if before_lines is not None:
+        history_store.record(session.get('username'), 'bom_line', item_code,
+                              'BOM edits reverted to ledger baseline',
+                              {'lines': before_lines}, None)
     logger.info(f'Reverted BOM edits for {item_code} to ledger baseline')
     lines, source = bom_store.get_bom(item_code)
     return jsonify({'item_code': item_code, 'lines': lines, 'source': source})
@@ -332,7 +436,7 @@ def api_users_create():
     body = request.get_json(silent=True) or {}
     username = (body.get('username') or '').strip()
     password = body.get('password') or ''
-    role = body.get('role') if body.get('role') in ('admin', 'user') else 'user'
+    role = body.get('role') if body.get('role') in ('admin', 'developer', 'user') else 'user'
     # Missing key entirely = caller didn't send a tab list at all -> no
     # restriction (matches pre-this-feature behaviour). An explicit []
     # is respected as "no tabs" rather than silently upgraded to all.
@@ -343,6 +447,9 @@ def api_users_create():
     if auth_store.get_user_by_username(username):
         return jsonify({'error': f'"{username}" already exists'}), 400
     user_id = auth_store.create_user(username, password, role, allowed_tabs)
+    history_store.record(session.get('username'), 'user_mgmt', username,
+                          f'User "{username}" created ({role})',
+                          None, {'id': user_id, 'role': role, 'allowed_tabs': allowed_tabs, 'is_active': True})
     logger.info(f'User "{username}" ({role}, tabs={allowed_tabs}) created by {session.get("username")}')
     return jsonify({'id': user_id, 'username': username, 'role': role, 'allowed_tabs': allowed_tabs}), 201
 
@@ -351,16 +458,30 @@ def api_users_create():
 @admin_required
 def api_users_update(user_id):
     body = request.get_json(silent=True) or {}
-    if 'role' in body and body['role'] in ('admin', 'user'):
+    target = auth_store.get_user_by_id(user_id)
+    if target is None:
+        return jsonify({'error': 'not found'}), 404
+    before = {'id': user_id, 'role': target['role'], 'allowed_tabs': target['allowed_tabs'], 'is_active': bool(target['is_active'])}
+    if 'role' in body and body['role'] in ('admin', 'developer', 'user'):
         auth_store.set_user_role(user_id, body['role'])
     if 'is_active' in body:
         auth_store.set_user_active(user_id, bool(body['is_active']))
     if 'allowed_tabs' in body and isinstance(body['allowed_tabs'], list):
         auth_store.set_user_tabs(user_id, [t for t in body['allowed_tabs'] if t in auth_store.ALL_TABS])
+    updated = auth_store.get_user_by_id(user_id)
+    after = {'id': user_id, 'role': updated['role'], 'allowed_tabs': updated['allowed_tabs'], 'is_active': bool(updated['is_active'])}
+    if after != before:
+        history_store.record(session.get('username'), 'user_mgmt', target['username'],
+                              f'User "{target["username"]}" updated (role: {before["role"]}→{after["role"]})'
+                              if before['role'] != after['role'] else
+                              f'User "{target["username"]}" updated',
+                              before, after)
     if body.get('new_password'):
         if len(body['new_password']) < 6:
             return jsonify({'error': 'New password must be at least 6 characters'}), 400
         auth_store.set_user_password(user_id, body['new_password'])
+        history_store.record(session.get('username'), 'user_password_reset', target['username'],
+                              f'Password reset for "{target["username"]}"', None, None)
         logger.info(f'Password reset for user {user_id} by {session.get("username")}')
     logger.info(f'User {user_id} updated by {session.get("username")}: { {k: v for k, v in body.items() if k != "new_password"} }')
     return jsonify({'updated': user_id})
@@ -428,6 +549,8 @@ def api_rd_create():
         return jsonify({'error': f'{base_item_code} has no extracted BOM to start a draft from'}), 400
     draft_id = rd_store.create_draft(name, mode, base_item_code, lines, dummy_item_code,
                                       created_by=session.get('username'))
+    history_store.record(session.get('username'), 'rd_draft', name, f'Draft "{name}" created (from {base_item_code})',
+                          None, {'id': draft_id, 'name': name, 'status': 'draft'})
     logger.info(f'Created R&D draft {draft_id} "{name}" (mode={mode}) from {base_item_code}')
     return jsonify(_with_base_sku(rd_store.get_draft(draft_id))), 201
 
@@ -458,7 +581,16 @@ def api_rd_update(draft_id):
     draft = rd_store.get_draft(draft_id)
     if draft is None:
         return jsonify({'error': 'not found'}), 404
+    before = {'id': draft_id, 'name': draft['name'], 'status': draft['status']}
     rd_store.update_draft(draft_id, name=body.get('name'), status=body.get('status'))
+    updated = rd_store.get_draft(draft_id)
+    after = {'id': draft_id, 'name': updated['name'], 'status': updated['status']}
+    if after != before:
+        history_store.record(session.get('username'), 'rd_draft', updated['name'],
+                              f'Draft "{before["name"]}" → status {before["status"]}→{after["status"]}'
+                              if before['status'] != after['status'] else
+                              f'Draft renamed "{before["name"]}" → "{after["name"]}"',
+                              before, after)
     logger.info(f'Updated R&D draft {draft_id}: {body}')
     if body.get('status') == 'pending_review':
         submitter = session.get('username') or draft.get('created_by') or 'Someone'
@@ -472,7 +604,11 @@ def api_rd_update(draft_id):
 
 @app.route('/api/rd/drafts/<int:draft_id>', methods=['DELETE'])
 def api_rd_delete(draft_id):
+    draft = rd_store.get_draft(draft_id)
     rd_store.delete_draft(draft_id)
+    if draft is not None:
+        history_store.record(session.get('username'), 'rd_draft', draft['name'],
+                              f'Draft "{draft["name"]}" deleted', draft, None)
     logger.info(f'Deleted R&D draft {draft_id}')
     return jsonify({'deleted': draft_id})
 
@@ -512,6 +648,58 @@ def api_rd_variant_save(draft_id, variant_id):
 def api_rd_variant_delete(draft_id, variant_id):
     rd_store.delete_variant(variant_id)
     return jsonify(rd_store.get_draft(draft_id))
+
+
+# ── History / rollback — admin+developer can view, only developer can roll
+# back (see developer_required's docstring) ────────────────────────────────
+
+@app.route('/api/history', methods=['GET'])
+@admin_required
+def api_history_list():
+    return jsonify(history_store.list_history())
+
+
+# Action types with a real, safe "write the old blob back" rollback path.
+# rd_draft/user_mgmt entries stay fully visible in the History tab for audit
+# but have no rollback handler — see history_store.py's module docstring.
+_ROLLBACK_ACTIONS = {'commercial_rate', 'mrp', 'bom_line'}
+
+
+@app.route('/api/history/<int:history_id>/rollback', methods=['POST'])
+@developer_required
+def api_history_rollback(history_id):
+    entry = history_store.get(history_id)
+    if entry is None:
+        return jsonify({'error': 'not found'}), 404
+    if entry['status'] != 'active':
+        return jsonify({'error': 'already rolled back'}), 400
+    action = entry['action']
+    if action not in _ROLLBACK_ACTIONS:
+        return jsonify({'error': f'"{action}" entries cannot be rolled back'}), 400
+    before = entry['before_data']
+    username = session.get('username')
+
+    if action == 'commercial_rate':
+        for key, value in (before or {}).items():
+            if value is None:
+                overrides_store.clear_commercial_override(key)
+            else:
+                overrides_store.set_commercial_override(key, float(value), username)
+    elif action == 'mrp':
+        if before is None or before.get('mrp') is None:
+            overrides_store.clear_mrp_override(entry['entity'])
+        else:
+            overrides_store.set_mrp_override(entry['entity'], float(before['mrp']), username)
+    elif action == 'bom_line':
+        lines = (before or {}).get('lines')
+        if lines is not None:
+            bom_store.save_override(entry['entity'], lines)
+        else:
+            bom_store.clear_override(entry['entity'])
+
+    history_store.mark_rolled_back(history_id)
+    logger.info(f'History #{history_id} ({action}: {entry["entity"]}) rolled back by {username}')
+    return jsonify({'ok': True, 'id': history_id})
 
 
 if __name__ == '__main__':
