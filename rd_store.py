@@ -52,6 +52,11 @@ def _conn():
     conn = sqlite3.connect(DB_PATH)
     conn.executescript(_SCHEMA)
     conn.execute("PRAGMA foreign_keys = ON")
+    # Migrate existing DBs: rd_draft predates the login system, so older
+    # rows have no submitter — added once login/CMS/notifications came in.
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(rd_draft)").fetchall()}
+    if "created_by" not in cols:
+        conn.execute("ALTER TABLE rd_draft ADD COLUMN created_by TEXT")
     return conn
 
 
@@ -60,15 +65,15 @@ def _now():
 
 
 def create_draft(name: str, mode: str, base_item_code: str, base_bom_lines: list,
-                  dummy_item_code: str | None = None) -> int:
+                  dummy_item_code: str | None = None, created_by: str | None = None) -> int:
     """Creates a draft plus its first variant ("Original"), seeded with a
     copy of the base product's real BOM. Returns the new draft's id."""
     now = _now()
     with _conn() as conn:
         cur = conn.execute(
-            "INSERT INTO rd_draft (name, mode, dummy_item_code, base_item_code, status, created_at, updated_at) "
-            "VALUES (?, ?, ?, ?, 'draft', ?, ?)",
-            (name, mode, dummy_item_code, base_item_code, now, now)
+            "INSERT INTO rd_draft (name, mode, dummy_item_code, base_item_code, status, created_at, updated_at, created_by) "
+            "VALUES (?, ?, ?, ?, 'draft', ?, ?, ?)",
+            (name, mode, dummy_item_code, base_item_code, now, now, created_by)
         )
         draft_id = cur.lastrowid
         conn.execute(
@@ -83,12 +88,12 @@ def list_drafts() -> list:
     with _conn() as conn:
         rows = conn.execute(
             "SELECT d.id, d.name, d.mode, d.dummy_item_code, d.base_item_code, d.status, "
-            "d.created_at, d.updated_at, COUNT(v.id) as variant_count "
+            "d.created_at, d.updated_at, COUNT(v.id) as variant_count, d.created_by "
             "FROM rd_draft d LEFT JOIN rd_variant v ON v.draft_id = d.id "
             "GROUP BY d.id ORDER BY d.updated_at DESC"
         ).fetchall()
         cols = ["id", "name", "mode", "dummy_item_code", "base_item_code", "status",
-                "created_at", "updated_at", "variant_count"]
+                "created_at", "updated_at", "variant_count", "created_by"]
         return [dict(zip(cols, r)) for r in rows]
 
 
@@ -96,12 +101,12 @@ def get_draft(draft_id: int):
     """Full draft detail plus all its variants (each with parsed BOM lines)."""
     with _conn() as conn:
         drow = conn.execute(
-            "SELECT id, name, mode, dummy_item_code, base_item_code, status, created_at, updated_at "
+            "SELECT id, name, mode, dummy_item_code, base_item_code, status, created_at, updated_at, created_by "
             "FROM rd_draft WHERE id = ?", (draft_id,)
         ).fetchone()
         if not drow:
             return None
-        dcols = ["id", "name", "mode", "dummy_item_code", "base_item_code", "status", "created_at", "updated_at"]
+        dcols = ["id", "name", "mode", "dummy_item_code", "base_item_code", "status", "created_at", "updated_at", "created_by"]
         draft = dict(zip(dcols, drow))
         vrows = conn.execute(
             "SELECT id, name, json_data, created_at, updated_at FROM rd_variant "

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peps Industries — Product Contribution Tool — Login</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1F3864;--blue2:#2E75B6;--border:#d0d4dd;--bg:#f0f2f5;--bg2:#f7f9fc;--red:#C00000;--red-bg:#FDECEC}
+html,body{height:100%}
+body{font-family:Calibri,Arial,sans-serif;font-size:14px;color:#1a1a2e;background:var(--bg);
+     display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+.card{background:#fff;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.12);width:100%;max-width:380px;overflow:hidden}
+.card-header{background:var(--blue);padding:26px 30px 22px;text-align:center}
+.card-header h1{font-size:17px;font-weight:700;color:#fff;margin-bottom:4px}
+.card-header p{font-size:12px;color:rgba(255,255,255,.6)}
+.card-body{padding:26px 30px 30px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;font-weight:700;color:#8892a4;letter-spacing:.05em;
+             text-transform:uppercase;margin-bottom:6px}
+.field input{width:100%;border:1px solid var(--border);border-radius:5px;padding:9px 11px;
+             font:inherit;font-size:13.5px;color:#1a1a2e;background:#fff;transition:border-color .15s}
+.field input:focus{outline:none;border-color:var(--blue2);box-shadow:0 0 0 3px rgba(46,117,182,.15)}
+.btn-login{width:100%;padding:10px;border:none;border-radius:5px;background:var(--blue2);color:#fff;
+           font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:background .15s;margin-top:6px}
+.btn-login:hover{background:#1F5C9A}
+.error-box{background:var(--red-bg);border:1px solid #f3a6a6;border-radius:5px;padding:9px 12px;
+           font-size:12px;color:var(--red);margin-bottom:16px}
+.help-text{text-align:center;margin-top:18px;font-size:11px;color:#8892a4;line-height:1.5}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <h1>Peps Industries</h1>
+      <p>Product Contribution Tool</p>
+    </div>
+    <div class="card-body">
+      {% if error %}<div class="error-box">{{ error }}</div>{% endif %}
+      <form method="POST" action="/login" autocomplete="on">
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" placeholder="Enter your username"
+                 autocomplete="username" autofocus required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Enter your password"
+                 autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn-login">Sign In</button>
+      </form>
+      <p class="help-text">Contact your administrator if you don't have an account.</p>
+    </div>
+  </div>
+</body>
+</html>

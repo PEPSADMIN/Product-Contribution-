@@ -9,6 +9,10 @@ server_run.err.log
 server_err.log
 refresh_output.log
 
+# Flask session-signing key — generated on first run (server.py), never
+# checked in (anyone with it could forge session cookies).
+.flask_secret_key
+
 # One-off analysis/debug output from data extraction sessions
 *_dump.txt
 cirrus_new_products_extract.json

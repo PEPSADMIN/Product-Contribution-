@@ -34,22 +34,37 @@ Endpoints:
   POST /api/rd/drafts/<id>/variants        -> add a variant (for compare mode)
   PUT /api/rd/drafts/<id>/variants/<vid>   -> save a variant's edited BOM
   DELETE /api/rd/drafts/<id>/variants/<vid> -> delete a variant
+
+  Auth (mirrors BOM Tool's login_required/session pattern):
+  GET/POST /login                -> login page / submit credentials
+  GET /logout                    -> clear session, back to /login
+  GET /api/me                    -> current session user (username, role)
+  GET /api/users                 -> list users (admin only)
+  POST /api/users                -> create a user (admin only)
+  PUT /api/users/<id>            -> change role / active status / tabs / reset password (admin only)
+  POST /api/change-password      -> self-service password change
+  GET /api/notifications         -> current user's notifications
+  POST /api/notifications/read   -> mark all of the current user's notifications read
 """
 import os
 import sys
 import logging
+import secrets
+from functools import wraps
 from logging.handlers import RotatingFileHandler
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from flask import Flask, jsonify, send_from_directory, request
+from flask import Flask, jsonify, send_from_directory, request, session, redirect, url_for, render_template
 from werkzeug.exceptions import HTTPException
+from werkzeug.security import check_password_hash
 
 from sku_master import SKUS
 from config import FINANCE, COMMERCIAL
 import costing_store
 import bom_store
 import rd_store
+import auth_store
 from item_master import search_items
 from colour_lookup import colour_for
 
@@ -57,6 +72,7 @@ APP_HOST = '192.168.0.133'
 APP_PORT = 5007
 WEB_DIR = os.path.join(os.path.dirname(__file__), 'web')
 LOG_PATH = os.path.join(os.path.dirname(__file__), 'server.log')
+SECRET_KEY_PATH = os.path.join(os.path.dirname(__file__), '.flask_secret_key')
 
 # File log (persists across restarts / terminal closes) + console, so both
 # a re-opened terminal and this log file show the same activity. Mirrors
@@ -77,6 +93,55 @@ werkzeug_logger.addHandler(_file_handler)
 werkzeug_logger.addHandler(_console_handler)
 
 app = Flask(__name__, static_folder=None)
+
+# Session signing key — generated once on first run, then persisted so
+# sessions survive a server restart (this box restarts often, per the
+# recurring stray-http.server issue seen during development). Gitignored,
+# never checked in.
+if os.path.exists(SECRET_KEY_PATH):
+    with open(SECRET_KEY_PATH, 'r') as f:
+        app.secret_key = f.read().strip()
+else:
+    app.secret_key = secrets.token_hex(32)
+    with open(SECRET_KEY_PATH, 'w') as f:
+        f.write(app.secret_key)
+
+auth_store.seed_default_admin()
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get('user_id'):
+            if request.path.startswith('/api/'):
+                return jsonify({'error': 'Unauthorised'}), 401
+            return redirect(url_for('login_page'))
+        return f(*args, **kwargs)
+    return decorated
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get('user_id'):
+            return jsonify({'error': 'Unauthorised'}), 401
+        if session.get('role') != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+        return f(*args, **kwargs)
+    return decorated
+
+
+@app.before_request
+def _require_login():
+    """Block unauthenticated access to every route except login/logout/
+    favicon — same blanket guard BOM Tool uses (app_v2_1.py's require_login)."""
+    public = {'login_page', 'logout', 'favicon'}
+    if request.endpoint in public:
+        return None
+    if not session.get('user_id'):
+        if request.path.startswith('/api/'):
+            return jsonify({'error': 'Unauthorised'}), 401
+        return redirect(url_for('login_page'))
 
 
 @app.before_request
@@ -118,6 +183,45 @@ def favicon():
     # No favicon file exists — every browser auto-requests this on load,
     # so a plain 204 keeps it out of the 404 noise in server.log.
     return '', 204
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login_page():
+    if session.get('user_id'):
+        return redirect(url_for('index'))
+    error = None
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+        user = auth_store.get_user_by_username(username)
+        if user and user['is_active'] and check_password_hash(user['password_hash'], password):
+            session.clear()
+            session['user_id'] = user['id']
+            session['username'] = user['username']
+            session['role'] = user['role']
+            auth_store.update_last_login(user['id'])
+            logger.info(f'Login: {user["username"]} ({user["role"]}) from {request.remote_addr}')
+            return redirect(url_for('index'))
+        error = 'Invalid username or password.'
+        logger.info(f'Failed login attempt for "{username}" from {request.remote_addr}')
+    return render_template('login.html', error=error)
+
+
+@app.route('/logout')
+def logout():
+    logger.info(f'Logout: {session.get("username", "")}')
+    session.clear()
+    return redirect(url_for('login_page'))
+
+
+@app.route('/api/me')
+def api_me():
+    user = auth_store.get_user_by_id(session['user_id']) if session.get('user_id') else None
+    return jsonify({
+        'username': session.get('username'),
+        'role': session.get('role'),
+        'allowed_tabs': user['allowed_tabs'] if user else [],
+    })
 
 
 @app.route('/api/skus')
@@ -214,6 +318,86 @@ def api_item_search():
     return jsonify(results)
 
 
+# ── Users (CMS) — admin-only account management ───────────────────────────
+
+@app.route('/api/users', methods=['GET'])
+@admin_required
+def api_users_list():
+    return jsonify(auth_store.list_users())
+
+
+@app.route('/api/users', methods=['POST'])
+@admin_required
+def api_users_create():
+    body = request.get_json(silent=True) or {}
+    username = (body.get('username') or '').strip()
+    password = body.get('password') or ''
+    role = body.get('role') if body.get('role') in ('admin', 'user') else 'user'
+    # Missing key entirely = caller didn't send a tab list at all -> no
+    # restriction (matches pre-this-feature behaviour). An explicit []
+    # is respected as "no tabs" rather than silently upgraded to all.
+    raw_tabs = body.get('allowed_tabs')
+    allowed_tabs = auth_store.ALL_TABS if raw_tabs is None else [t for t in raw_tabs if t in auth_store.ALL_TABS]
+    if not username or len(password) < 6:
+        return jsonify({'error': 'username and a password of at least 6 characters are required'}), 400
+    if auth_store.get_user_by_username(username):
+        return jsonify({'error': f'"{username}" already exists'}), 400
+    user_id = auth_store.create_user(username, password, role, allowed_tabs)
+    logger.info(f'User "{username}" ({role}, tabs={allowed_tabs}) created by {session.get("username")}')
+    return jsonify({'id': user_id, 'username': username, 'role': role, 'allowed_tabs': allowed_tabs}), 201
+
+
+@app.route('/api/users/<int:user_id>', methods=['PUT'])
+@admin_required
+def api_users_update(user_id):
+    body = request.get_json(silent=True) or {}
+    if 'role' in body and body['role'] in ('admin', 'user'):
+        auth_store.set_user_role(user_id, body['role'])
+    if 'is_active' in body:
+        auth_store.set_user_active(user_id, bool(body['is_active']))
+    if 'allowed_tabs' in body and isinstance(body['allowed_tabs'], list):
+        auth_store.set_user_tabs(user_id, [t for t in body['allowed_tabs'] if t in auth_store.ALL_TABS])
+    if body.get('new_password'):
+        if len(body['new_password']) < 6:
+            return jsonify({'error': 'New password must be at least 6 characters'}), 400
+        auth_store.set_user_password(user_id, body['new_password'])
+        logger.info(f'Password reset for user {user_id} by {session.get("username")}')
+    logger.info(f'User {user_id} updated by {session.get("username")}: { {k: v for k, v in body.items() if k != "new_password"} }')
+    return jsonify({'updated': user_id})
+
+
+@app.route('/api/change-password', methods=['POST'])
+def api_change_password():
+    body = request.get_json(silent=True) or {}
+    old_pw = body.get('old_password') or ''
+    new_pw = body.get('new_password') or ''
+    user = auth_store.get_user_by_username(session.get('username', ''))
+    if not user or not check_password_hash(user['password_hash'], old_pw):
+        return jsonify({'error': 'Current password is incorrect'}), 400
+    if len(new_pw) < 6:
+        return jsonify({'error': 'New password must be at least 6 characters'}), 400
+    auth_store.set_user_password(user['id'], new_pw)
+    logger.info(f'Password changed for {user["username"]}')
+    return jsonify({'ok': True})
+
+
+# ── Notifications ───────────────────────────────────────────────────────
+
+@app.route('/api/notifications')
+def api_notifications():
+    uid = session.get('user_id')
+    return jsonify({
+        'notifications': auth_store.get_user_notifications(uid),
+        'unread_count': auth_store.get_unread_count(uid),
+    })
+
+
+@app.route('/api/notifications/read', methods=['POST'])
+def api_notifications_read():
+    auth_store.mark_notifications_read(session.get('user_id'))
+    return jsonify({'ok': True})
+
+
 # ── R&D drafts — sandbox BOM experiments, never written to sku_master.py ──
 # "Approved" is a status the user sets by hand once their admin signs off
 # in their own separate BOMAT Tool workflow; nothing here promotes a draft
@@ -242,7 +426,8 @@ def api_rd_create():
     lines, _source = bom_store.get_bom(base_item_code)
     if lines is None:
         return jsonify({'error': f'{base_item_code} has no extracted BOM to start a draft from'}), 400
-    draft_id = rd_store.create_draft(name, mode, base_item_code, lines, dummy_item_code)
+    draft_id = rd_store.create_draft(name, mode, base_item_code, lines, dummy_item_code,
+                                      created_by=session.get('username'))
     logger.info(f'Created R&D draft {draft_id} "{name}" (mode={mode}) from {base_item_code}')
     return jsonify(_with_base_sku(rd_store.get_draft(draft_id))), 201
 
@@ -270,10 +455,18 @@ def api_rd_get(draft_id):
 @app.route('/api/rd/drafts/<int:draft_id>', methods=['PUT'])
 def api_rd_update(draft_id):
     body = request.get_json(silent=True) or {}
-    if rd_store.get_draft(draft_id) is None:
+    draft = rd_store.get_draft(draft_id)
+    if draft is None:
         return jsonify({'error': 'not found'}), 404
     rd_store.update_draft(draft_id, name=body.get('name'), status=body.get('status'))
     logger.info(f'Updated R&D draft {draft_id}: {body}')
+    if body.get('status') == 'pending_review':
+        submitter = session.get('username') or draft.get('created_by') or 'Someone'
+        auth_store.notify_many(
+            auth_store.list_admin_ids(),
+            f'{submitter} submitted "{draft["name"]}" for admin review',
+            notif_type='rd_review'
+        )
     return jsonify(rd_store.get_draft(draft_id))
 
 
