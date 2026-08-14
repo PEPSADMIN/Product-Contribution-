@@ -82,7 +82,7 @@ tbody td{padding:6px 8px;white-space:nowrap}
 .sc-sub{font-size:11px;color:#888;margin-top:2px}
 .sc-peps{border-top:3px solid #2E75B6}
 .sc-cirrus{border-top:3px solid #1E5631}
-.sc-it{border-top:3px solid #BF8F00}
+.sc-coir{border-top:3px solid #BF8F00}
 .sc-acc{border-top:3px solid #C00000}
 
 /* ── Waterfall detail ── */
@@ -1248,13 +1248,18 @@ const pill = v=>v>=0.12?`<span class="pill pill-g">${PCT(v)}</span>`
                 :v>=0.06?`<span class="pill pill-a">${PCT(v)}</span>`
                         :`<span class="pill pill-r">${PCT(v)}</span>`;
 
+// Same 4 categories as the Material Costing tab's Category filter
+// (mcCategoryOf) — Peps (incl. Italiano) / Cirrus Foam / Cirrus Coir /
+// Accessories — instead of the old raw brand field, which lumped every
+// Cirrus SKU (Foam and Coir both) under one "Cirrus Foam" card and gave
+// Italiano a card of its own that Material Costing doesn't have.
 function renderSummary(results){
-  const brands=['peps','cirrus','italiano','accessories'];
-  const labels=['Peps Spring','Cirrus Foam','Italiano','Accessories'];
-  const scClass=['sc-peps','sc-cirrus','sc-it','sc-acc'];
+  const cats=['Peps','Cirrus Foam','Cirrus Coir','Accessories'];
+  const labels=['Peps Spring','Cirrus Foam','Cirrus Coir','Accessories'];
+  const scClass=['sc-peps','sc-cirrus','sc-coir','sc-acc'];
   let html='';
-  brands.forEach((b,i)=>{
-    const rows=results.filter(r=>r.b===b);
+  cats.forEach((cat,i)=>{
+    const rows=results.filter(r=>mcCategoryOf(r)===cat);
     const avg=rows.reduce((s,r)=>s+r.nm_pct,0)/rows.length;
     const below=rows.filter(r=>r.nm_pct<0.06).length;
     html+=`<div class="summary-card ${scClass[i]}">
