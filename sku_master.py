@@ -10177,7 +10177,7 @@ SKUS = [
      "rm_source_note":"accessories_bom:mrp_and_rm_cost_14_08_2026"},
     {"brand":"accessories","item_code":"PEPS-NATRL-LTX-PLW","product":"Natural Latex Pillow 20x11","sqft":1,
      "mrp":1869,"rm_cost":439.50,"freight_south":15.79,"consumer_scheme":0,"mfg_type":"Manuf",
-     "rm_source_note":"accessories_bom:komffy_peps_range_costing"},
+     "rm_source_note":"accessories_bom:user_confirmed_14_08_2026"},
     {"brand":"accessories","item_code":"RM-PEPS-FIT-SHT-78X60","product":"Fitted Sheets 78x60","sqft":1,
      "mrp":1782,"rm_cost":451.20,"freight_south":9.375,"consumer_scheme":0,"mfg_type":"BO",
      "rm_source_note":"accessories_bom:mrp_and_rm_cost_14_08_2026"},
