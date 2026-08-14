@@ -57,7 +57,12 @@ body{font-family:Calibri,Arial,sans-serif;font-size:13px;background:#f0f2f5;colo
 .params-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
 .param-group{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:10px 12px}
 .param-group-title{font-size:10px;font-weight:700;color:#8892a4;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.param-apply-scope{margin-bottom:12px}
+.param-apply-scope:last-child{margin-bottom:0}
+.param-subgroup-title{font-size:11px;font-weight:700;color:var(--blue2);margin-bottom:6px}
+.param-note{font-size:10.5px;color:#8892a4;font-style:italic;line-height:1.4;margin-bottom:8px}
 .param-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.param-apply-btn{margin-top:4px}
 .param-label{font-size:11px;color:#555;flex:1}
 .param-input{width:72px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;font-size:12px;font-family:inherit;text-align:right;background:#fff}
 .param-input:focus{outline:none;border-color:var(--blue2);box-shadow:0 0 0 2px rgba(46,117,182,.15)}
@@ -840,9 +845,10 @@ let COMM = {
   cirlatex_dealer:0.35, cirlatex_dist_vat:0.016364, cirlatex_dist:0.10,
   cirlatex_cd:0.030, cirlatex_dct:0.030, cirlatex_tod:0.040,
   cirlatex_sr:0.015, cirlatex_scheme:0.1237,
-  it_dealer:0.40, it_dist_vat:0.016364, it_dist:0.10,
-  it_cd:0.030, it_dct:0.040, it_tod:0.030,
-  it_sr:0.015, it_scheme:0.183736,
+  // Italiano used to have its own it_* rates here (40% dealer, 18.37%
+  // scheme) — merged into Peps Spring's peps_* rates per explicit
+  // request; see the "italiano" branches in calcSKU() and the Materials
+  // waterfall engine below.
   acc_dealer:0.50, acc_cd:0.030, acc_sr:0.015
 };
 const COMM_BASE = JSON.parse(JSON.stringify(COMM));
@@ -929,6 +935,9 @@ const SKUS_RAW = [
 let SKUS_BASE = JSON.parse(JSON.stringify(SKUS_RAW));
 let skus = SKUS_BASE.map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:s.rm_from_ramco||false, rm_source:s.rm_source}));
 let baseResults = null;
+// Commercial Rates: typed-but-not-yet-applied field values, keyed by COMM
+// key — see applyParamGroup()/renderParams().
+let paramPending = {};
 
 // ═══════════════════════════════════════════════════════════════════
 // ENGINE SERVER CONNECTION — like BOM Tool, pulls live data over HTTP
@@ -972,10 +981,6 @@ const COMM_PATH = {
   cirlatex_dist:['cirrus','cirrus_latex','dist_margin'], cirlatex_cd:['cirrus','cirrus_latex','cd'],
   cirlatex_dct:['cirrus','cirrus_latex','dct'], cirlatex_tod:['cirrus','cirrus_latex','tod'],
   cirlatex_sr:['cirrus','cirrus_latex','sales_return'], cirlatex_scheme:['cirrus','cirrus_latex','scheme_rm_pct'],
-  it_dealer:['italiano','dis_south','dealer_margin'], it_dist_vat:['italiano','dis_south','dist_vat_diff'],
-  it_dist:['italiano','dis_south','dist_margin'], it_cd:['italiano','dis_south','cd'],
-  it_dct:['italiano','dis_south','dct'], it_tod:['italiano','dis_south','tod'],
-  it_sr:['italiano','dis_south','sales_return'], it_scheme:['italiano','dis_south','scheme_rm_pct'],
   acc_dealer:['accessories','south','dealer_margin'], acc_cd:['accessories','south','cd'],
   acc_sr:['accessories','south','sales_return'],
 };
@@ -1167,9 +1172,14 @@ function calcSKU(s){
        cd:COMM.cirrus_cd,dct:COMM.cirrus_dct,tod:COMM.cirrus_tod,
        sr:COMM.cirrus_sr,scheme_rm:COMM.cirrus_scheme};
   } else if(b==="italiano"){
-    p={dm:COMM.it_dealer,dv:COMM.it_dist_vat,di:COMM.it_dist,
-       cd:COMM.it_cd,dct:COMM.it_dct,tod:COMM.it_tod,
-       sr:COMM.it_sr,scheme_rm:COMM.it_scheme};
+    // Italiano fully shares Peps Spring's channel policy — no separate
+    // Italiano rates exist anymore (merged per explicit request; Italiano
+    // used to have its own real, different rates — 40%/18.37% vs 30%/
+    // 13.24% — so this is a genuine calculation change, not just a
+    // display simplification).
+    p={dm:COMM.peps_dealer,dv:COMM.peps_dist_vat,di:COMM.peps_dist,
+       cd:COMM.peps_cd,dct:COMM.peps_dct,tod:COMM.peps_tod,
+       sr:COMM.peps_sr,scheme_rm:COMM.peps_scheme};
   } else {
     p={dm:COMM.acc_dealer,dv:0,di:0,cd:COMM.acc_cd,dct:0,tod:0,
        sr:COMM.acc_sr,scheme_rm:0};
@@ -1469,69 +1479,119 @@ function render(){
 // ═══════════════════════════════════════════════════════════════════
 // PARAMS PAGE
 // ═══════════════════════════════════════════════════════════════════
+// paramPending holds typed-but-not-yet-applied values, keyed by COMM key —
+// showPage('params') calls renderParams() fresh on every visit to this tab,
+// so without this, navigating away before hitting Apply would silently
+// discard whatever was typed.
+function paramFieldRowHTML(f){
+  const pending = paramPending[f.k];
+  const val = (pending!=null ? pending : COMM[f.k]*(f.mult||1)).toFixed(2);
+  const changed = (COMM[f.k]!==COMM_BASE[f.k]) || (pending!=null);
+  return `<div class="param-row">
+    <span class="param-label">${f.l}</span>
+    <input class="param-input${changed?' changed':''}" type="number" step="0.01"
+      value="${val}" data-key="${f.k}" data-mult="${f.mult||1}"
+      oninput="paramPending[this.dataset.key]=parseFloat(this.value); this.classList.add('changed')">
+    <span class="param-unit">${f.unit}</span>
+  </div>`;
+}
+function paramApplyBtnHTML(){
+  return `<button type="button" class="btn btn-sm btn-primary param-apply-btn" onclick="applyParamGroup(this)">Apply</button>`;
+}
+
+// Italiano fully shares these — it no longer has any rates of its own
+// (merged per explicit request; it previously had genuinely different
+// real numbers — 40% dealer margin, 18.37% scheme — so this is a real
+// calculation change for Italiano products, not just a display change).
+const PEPS_FIELDS=[
+  {k:'peps_dealer',l:'Dealer margin',unit:'%',mult:100},
+  {k:'peps_dist',l:'Distributor margin',unit:'%',mult:100},
+  {k:'peps_cd',l:'Cash discount (CD)',unit:'%',mult:100},
+  {k:'peps_dct',l:'DCT',unit:'%',mult:100},
+  {k:'peps_tod',l:'TOD',unit:'%',mult:100},
+  {k:'peps_sr',l:'Sales return',unit:'%',mult:100},
+  {k:'peps_scheme',l:'Scheme (% of RM)',unit:'%',mult:100},
+];
+const CIRRUS_SHARED_FIELDS=[
+  {k:'cirrus_dealer',l:'Dealer margin',unit:'%',mult:100},
+  {k:'cirrus_dist',l:'Distributor margin',unit:'%',mult:100},
+  {k:'cirrus_cd',l:'Cash discount (CD)',unit:'%',mult:100},
+  {k:'cirrus_dct',l:'DCT',unit:'%',mult:100},
+  {k:'cirrus_tod',l:'TOD',unit:'%',mult:100},
+  {k:'cirrus_sr',l:'Sales return',unit:'%',mult:100},
+  {k:'cirrus_scheme',l:'Scheme (% of RM)',unit:'%',mult:100},
+];
+const INSPREE_FIELDS=[
+  {k:'inspree_dealer',l:'Inspree dealer margin',unit:'%',mult:100},
+  {k:'inspree_scheme',l:'Inspree scheme (% of RM)',unit:'%',mult:100},
+];
+const ACCESSORIES_FIELDS=[
+  {k:'acc_dealer',l:'Dealer margin',unit:'%',mult:100},
+  {k:'acc_cd',l:'Cash discount (CD)',unit:'%',mult:100},
+  {k:'acc_sr',l:'Sales return',unit:'%',mult:100},
+];
+
 function renderParams(){
-  const groups=[
-    {title:'Peps Spring — Channel Policy',fields:[
-      {k:'peps_dealer',l:'Dealer margin',unit:'%',mult:100},
-      {k:'peps_dist',l:'Distributor margin',unit:'%',mult:100},
-      {k:'peps_cd',l:'Cash discount (CD)',unit:'%',mult:100},
-      {k:'peps_dct',l:'DCT',unit:'%',mult:100},
-      {k:'peps_tod',l:'TOD',unit:'%',mult:100},
-      {k:'peps_sr',l:'Sales return',unit:'%',mult:100},
-      {k:'peps_scheme',l:'Scheme (% of RM)',unit:'%',mult:100},
-    ]},
-    {title:'Cirrus Foam — Channel Policy',fields:[
-      {k:'cirrus_dealer',l:'Dealer margin',unit:'%',mult:100},
-      {k:'cirrus_dist',l:'Distributor margin',unit:'%',mult:100},
-      {k:'cirrus_cd',l:'Cash discount (CD)',unit:'%',mult:100},
-      {k:'cirrus_dct',l:'DCT',unit:'%',mult:100},
-      {k:'cirrus_tod',l:'TOD',unit:'%',mult:100},
-      {k:'cirrus_sr',l:'Sales return',unit:'%',mult:100},
-      {k:'cirrus_scheme',l:'Scheme (% of RM)',unit:'%',mult:100},
-      {k:'inspree_dealer',l:'Inspree dealer margin',unit:'%',mult:100},
-      {k:'inspree_scheme',l:'Inspree scheme (% of RM)',unit:'%',mult:100},
-    ]},
-    {title:'Italiano — Channel Policy',fields:[
-      {k:'it_dealer',l:'Dealer margin',unit:'%',mult:100},
-      {k:'it_dist',l:'Distributor margin',unit:'%',mult:100},
-      {k:'it_cd',l:'Cash discount (CD)',unit:'%',mult:100},
-      {k:'it_dct',l:'DCT',unit:'%',mult:100},
-      {k:'it_tod',l:'TOD',unit:'%',mult:100},
-      {k:'it_sr',l:'Sales return',unit:'%',mult:100},
-      {k:'it_scheme',l:'Scheme (% of RM)',unit:'%',mult:100},
-    ]},
-    {title:'Accessories — Channel Policy',fields:[
-      {k:'acc_dealer',l:'Dealer margin',unit:'%',mult:100},
-      {k:'acc_cd',l:'Cash discount (CD)',unit:'%',mult:100},
-      {k:'acc_sr',l:'Sales return',unit:'%',mult:100},
-    ]},
-  ];
+  // Ordered Peps / Cirrus Coir / Cirrus Foam / Accessories, matching the
+  // category scheme used everywhere else (mcCategoryOf). Peps Spring and
+  // Italiano still keep their own real, different rates underneath (30%
+  // vs 40% dealer margin) — they're just not shown as separate nested
+  // sections anymore; one flat field list, one shared Apply, field labels
+  // carry the brand name instead of a sub-heading. Cirrus Coir and Cirrus
+  // Foam are shown as two cards but both edit the exact same cirrus_*
+  // keys — there's no real Coir-specific policy in the data, applying
+  // either one applies the one shared policy (noted on both).
   let html='<div class="params-grid params-grid-2col">';
-  groups.forEach(g=>{
-    html+=`<div class="param-group"><div class="param-group-title">${g.title}</div>`;
-    g.fields.forEach(f=>{
-      const val=(COMM[f.k]*(f.mult||1)).toFixed(f.mult===100?2:2);
-      const changed=COMM[f.k]!==COMM_BASE[f.k];
-      html+=`<div class="param-row">
-        <span class="param-label">${f.l}</span>
-        <input class="param-input${changed?' changed':''}" type="number" step="0.01"
-          value="${val}" data-key="${f.k}" data-mult="${f.mult||1}"
-          onchange="updateComm(this)" oninput="this.classList.add('changed')">
-        <span class="param-unit">${f.unit}</span>
-      </div>`;
-    });
-    html+='</div>';
-  });
+
+  html+='<div class="param-group"><div class="param-group-title">Peps — Channel Policy</div>';
+  html+='<div class="param-apply-scope"><div class="param-note">Also applies to Italiano — it fully shares these rates, it has no separate policy of its own.</div>';
+  PEPS_FIELDS.forEach(f=>html+=paramFieldRowHTML(f));
+  html+=paramApplyBtnHTML()+'</div>';
+  html+='</div>';
+
+  html+='<div class="param-group"><div class="param-group-title">Cirrus Coir — Channel Policy</div>';
+  html+='<div class="param-apply-scope"><div class="param-note">Shares the same rates as Cirrus Foam — no separate Coir-specific policy exists in the data yet. Applying here applies to both.</div>';
+  CIRRUS_SHARED_FIELDS.forEach(f=>html+=paramFieldRowHTML(f));
+  html+=paramApplyBtnHTML()+'</div>';
+  html+='</div>';
+
+  html+='<div class="param-group"><div class="param-group-title">Cirrus Foam — Channel Policy</div>';
+  html+='<div class="param-apply-scope"><div class="param-note">The first 7 fields are shared with Cirrus Coir — applying here applies to both. Inspree rates are Foam-only.</div>';
+  CIRRUS_SHARED_FIELDS.forEach(f=>html+=paramFieldRowHTML(f));
+  INSPREE_FIELDS.forEach(f=>html+=paramFieldRowHTML(f));
+  html+=paramApplyBtnHTML()+'</div>';
+  html+='</div>';
+
+  html+='<div class="param-group"><div class="param-group-title">Accessories — Channel Policy</div>';
+  html+='<div class="param-apply-scope">';
+  ACCESSORIES_FIELDS.forEach(f=>html+=paramFieldRowHTML(f));
+  html+=paramApplyBtnHTML()+'</div>';
+  html+='</div>';
+
   html+='</div>';
   document.getElementById('params-cards').innerHTML=html;
 }
 
-function updateComm(el){
-  const k=el.dataset.key; const mult=parseFloat(el.dataset.mult)||1;
-  COMM[k]=parseFloat(el.value)/mult;
+// Editing a field only stages it in paramPending (oninput above) — it does
+// NOT touch COMM or recalculate anything live. Nothing takes effect on any
+// actual product until this card's own Apply button is clicked, and only
+// this card's fields are applied, not the whole page at once.
+function applyParamGroup(btn){
+  // Scoped to .param-apply-scope, not .param-group — the Peps card holds
+  // two independently-appliable sub-sections (Peps Spring, Italiano), so
+  // scoping to the whole card would apply both at once from either button.
+  const scope=btn.closest('.param-apply-scope');
+  scope.querySelectorAll('.param-input').forEach(el=>{
+    const k=el.dataset.key, mult=parseFloat(el.dataset.mult)||1;
+    COMM[k]=parseFloat(el.value)/mult;
+    delete paramPending[k];
+  });
   baseResults=null;
   render();
-  toast('Rates updated — table recalculated');
+  const groupTitle=btn.closest('.param-group').querySelector('.param-group-title').textContent;
+  const subTitle=scope.querySelector('.param-subgroup-title');
+  const label=subTitle ? `${groupTitle} — ${subTitle.textContent}` : groupTitle;
+  toast(`${label} rates applied — table recalculated`);
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -1631,6 +1691,7 @@ function showPage(p, skipRdCleanup){
 function resetAll(){
   skus=SKUS_BASE.map(s=>({...s,mrp_live:s.mrp,rm_live:s.rm,rm_from_ramco:s.rm_from_ramco||false,rm_source:s.rm_source}));
   Object.assign(COMM,JSON.parse(JSON.stringify(COMM_BASE)));
+  paramPending={};
   baseResults=null;
   render();
   if(document.getElementById('page-params').classList.contains('active'))renderParams();
@@ -1710,9 +1771,7 @@ function exportExcel(){
     ['Cirrus TOD',(COMM.cirrus_tod*100).toFixed(2)+'%'],
     ['Cirrus Scheme % of RM',(COMM.cirrus_scheme*100).toFixed(4)+'%'],
     [],
-    ['Italiano Dealer Margin',(COMM.it_dealer*100).toFixed(2)+'%'],
-    ['Italiano Dist Margin',(COMM.it_dist*100).toFixed(2)+'%'],
-    ['Italiano Scheme % of RM',(COMM.it_scheme*100).toFixed(4)+'%'],
+    ['Italiano — fully shares Peps rates above, no policy of its own', ''],
   ];
   const ws3=XLSX.utils.aoa_to_sheet(rates);
   ws3['!cols']=[{wch:28},{wch:14}];
@@ -1858,9 +1917,11 @@ function mcAdapt(s){
     adminPct=f.admin_ohs_pct; mktgPct=f.mktg_salary_pct;
     depreciationPct=f.depreciation_pct_cirrus; taxRate=f.direct_tax_rate;
   } else if(b==="italiano"){
-    pol={dv:COMM.it_dist_vat, cd:COMM.it_cd, dct:COMM.it_dct,
-         tod:COMM.it_tod, salesReturn:COMM.it_sr, schemeRmPct:COMM.it_scheme};
-    dealerPct=COMM.it_dealer*100; distPct=COMM.it_dist*100;
+    // Italiano fully shares Peps Spring's channel policy — see the
+    // matching note in calcSKU() above.
+    pol={dv:COMM.peps_dist_vat, cd:COMM.peps_cd, dct:COMM.peps_dct,
+         tod:COMM.peps_tod, salesReturn:COMM.peps_sr, schemeRmPct:COMM.peps_scheme};
+    dealerPct=COMM.peps_dealer*100; distPct=COMM.peps_dist*100;
     directLabourPct=f.direct_labour_pct_it; mfgOhsPct=f.mfg_ohs_pct;
     adminPct=f.admin_ohs_pct_it; mktgPct=f.mktg_salary_pct_it;
     advPromoPct=f.adv_promo_pct_it; depreciationPct=f.depreciation_pct_cirrus; taxRate=f.direct_tax_rate;
