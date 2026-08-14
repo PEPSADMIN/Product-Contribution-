@@ -140,6 +140,22 @@ html[data-ffam="verdana"] body{font-family:Verdana,Arial,sans-serif}
 .history-status-badge{font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:8px}
 .history-status-badge.active{background:var(--tint-green-bg);color:var(--tint-green-text)}
 .history-status-badge.rolled_back{background:var(--bg3);color:var(--text-dim)}
+.home-hero{margin-bottom:20px}
+.home-hero h2{font-size:21px;font-weight:700;color:var(--text);margin-bottom:4px}
+.home-sub{font-size:13px;color:var(--text-muted)}
+.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.home-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;display:flex;flex-direction:column;gap:10px}
+.home-card:hover{border-color:var(--blue2);box-shadow:0 4px 16px rgba(0,0,0,.08);transform:translateY(-1px)}
+.home-card-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.home-card-icon svg{width:19px;height:19px}
+.home-card-icon.tint-blue{background:var(--tint-blue-bg);color:var(--tint-blue-text)}
+.home-card-icon.tint-green{background:var(--tint-green-bg);color:var(--tint-green-text)}
+.home-card-icon.tint-amber{background:var(--tint-amber-bg);color:var(--tint-amber-text)}
+.home-card-icon.tint-rd{background:var(--rd-bg);color:var(--rd)}
+.home-card-icon.tint-grey{background:var(--bg3);color:var(--text-dim)}
+.home-card-title{font-size:14.5px;font-weight:700;color:var(--text)}
+.home-card-desc{font-size:12px;color:var(--text-muted);line-height:1.5}
+.home-loading{color:var(--text-muted);font-style:italic;font-size:12.5px}
 .cms-tabs-summary{font-size:11px;color:var(--text-dim)}
 
 /* ── Layout ── */
@@ -504,7 +520,11 @@ input.bom-rate{text-align:right;width:70px}
     </div>
     <div class="sidebar-section">Views</div>
     <div class="nav-group-view">
-      <div class="nav-item active" data-tab="nm" onclick="showPage('nm')" title="NM Abstract">
+      <div class="nav-item active" id="nav-home" onclick="showPage('home')" title="Home">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+        <span class="nav-label">Home</span>
+      </div>
+      <div class="nav-item" data-tab="nm" onclick="showPage('nm')" title="NM Abstract">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
         <span class="nav-label">NM Abstract</span>
       </div>
@@ -524,7 +544,7 @@ input.bom-rate{text-align:right;width:70px}
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></span>
         <span class="nav-label">History</span>
       </div>
-      <div class="nav-item" onclick="showPage('settings')" title="Settings">
+      <div class="nav-item" id="nav-settings" onclick="showPage('settings')" title="Settings">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
         <span class="nav-label">Settings</span>
       </div>
@@ -539,8 +559,23 @@ input.bom-rate{text-align:right;width:70px}
   <!-- Main -->
   <div class="main">
 
+    <!-- Home page — landing screen after login, a grid of every tab this
+         user can reach (renderHomeGrid() fills it in once loadMe() knows
+         the role/allowed_tabs; see the JS section near loadMe()). -->
+    <div class="page active" id="page-home">
+      <div class="section-pad">
+        <div class="home-hero">
+          <h2 id="home-greeting">Welcome</h2>
+          <p class="home-sub">Choose where you'd like to go — the same tabs are always in the sidebar too.</p>
+        </div>
+        <div class="home-grid" id="home-grid">
+          <div class="home-loading">Loading your available tools…</div>
+        </div>
+      </div>
+    </div>
+
     <!-- NM Abstract page -->
-    <div class="page active" id="page-nm">
+    <div class="page" id="page-nm">
       <div class="section-pad-top">
         <div class="summary-row" id="summary-row"></div>
       </div>
@@ -2036,6 +2071,7 @@ function showPage(p, skipRdCleanup){
   if(p==='cms')loadUsers();
   if(p==='history')loadHistory();
   if(p==='settings')initThemeToggleUI();
+  if(p==='home')renderHomeGrid();
 }
 
 function resetAll(){
@@ -3892,24 +3928,73 @@ async function loadMe(){
     // Per-user tab visibility — admin/developer always see everything
     // regardless of allowed_tabs (see auth_store.py); 'user' role only sees
     // what they were granted at creation (CMS "Visible Tabs" checkboxes).
+    // No "redirect away from an inaccessible default tab" logic needed here
+    // any more — Home (see renderHomeGrid() below) is the default landing
+    // page and is always accessible to everyone, so there's no default tab
+    // a restricted user could land on and find blank.
     const isAdmin = isPrivileged;
     const allowed = currentUser.allowed_tabs || [];
-    let firstVisibleTab = null;
     document.querySelectorAll('.nav-item[data-tab]').forEach(el=>{
       const tab = el.dataset.tab;
-      const visible = isAdmin || allowed.includes(tab);
-      el.classList.toggle('mc-hidden', !visible);
-      if(visible && !firstVisibleTab) firstVisibleTab = tab;
+      el.classList.toggle('mc-hidden', !(isAdmin || allowed.includes(tab)));
     });
-    // If the page that's currently showing (default: NM Abstract) isn't
-    // one this user has access to, land them on the first tab they do —
-    // otherwise a restricted user would open to a blank/inaccessible page.
-    const activePage = document.querySelector('.page.active');
-    const activeTab = activePage ? activePage.id.replace('page-','') : null;
-    const activeTabHidden = ['nm','params','material','rd'].includes(activeTab)
-      && !isAdmin && !allowed.includes(activeTab);
-    if(activeTabHidden && firstVisibleTab) showPage(firstVisibleTab);
+    renderHomeGrid();
   }catch(e){ console.warn('loadMe failed', e); }
+}
+
+// ── Home — landing screen after login: a grid of every tab this user can
+// reach, mirroring the sidebar 1:1 (same set, same gating), with a short
+// explanation per card since the sidebar's icon+label alone doesn't say
+// what each tab is for. ──────────────────────────────────────────────────
+const HOME_TAB_ICONS = {
+  nm: '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+  params: '<line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
+  material: '<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>',
+  rd: '<path d="M9 3h6"/><path d="M10 3v6l-5.5 9.5A1 1 0 0 0 5.4 20h13.2a1 1 0 0 0 .9-1.5L14 9V3"/><path d="M7 15h10"/>',
+  history: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+  cms: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+};
+const HOME_TABS = [
+  {key:'nm', label:'NM Abstract', desc:'Net margin overview across every SKU — filter by category, product line, height, size, and colour.', tint:'blue'},
+  {key:'params', label:'Commercial Rates', desc:'Edit dealer and distributor margin policy by category: Peps, Cirrus Coir, Cirrus Foam, Accessories.', tint:'blue'},
+  {key:'material', label:'Material Costing', desc:'Editable Bill of Materials and full cost waterfall for every product with a real Ramco item code.', tint:'green'},
+  {key:'rd', label:'R&D', desc:'Sandbox BOM experiments and fabric/material comparisons — never touches the live catalog.', tint:'rd'},
+  {key:'history', label:'History', desc:'Numbered audit trail of every saved edit, with rollback for Commercial Rates, MRP, and BOM changes.', tint:'amber', privilegedOnly:true},
+  {key:'settings', label:'Settings', desc:"Change your password, and set dark mode, font size, and font style.", tint:'grey'},
+  {key:'cms', label:'CMS', desc:'Create and manage user accounts, roles, and per-user tab permissions.', tint:'amber', privilegedOnly:true},
+];
+
+function renderHomeGrid(){
+  if(!currentUser) return;
+  const isPrivileged = currentUser.role === 'admin' || currentUser.role === 'developer';
+  const allowed = currentUser.allowed_tabs || [];
+  const CORE_TABS = ['nm', 'params', 'material', 'rd'];
+  const visible = HOME_TABS.filter(t=>{
+    if(t.privilegedOnly) return isPrivileged;
+    if(CORE_TABS.includes(t.key)) return isPrivileged || allowed.includes(t.key);
+    return true; // Settings — always available, it's per-account self-service
+  });
+  const greetingEl = document.getElementById('home-greeting');
+  if(greetingEl) greetingEl.textContent = `Welcome, ${currentUser.username}`;
+  document.getElementById('home-grid').innerHTML = visible.map(t=>`
+    <div class="home-card" onclick="goHome('${t.key}')">
+      <div class="home-card-icon tint-${t.tint}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${HOME_TAB_ICONS[t.key]}</svg></div>
+      <div class="home-card-title">${escHtml(t.label)}</div>
+      <div class="home-card-desc">${escHtml(t.desc)}</div>
+    </div>
+  `).join('');
+}
+
+// Wraps showPage() so a home-card click highlights the matching *sidebar*
+// item, not the home-card itself — _setActiveInGroup() (called inside
+// showPage) highlights event.currentTarget, which from a home-card's own
+// onclick would be the card, not the nav-item.
+function goHome(key){
+  showPage(key);
+  document.querySelectorAll('.nav-group-view .nav-item').forEach(x=>x.classList.remove('active'));
+  const navEl = document.querySelector(`.nav-group-view .nav-item[data-tab="${key}"]`) || document.getElementById('nav-'+key);
+  if(navEl) navEl.classList.add('active');
 }
 
 async function loadNotifications(){
