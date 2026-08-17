@@ -134,6 +134,7 @@ html[data-ffam="verdana"] body{font-family:Verdana,Arial,sans-serif}
 .history-type-badge.type-commercial_rate{background:var(--tint-blue-bg);color:var(--tint-blue-text)}
 .history-type-badge.type-mrp{background:var(--tint-amber-bg);color:var(--tint-amber-text)}
 .history-type-badge.type-bom_line{background:var(--tint-green-bg);color:var(--tint-green-text)}
+.history-type-badge.type-waterfall_override{background:var(--tint-red2-bg);color:var(--tint-red2-text)}
 .history-type-badge.type-rd_draft{background:var(--rd-bg);color:var(--rd)}
 .history-type-badge.type-user_mgmt,.history-type-badge.type-user_password_reset{background:var(--tint-orange-bg);color:var(--tint-orange-text)}
 .history-table-wrap td.history-summary{max-width:420px;font-size:12px;color:var(--text);white-space:normal;word-break:break-word}
@@ -299,6 +300,9 @@ tbody td{padding:6px 8px;white-space:nowrap;color:var(--text)}
 .mc-subpage{display:none}.mc-subpage.active{display:block}
 .mc-section-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 8px}
 .mc-section-note{font-weight:400;text-transform:none;letter-spacing:0}
+.mc-save-note{font-weight:600;text-transform:none;letter-spacing:0;font-size:11px}
+.mc-save-note.dirty{color:var(--amber)}
+.mc-save-note.saved{color:var(--tint-green-text)}
 table.wf{width:100%;border-collapse:collapse;font-size:12.5px}
 table.wf:not(.mc-wf-transposed){max-width:880px}
 table.wf:not(.mc-wf-transposed) th:first-child,table.wf:not(.mc-wf-transposed) td:first-child{width:46%}
@@ -758,7 +762,13 @@ input.bom-rate{text-align:right;width:70px}
               </div>
             </div>
 
-            <div class="mc-section-label">Net Margin <span class="mc-section-note">(every % and ₹ amount is editable — try changing any of them)</span></div>
+            <div class="mc-bom-header">
+              <div class="mc-section-label mc-bom-header-label" id="mc-mat-header-label">Net Margin <span class="mc-section-note">(every % and ₹ amount is editable — try changing any of them)</span> <span class="mc-save-note" id="mc-mat-save-note"></span></div>
+              <div class="mc-bom-actions">
+                <button type="button" class="btn btn-sm btn-outline-blue" onclick="mcRevertWaterfall()">Revert to baseline</button>
+                <button type="button" class="btn btn-sm btn-primary" onclick="mcSaveWaterfall()">Save Net Margin changes</button>
+              </div>
+            </div>
             <div class="mc-card mc-scroll">
               <table class="wf mc-wf-transposed">
                 <thead><tr>
@@ -1057,6 +1067,7 @@ input.bom-rate{text-align:right;width:70px}
               <option value="commercial_rate">Commercial Rate</option>
               <option value="mrp">MRP</option>
               <option value="bom_line">Material Costing BOM</option>
+              <option value="waterfall_override">Net Margin Override</option>
               <option value="rd_draft">R&amp;D</option>
               <option value="user_mgmt">User Management</option>
               <option value="user_password_reset">Password Reset</option>
@@ -2534,6 +2545,28 @@ function mcRenderTransposed(prefix){
   }
 }
 
+// mcWaterfallDirty: true once the user has typed something since the last
+// load/save/revert. mcWaterfallHasSaved: true if a saved override currently
+// exists on the server for this product (drives the "· saved" note and
+// whether "Revert to baseline" has anything real to discard).
+let mcWaterfallDirty = false;
+let mcWaterfallHasSaved = false;
+
+function mcUpdateSaveNote(){
+  const el = document.getElementById('mc-mat-save-note');
+  if(!el) return;
+  if(mcWaterfallDirty){
+    el.textContent = '· unsaved changes';
+    el.className = 'mc-save-note dirty';
+  } else if(mcWaterfallHasSaved){
+    el.textContent = '· saved';
+    el.className = 'mc-save-note saved';
+  } else {
+    el.textContent = '';
+    el.className = 'mc-save-note';
+  }
+}
+
 function mcHandleWaterfallInput(e){
   const el = e.target;
   if(!el.matches('input[data-key]')) return;
@@ -2541,6 +2574,8 @@ function mcHandleWaterfallInput(e){
   const v = parseFloat(el.value);
   if(isNaN(v)) delete mcState.overrides[key];
   else mcState.overrides[key] = {kind, value:v};
+  mcWaterfallDirty = true;
+  mcUpdateSaveNote();
   mcRenderTransposed('mc-mat');
 }
 
@@ -3097,9 +3132,37 @@ function mcSelectProduct(idxStr){
   if(isNaN(idx) || !skus[idx]) return;
   mcState.idx = idx;
   mcState.overrides = {};
+  mcWaterfallDirty = false;
+  mcWaterfallHasSaved = false;
+  mcUpdateSaveNote();
   mcRefreshCalc();
   mcLoadBom();
+  // R&D drafts are a frozen sandbox seeded once at creation (see mcLoadBom's
+  // own rdActiveContext branch, which loads the variant's own saved lines
+  // instead of the real product's live BOM) — never pull in the REAL
+  // product's live Net Margin overrides here either, or a draft would
+  // silently drift as someone edits the real product elsewhere.
+  if(!rdActiveContext) mcLoadWaterfallOverride();
   if(document.getElementById('mc-sub-history').classList.contains('active')) mcHistOnShow();
+}
+
+async function mcLoadWaterfallOverride(){
+  const s = skus[mcState.idx];
+  if(!s || !s.ic) return;
+  const myIdx = mcState.idx;
+  try{
+    const resp = await fetch('/api/waterfall/' + encodeURIComponent(s.ic));
+    if(myIdx !== mcState.idx || rdActiveContext) return; // product switched (or entered R&D) before this returned
+    if(!resp.ok) return;
+    const data = await resp.json();
+    const overrides = data.overrides || {};
+    if(Object.keys(overrides).length){
+      Object.assign(mcState.overrides, overrides);
+      mcWaterfallHasSaved = true;
+      mcUpdateSaveNote();
+      mcRenderTransposed('mc-mat');
+    }
+  }catch(e){ /* silent — same as the rest of this page's best-effort server calls */ }
 }
 
 // Recomputes the waterfall for the currently-selected product from the
@@ -3474,6 +3537,46 @@ async function mcRevertBom(){
     await fetch('/api/bom/' + encodeURIComponent(s.ic), {method:'DELETE'});
     toast('Reverted to the ledger baseline');
     mcLoadBom();
+  }catch(e){ toast('Could not revert — engine server unreachable'); }
+}
+
+// Same persist/discard pattern as the BOM buttons above, for the Net
+// Margin waterfall's own % / ₹ overrides — a separate save target from
+// the BOM (POST /api/waterfall/<ic>, not /api/bom/<ic>). R&D drafts never
+// persist these (see mcSelectProduct's rdActiveContext guard on load) —
+// saving here from inside a draft would silently overwrite the REAL
+// product's live overrides, which is exactly what the sandbox promises
+// never to do.
+async function mcSaveWaterfall(){
+  if(rdActiveContext){ toast('R&D drafts don\'t save Net Margin overrides — only the Bill of Materials is saved per draft'); return; }
+  const s = skus[mcState.idx];
+  if(!s || !s.ic){ toast('This product has no item code — nothing to save'); return; }
+  const { rm, ...overrides } = mcState.overrides; // rm is BOM-derived, never part of a saved override
+  try{
+    const resp = await fetch('/api/waterfall/' + encodeURIComponent(s.ic), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({overrides})
+    });
+    if(!resp.ok) throw new Error('save failed');
+    mcWaterfallDirty = false;
+    mcWaterfallHasSaved = true;
+    mcUpdateSaveNote();
+    toast('Net Margin overrides saved');
+  }catch(e){ toast('Could not save — engine server unreachable'); }
+}
+async function mcRevertWaterfall(){
+  if(rdActiveContext){ toast('R&D drafts don\'t save Net Margin overrides — nothing to revert'); return; }
+  const s = skus[mcState.idx];
+  if(!s || !s.ic) return;
+  try{
+    await fetch('/api/waterfall/' + encodeURIComponent(s.ic), {method:'DELETE'});
+    const rm = mcState.overrides.rm;
+    mcState.overrides = rm ? {rm} : {};
+    mcWaterfallDirty = false;
+    mcWaterfallHasSaved = false;
+    mcUpdateSaveNote();
+    mcRenderTransposed('mc-mat');
+    toast('Net Margin overrides reverted to baseline');
   }catch(e){ toast('Could not revert — engine server unreachable'); }
 }
 
@@ -4182,9 +4285,10 @@ async function saveEditUser(e){
 let historyCache = [];
 const HISTORY_TYPE_LABELS = {
   commercial_rate: 'Commercial Rate', mrp: 'MRP', bom_line: 'Material Costing BOM',
+  waterfall_override: 'Net Margin Override',
   rd_draft: 'R&D', user_mgmt: 'User Management', user_password_reset: 'Password Reset'
 };
-const HISTORY_ROLLBACKABLE = new Set(['commercial_rate', 'mrp', 'bom_line']);
+const HISTORY_ROLLBACKABLE = new Set(['commercial_rate', 'mrp', 'bom_line', 'waterfall_override']);
 
 async function loadHistory(){
   try{
@@ -4230,6 +4334,20 @@ async function rollbackHistory(id, entityLabel){
     if(resp.ok){
       toast(`History #${id} rolled back`);
       await connectToEngine();
+      // connectToEngine() refreshes /api/skus + /api/config (covers
+      // commercial_rate/mrp rollbacks) but doesn't know about whatever
+      // product Material Costing currently has open — a bom_line or
+      // waterfall_override rollback needs that product's own saved state
+      // re-fetched too, or the page keeps showing the pre-rollback values
+      // until the user manually switches products.
+      if(mcState.idx != null && skus[mcState.idx]){
+        mcState.overrides = {};
+        mcWaterfallDirty = false;
+        mcWaterfallHasSaved = false;
+        mcUpdateSaveNote();
+        mcLoadBom();
+        if(!rdActiveContext) mcLoadWaterfallOverride();
+      }
       loadHistory();
     } else {
       toast(data.error || 'Could not roll back');

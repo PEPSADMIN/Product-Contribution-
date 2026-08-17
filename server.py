@@ -50,6 +50,11 @@ Endpoints:
   POST /api/commercial-rates     -> save a Commercial Rates card's edited
                                      values (history_store logs before/after)
   POST /api/mrp                  -> save one product's edited MRP
+  GET /api/waterfall/<item_code>  -> a product's saved Net Margin overrides
+  POST /api/waterfall/<item_code> -> save Material Costing's per-line
+                                     Net Margin overrides (dealer margin,
+                                     dist margin, deductions, overheads...)
+  DELETE /api/waterfall/<item_code> -> discard overrides, revert to baseline
 
   History / rollback:
   GET /api/history                       -> the unified audit trail, newest first
@@ -78,6 +83,7 @@ import rd_store
 import auth_store
 import history_store
 import overrides_store
+import waterfall_store
 from item_master import search_items
 from colour_lookup import colour_for
 
@@ -397,6 +403,41 @@ def api_bom_revert(item_code):
     return jsonify({'item_code': item_code, 'lines': lines, 'source': source})
 
 
+@app.route('/api/waterfall/<item_code>', methods=['GET'])
+def api_waterfall_get(item_code):
+    return jsonify({'item_code': item_code, 'overrides': waterfall_store.get_override(item_code) or {}})
+
+
+@app.route('/api/waterfall/<item_code>', methods=['POST'])
+def api_waterfall_save(item_code):
+    body = request.get_json(silent=True) or {}
+    overrides = body.get('overrides')
+    if not isinstance(overrides, dict):
+        return jsonify({'error': "body must be {'overrides': {key: {'kind','value'}}}"}), 400
+    username = session.get('username')
+    before = waterfall_store.get_override(item_code)
+    waterfall_store.save_override(item_code, overrides, username)
+    n = len(overrides)
+    history_store.record(username, 'waterfall_override', item_code,
+                          f'Net Margin overrides updated ({n} field{"s" if n != 1 else ""})',
+                          {'overrides': before} if before is not None else None,
+                          {'overrides': overrides})
+    logger.info(f'Saved waterfall overrides for {item_code}: {list(overrides.keys())}')
+    return jsonify({'item_code': item_code, 'overrides': overrides})
+
+
+@app.route('/api/waterfall/<item_code>', methods=['DELETE'])
+def api_waterfall_revert(item_code):
+    before = waterfall_store.get_override(item_code)
+    waterfall_store.clear_override(item_code)
+    if before is not None:
+        history_store.record(session.get('username'), 'waterfall_override', item_code,
+                              'Net Margin overrides reverted to baseline',
+                              {'overrides': before}, None)
+    logger.info(f'Reverted waterfall overrides for {item_code} to baseline')
+    return jsonify({'item_code': item_code, 'overrides': {}})
+
+
 @app.route('/api/rm-history/<item_code>')
 def api_rm_history(item_code):
     rows = costing_store.history(item_code)
@@ -662,7 +703,7 @@ def api_history_list():
 # Action types with a real, safe "write the old blob back" rollback path.
 # rd_draft/user_mgmt entries stay fully visible in the History tab for audit
 # but have no rollback handler — see history_store.py's module docstring.
-_ROLLBACK_ACTIONS = {'commercial_rate', 'mrp', 'bom_line'}
+_ROLLBACK_ACTIONS = {'commercial_rate', 'mrp', 'bom_line', 'waterfall_override'}
 
 
 @app.route('/api/history/<int:history_id>/rollback', methods=['POST'])
@@ -696,6 +737,12 @@ def api_history_rollback(history_id):
             bom_store.save_override(entry['entity'], lines)
         else:
             bom_store.clear_override(entry['entity'])
+    elif action == 'waterfall_override':
+        overrides = (before or {}).get('overrides')
+        if overrides is not None:
+            waterfall_store.save_override(entry['entity'], overrides, username)
+        else:
+            waterfall_store.clear_override(entry['entity'])
 
     history_store.mark_rolled_back(history_id)
     logger.info(f'History #{history_id} ({action}: {entry["entity"]}) rolled back by {username}')
