@@ -1666,9 +1666,23 @@ const escHtml = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&l
 const INR = v=>v<0?`(${Math.abs(v).toLocaleString('en-IN',{maximumFractionDigits:0})})`
                   :v.toLocaleString('en-IN',{maximumFractionDigits:0});
 const PCT = v=>(v*100).toFixed(1)+'%';
-const pill = v=>v>=0.12?`<span class="pill pill-g">${PCT(v)}</span>`
-                :v>=0.06?`<span class="pill pill-a">${PCT(v)}</span>`
-                        :`<span class="pill pill-r">${PCT(v)}</span>`;
+
+// NM Abstract's NM% pill — red/amber/green, boundaries tied to the "NM
+// below X%" filter's Threshold % box (default 6%, red<threshold,
+// amber<2x threshold, green>=2x threshold — 2x reproduces the original
+// fixed 6%/12% split exactly when threshold is left at its default 6).
+// Without this, setting a custom threshold (say 15%) could show a product
+// at 14.2% — which the filter correctly flags as "below 15%" — with a
+// GREEN pill (a fixed >=12% boundary would say so), directly contradicting
+// the filter that surfaced it. Tying both to the same number removes that.
+function nmPill(v){
+  const thresholdEl = document.getElementById('nm-f-margin-threshold');
+  const parsed = thresholdEl ? parseFloat(thresholdEl.value) : NaN;
+  const threshold = (isNaN(parsed) ? 6 : parsed) / 100;
+  return v>=threshold*2 ? `<span class="pill pill-g">${PCT(v)}</span>`
+       : v>=threshold   ? `<span class="pill pill-a">${PCT(v)}</span>`
+                         : `<span class="pill pill-r">${PCT(v)}</span>`;
+}
 
 // Same 4 categories as the Material Costing tab's Category filter
 // (mcCategoryOf) — Peps (incl. Italiano) / Cirrus Foam / Cirrus Coir /
@@ -1804,7 +1818,7 @@ function renderTable(results){
         <td>${INR(r.net_sales)}</td>
         <td>${INR(r.ebitda)}</td>
         <td>${INR(r.nm)}</td>
-        <td>${pill(r.nm_pct)}</td>
+        <td>${nmPill(r.nm_pct)}</td>
         <td>${r.sqft>1?INR(r.nm_sqft):'—'}</td>
         <td>${dstr}</td>
       </tr>`;

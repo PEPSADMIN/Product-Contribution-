@@ -39,7 +39,13 @@ def sum_rm_cost(filepath: str, item_codes: Iterable[str], sheet_keyword: str = '
     Returns {item_code: {'rm_cost': float, 'line_count': int}}.
     """
     wanted = set(item_codes)
-    wb = openpyxl.load_workbook(filepath, read_only=True, data_only=True)
+    # keep_links=False: we only ever read cell values, never follow a
+    # formula's reference to another workbook — but openpyxl parses the
+    # external-links XML eagerly regardless of read_only mode, and on this
+    # export's external-links section that's expensive enough to raise
+    # MemoryError on a memory-constrained machine. Skipping it avoids that
+    # parse entirely with no effect on the values this function reads.
+    wb = openpyxl.load_workbook(filepath, read_only=True, data_only=True, keep_links=False)
     try:
         sheet_name = _find_sheet(wb, sheet_keyword)
         ws = wb[sheet_name]
@@ -55,7 +61,16 @@ def sum_rm_cost(filepath: str, item_codes: Iterable[str], sheet_keyword: str = '
                 continue
             code = row[bc_i]
             if code in wanted:
-                totals[code] = totals.get(code, 0.0) + float(row[tot_i] or 0)
+                # A handful of rows carry a formula-error cached value
+                # (e.g. '#N/A') instead of a number — Ramco's export, not
+                # this tool's data. Treat as 0 for that one line rather
+                # than crashing the whole scan; the line still counts
+                # toward line_count so it's visible in the total row count.
+                try:
+                    val = float(row[tot_i] or 0)
+                except (TypeError, ValueError):
+                    val = 0.0
+                totals[code] = totals.get(code, 0.0) + val
                 counts[code] = counts.get(code, 0) + 1
         return {c: {'rm_cost': round(totals[c], 4), 'line_count': counts[c]} for c in totals}
     finally:

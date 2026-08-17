@@ -92,7 +92,11 @@ def extract_boms(item_codes: Iterable[str], fg_path: str, sfg_path: str, progres
     boms: dict[str, list[dict]] = {}
     sfg_codes_needed: set[str] = set()
 
-    wb = openpyxl.load_workbook(fg_path, read_only=True, data_only=True)
+    # keep_links=False: skips eagerly parsing the external-links XML, which
+    # openpyxl does even in read_only mode and which can raise MemoryError
+    # on some of these ledger exports on a memory-constrained machine —
+    # this function only ever reads cell values, never external references.
+    wb = openpyxl.load_workbook(fg_path, read_only=True, data_only=True, keep_links=False)
     try:
         ws = wb[_find_sheet(wb, 'FG')]
         rows = ws.iter_rows(values_only=True)
@@ -137,7 +141,7 @@ def extract_boms(item_codes: Iterable[str], fg_path: str, sfg_path: str, progres
 
     children_by_sfg: dict[str, list[dict]] = {}
     if sfg_codes_needed:
-        wb2 = openpyxl.load_workbook(sfg_path, read_only=True, data_only=True)
+        wb2 = openpyxl.load_workbook(sfg_path, read_only=True, data_only=True, keep_links=False)
         try:
             ws2 = wb2[_find_sheet(wb2, 'SFG')]
             rows2 = ws2.iter_rows(values_only=True)
