@@ -33,12 +33,12 @@
         "scheme_rm_pct": 0.132431
       },
       "dd_south": {
-        "dealer_margin": 0.35, "dist_vat_diff": 0.0, "dist_margin": 0.0,
+        "dealer_margin": 0.40, "dist_vat_diff": 0.0, "dist_margin": 0.0,
         "cd": 0.030, "dct": 0.040, "tod": 0.0, "sales_return": 0.015,
         "scheme_rm_pct": 0.132431
       },
       "dd_a_south": {
-        "dealer_margin": 0.40, "dist_vat_diff": 0.0, "dist_margin": 0.0,
+        "dealer_margin": 0.45, "dist_vat_diff": 0.0, "dist_margin": 0.0,
         "cd": 0.030, "dct": 0.0, "tod": 0.0, "sales_return": 0.015,
         "scheme_rm_pct": 0.0
       },
