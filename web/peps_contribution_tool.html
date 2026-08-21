@@ -134,6 +134,7 @@ html[data-ffam="verdana"] body{font-family:Verdana,Arial,sans-serif}
 .history-type-badge.type-commercial_rate{background:var(--tint-blue-bg);color:var(--tint-blue-text)}
 .history-type-badge.type-mrp{background:var(--tint-amber-bg);color:var(--tint-amber-text)}
 .history-type-badge.type-bom_line{background:var(--tint-green-bg);color:var(--tint-green-text)}
+.history-type-badge.type-rm_refresh{background:var(--tint-green-bg);color:var(--tint-green-text)}
 .history-type-badge.type-waterfall_override{background:var(--tint-red2-bg);color:var(--tint-red2-text)}
 .history-type-badge.type-rd_draft{background:var(--rd-bg);color:var(--rd)}
 .history-type-badge.type-user_mgmt,.history-type-badge.type-user_password_reset{background:var(--tint-orange-bg);color:var(--tint-orange-text)}
@@ -1068,6 +1069,7 @@ input.bom-rate{text-align:right;width:70px}
               <option value="mrp">MRP</option>
               <option value="bom_line">Material Costing BOM</option>
               <option value="waterfall_override">Net Margin Override</option>
+              <option value="rm_refresh">RM Statement Refresh</option>
               <option value="rd_draft">R&amp;D</option>
               <option value="user_mgmt">User Management</option>
               <option value="user_password_reset">Password Reset</option>
@@ -4285,7 +4287,7 @@ async function saveEditUser(e){
 let historyCache = [];
 const HISTORY_TYPE_LABELS = {
   commercial_rate: 'Commercial Rate', mrp: 'MRP', bom_line: 'Material Costing BOM',
-  waterfall_override: 'Net Margin Override',
+  waterfall_override: 'Net Margin Override', rm_refresh: 'RM Statement Refresh',
   rd_draft: 'R&D', user_mgmt: 'User Management', user_password_reset: 'Password Reset'
 };
 const HISTORY_ROLLBACKABLE = new Set(['commercial_rate', 'mrp', 'bom_line', 'waterfall_override']);

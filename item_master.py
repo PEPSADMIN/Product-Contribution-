@@ -62,6 +62,15 @@ def get_index() -> sqlite3.Connection:
     return _conn
 
 
+def get_standard_cost(item_code: str) -> float | None:
+    """The Item Master's own Standard Cost for one item — the last-resort
+    fallback tier in rm_statement.py's rate chain, for items the RM
+    Statement has no Opening/In/Out/Closing rate for at all."""
+    conn = get_index()
+    row = conn.execute("SELECT rate FROM items WHERE code = ?", (item_code,)).fetchone()
+    return row[0] if row and row[0] else None
+
+
 def search_items(query: str, limit: int = 60, item_types: list[str] | None = None) -> list[dict]:
     """
     Partial, case-insensitive match against Item Code OR Description, ACTIVE
