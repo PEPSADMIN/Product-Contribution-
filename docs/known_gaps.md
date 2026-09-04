@@ -320,3 +320,27 @@ product** — it needs no BOM/RM/MRP work and should be treated as out of
 scope, not a missing-data gap. Recorded here so it is not re-reported.
 
 (Gap tracking workbook: `Gap_Tracking.xlsx`.)
+
+## Current gap summary (confirmed 2026-09-04)
+
+**Needs DATA/BOM input (blocked, no BOM source in tool):**
+- 12 Accessories — RM is a flat placeholder, no itemized component BOM
+- Absent Peps brands — HotMot, Caspio, Allura, Carousel, Tartania, Geneva,
+  Opulence, Fontaine, Cameo (exist in Item Master, not tracked)
+- Absent Cirrus brands — Kozybond, Mirage, Spring Soft, Pure Latex,
+  Panorama, Orthobond, Haven, Memorio
+
+**Needs FINANCE input, but not blocking** — Ardene (630), Spine Guard (70),
+Vista Bond (105), Kozybreeze (210), Furno (3) all have complete BOM/MRP;
+only `policy_cost` (and, for Kozybreeze/Furno, `channel_key`) is unset.
+User confirmed this can be filled in later during testing, not a launch
+blocker.
+
+**No longer gaps (resolved):**
+- Peps+Cirrus no-BOM SKUs (2,946) — July'26 ledger scan
+- Last 16 no-BOM (15 Pin Core Latex + 1 Peps Supreme) — commit 9887904
+- 70 Crystal New Beige (-NEW) — RM from Crystal Beige
+- Freight 9.76%/10.06% catalog-wide (6,536 SKUs)
+
+**Out of scope:**
+- Foamera (3 SKUs) — confirmed INACTIVE product, no BOM needed.
