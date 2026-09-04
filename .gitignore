@@ -13,6 +13,10 @@ refresh_output.log
 # checked in (anyone with it could forge session cookies).
 .flask_secret_key
 
+# Local timestamped backups made before editing sku_master.py directly —
+# git history already preserves every real version, these are disposable.
+sku_master.py.bak_*
+
 # One-off analysis/debug output from data extraction sessions
 *_dump.txt
 cirrus_new_products_extract.json
