@@ -310,3 +310,13 @@ Cirrus 30% nor the Inspree 35% tier):
 
 All 350 real, ledger-verified codes added to `sku_master.py`
 (`scripts/apply_vista_caprina_expansion.py`). No longer a gap.
+
+## Blockage 4 — Foamera: INACTIVE product, NOT a data gap (2026-09-04)
+
+The 3 `Foamera 4"/5"/6"` rows in `sku_master.py` have no `item_code`
+(so cannot be attached to any ledger/BOM) and were previously flagged as
+"unmatchable". **User confirmed Foamera is an INACTIVE/discontinued
+product** — it needs no BOM/RM/MRP work and should be treated as out of
+scope, not a missing-data gap. Recorded here so it is not re-reported.
+
+(Gap tracking workbook: `Gap_Tracking.xlsx`.)
