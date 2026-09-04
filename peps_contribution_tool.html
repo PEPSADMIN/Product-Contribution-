@@ -1201,7 +1201,16 @@ let COMM = {
   // scheme) — merged into Peps Spring's peps_* rates per explicit
   // request; see the "italiano" branches in calcSKU() and the Materials
   // waterfall engine below.
-  acc_dealer:0.50, acc_cd:0.030, acc_sr:0.015
+  acc_dealer:0.50, acc_cd:0.030, acc_sr:0.015,
+  // Consumer scheme — a per-SKU ₹ in sku_master.py that the workbook holds
+  // as a fixed amount (Sanibel 313, Crystal 285, Comfort 0, Italiano 678…).
+  // On the Commercial Rates cards it's edited as a % of RM; applying it
+  // re-derives each SKU's ₹ = pct × RM across the category. Defaults below
+  // mirror the current catalog average so the cards open un-changed.
+  peps_consumer_scheme:0.04399,
+  cirrus_consumer_scheme:0.03259,
+  inspree_consumer_scheme:0.06329,
+  acc_consumer_scheme:0.0,
 };
 const COMM_BASE = JSON.parse(JSON.stringify(COMM));
 
@@ -1888,6 +1897,7 @@ const PEPS_FIELDS=[
   {k:'peps_tod',l:'TOD',unit:'%',mult:100},
   {k:'peps_sr',l:'Sales return',unit:'%',mult:100},
   {k:'peps_scheme',l:'Scheme (% of RM)',unit:'%',mult:100},
+  {k:'peps_consumer_scheme',l:'Consumer scheme (% of RM)',unit:'%',mult:100},
 ];
 const CIRRUS_SHARED_FIELDS=[
   {k:'cirrus_dealer',l:'Dealer margin',unit:'%',mult:100},
@@ -1897,15 +1907,18 @@ const CIRRUS_SHARED_FIELDS=[
   {k:'cirrus_tod',l:'TOD',unit:'%',mult:100},
   {k:'cirrus_sr',l:'Sales return',unit:'%',mult:100},
   {k:'cirrus_scheme',l:'Scheme (% of RM)',unit:'%',mult:100},
+  {k:'cirrus_consumer_scheme',l:'Consumer scheme (% of RM)',unit:'%',mult:100},
 ];
 const INSPREE_FIELDS=[
   {k:'inspree_dealer',l:'Inspree dealer margin',unit:'%',mult:100},
   {k:'inspree_scheme',l:'Inspree scheme (% of RM)',unit:'%',mult:100},
+  {k:'inspree_consumer_scheme',l:'Inspree consumer scheme (% of RM)',unit:'%',mult:100},
 ];
 const ACCESSORIES_FIELDS=[
   {k:'acc_dealer',l:'Dealer margin',unit:'%',mult:100},
   {k:'acc_cd',l:'Cash discount (CD)',unit:'%',mult:100},
   {k:'acc_sr',l:'Sales return',unit:'%',mult:100},
+  {k:'acc_consumer_scheme',l:'Consumer scheme (% of RM)',unit:'%',mult:100},
 ];
 
 function renderParams(){
@@ -2233,7 +2246,7 @@ const MC_ROW_SPEC = [
 
   {key:'directlabour', label:'Direct labour', group:'Costs', pct:'variable', neg:true},
   {key:'rm', label:'RM cost', pct:'ratio', ratioOf:(s)=>s.rmPct, neg:true},
-  {key:'consumerscheme', label:'Consumer scheme', pct:'dash', neg:true},
+  {key:'consumerscheme', label:'Consumer scheme', pct:'input', neg:true},
   {key:'mfgohs', label:'Mfg overhead', pct:'input', neg:true},
   {key:'grossmargin', label:'Gross Margin', pct:'dash', neg:false, subtotal:true},
   {key:'mktgohs', label:'Marketing OHS', pct:'variable', neg:true},
@@ -2254,6 +2267,16 @@ const MC_ROW_SPEC = [
 // branching field-for-field (same COMM/FINANCE sources) so the two never
 // drift apart in intent, but is a fully separate function — it can never
 // alter calcSKU()'s own output.
+
+// Which Commercial-Rates "Consumer scheme (% of RM)" key applies to a SKU.
+// Peps/Italiano share peps_*; Cirrus inspree lines use inspree_* and plain
+// Cirrus (Foam/Coir) use cirrus_*; Accessories use acc_*.
+function csPctForKey(b, ck){
+  if(b==='peps' || b==='italiano') return COMM.peps_consumer_scheme || 0;
+  if(b==='cirrus') return (ck==='inspree' ? COMM.inspree_consumer_scheme : COMM.cirrus_consumer_scheme) || 0;
+  if(b==='accessories') return COMM.acc_consumer_scheme || 0;
+  return 0;
+}
 function mcAdapt(s){
   const f = FINANCE;
   const b = s.b, ck = s.ck||null, rg = s.rg||null;
@@ -2347,8 +2370,15 @@ function mcAdapt(s){
     depreciationPct=f.depreciation_pct; taxRate=f.direct_tax_rate;
   }
 
+  // Consumer scheme ₹ for this product: prefer the selected product's own
+  // sku_master.py value (s.cs) when it's non-zero, otherwise fall back to the
+  // category's Consumer scheme % of RM set on the Commercial Rates card.
+  let consumerScheme = s.cs || 0;
+  const catCsPct = csPctForKey(b, ck);
+  if(!consumerScheme && catCsPct > 0 && s.rm_live) consumerScheme = s.rm_live * catCsPct;
+
   return {mrp:s.mrp_live, rm:s.rm_live, sqft:s.sqft, policy:pol, dealerPct, distPct,
-          directLabour, directLabourPct, consumerScheme:s.cs, mfgOhsPct,
+          directLabour, directLabourPct, consumerScheme, mfgOhsPct,
           mktgLump, mktgPct, advPromoPct, freightOhs:s.fr,
           adminLump, adminPct, depreciationPct, taxRate, financeCostPct};
 }
@@ -2370,6 +2400,7 @@ function mcDefaultPctFor(p, key){
     case 'financecost': return p.financeCostPct*100;
     case 'depreciation': return p.depreciationPct*100;
     case 'directtaxes': return p.taxRate*100;
+    case 'consumerscheme': return p.rm>0 ? (p.consumerScheme/p.rm)*100 : 0;
     case 'directlabour': return p.directLabourPct!=null ? p.directLabourPct*100 : null;
     case 'mktgohs': return p.mktgPct!=null ? p.mktgPct*100 : null;
     case 'adminohs': return p.adminPct!=null ? p.adminPct*100 : null;
@@ -2413,7 +2444,8 @@ function mcEvalWaterfall(p, ov){
   s.netsales = amtOf('netsales', s.nbr - s.salesreturn - s.cd - s.dct - s.tod - s.scheme);
 
   s.directlabour = amtOf('directlabour', p.directLabourPct!=null ? s.rm*pctOf('directlabour', p.directLabourPct) : p.directLabour);
-  s.consumerscheme = amtOf('consumerscheme', p.consumerScheme);
+  const csPct = (ov.consumerscheme && ov.consumerscheme.kind==='pct') ? ov.consumerscheme.value/100 : null;
+  s.consumerscheme = amtOf('consumerscheme', csPct!=null ? s.rm*csPct : p.consumerScheme);
   s.mfgohs = amtOf('mfgohs', s.rm*pctOf('mfgohs', p.mfgOhsPct));
   s.grossmargin = amtOf('grossmargin', s.netsales - s.directlabour - s.rm - s.consumerscheme - s.mfgohs);
 
@@ -2547,6 +2579,14 @@ function mcRenderTransposed(prefix){
   }
 }
 
+// Materials subtab renders only the compact transposed quick-view — the
+// full line-by-line waterfall stays on the Abstract subtab (read-only),
+// so what-if editing and "the real, full breakdown" don't visually
+// duplicate each other on the same screen.
+function mcRenderMatViews(){
+  mcRenderTransposed('mc-mat');
+}
+
 // mcWaterfallDirty: true once the user has typed something since the last
 // load/save/revert. mcWaterfallHasSaved: true if a saved override currently
 // exists on the server for this product (drives the "· saved" note and
@@ -2578,7 +2618,7 @@ function mcHandleWaterfallInput(e){
   else mcState.overrides[key] = {kind, value:v};
   mcWaterfallDirty = true;
   mcUpdateSaveNote();
-  mcRenderTransposed('mc-mat');
+  mcRenderMatViews();
 }
 
 // ── Editable Bill of Materials — real /api/bom/<item_code> data ───────
@@ -2780,7 +2820,7 @@ function mcRenderBom(){
   // (Gross Margin, EBITDA, Net Margin...) recalculates from it exactly
   // like a real spreadsheet formula chain.
   mcState.overrides.rm = {kind:'amt', value: total};
-  mcRenderTransposed('mc-mat');
+  mcRenderMatViews();
 
   if(fSel){
     const sel = fSel.scope==='child'
@@ -3162,7 +3202,7 @@ async function mcLoadWaterfallOverride(){
       Object.assign(mcState.overrides, overrides);
       mcWaterfallHasSaved = true;
       mcUpdateSaveNote();
-      mcRenderTransposed('mc-mat');
+      mcRenderMatViews();
     }
   }catch(e){ /* silent — same as the rest of this page's best-effort server calls */ }
 }
@@ -3181,7 +3221,7 @@ function mcRefreshCalc(){
   if(codeEl) codeEl.textContent = s.ic ? '— ' + s.ic : '— (no item code on this product)';
   mcRenderProductDetails(s);
   mcRenderWaterfall('mc-abs', true);
-  mcRenderTransposed('mc-mat');
+  mcRenderMatViews();
 }
 
 // ── History subtab — real per-month RM cost (costing_store snapshots) run
@@ -3577,7 +3617,7 @@ async function mcRevertWaterfall(){
     mcWaterfallDirty = false;
     mcWaterfallHasSaved = false;
     mcUpdateSaveNote();
-    mcRenderTransposed('mc-mat');
+    mcRenderMatViews();
     toast('Net Margin overrides reverted to baseline');
   }catch(e){ toast('Could not revert — engine server unreachable'); }
 }

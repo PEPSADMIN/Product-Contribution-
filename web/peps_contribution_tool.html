@@ -790,16 +790,6 @@ input.bom-rate{text-align:right;width:70px}
             </div>
 
             <div class="mc-bom-header">
-              <div class="mc-section-label mc-bom-header-label">Full Net Margin Waterfall <span class="mc-section-note">(every % and ₹ amount is editable — Scheme & Consumer scheme shown individually)</span></div>
-            </div>
-            <div class="mc-card mc-scroll">
-              <table class="wf">
-                <thead><tr><th>Particulars</th><th class="pctcol">Percentage</th><th class="num">Amount (₹)</th></tr></thead>
-                <tbody id="mc-mat-full-tbody"></tbody>
-              </table>
-            </div>
-
-            <div class="mc-bom-header">
               <div class="mc-section-label mc-bom-header-label" id="mc-bom-count">Bill of Materials</div>
               <div class="mc-bom-actions" id="mc-bom-actions-real">
                 <button type="button" class="btn btn-sm btn-outline-blue" onclick="mcRevertBom()">Revert to ledger</button>
@@ -2589,12 +2579,12 @@ function mcRenderTransposed(prefix){
   }
 }
 
-// Materials subtab renders BOTH the compact transposed quick-view and the
-// full editable waterfall (Scheme + Consumer scheme shown as individual
-// rows, every % / ₹ editable) — see mc-sub-materials in the HTML.
+// Materials subtab renders only the compact transposed quick-view — the
+// full line-by-line waterfall stays on the Abstract subtab (read-only),
+// so what-if editing and "the real, full breakdown" don't visually
+// duplicate each other on the same screen.
 function mcRenderMatViews(){
   mcRenderTransposed('mc-mat');
-  mcRenderWaterfall('mc-mat-full', false);
 }
 
 // mcWaterfallDirty: true once the user has typed something since the last
@@ -3634,8 +3624,6 @@ async function mcRevertWaterfall(){
 
 const mcMatTbodyEl = document.getElementById('mc-mat-tbody');
 if(mcMatTbodyEl) mcMatTbodyEl.addEventListener('input', mcHandleWaterfallInput);
-const mcMatFullTbodyEl = document.getElementById('mc-mat-full-tbody');
-if(mcMatFullTbodyEl) mcMatFullTbodyEl.addEventListener('input', mcHandleWaterfallInput);
 
 // ═══════════════════════════════════════════════════════════════════
 // R&D TAB — sandbox BOM experiments (rd_store.py / /api/rd/... on the
