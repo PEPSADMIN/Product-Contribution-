@@ -12,11 +12,13 @@ the same 28 columns):
                       sheet, SFG code in the SFG sheet)
   Issue Item       — the component actually consumed (RM or SFG), followed
                       immediately by ITS OWN Item Desc / Uom / Qty columns
-  Std Wh Code      — the issued component's own warehouse; 'CBESFG' means
-                      the component is itself an SFG code (needs expanding
-                      via a second lookup against the SFG sheet's own
-                      Bom Code/PS.No column) — anything else is treated as
-                      a raw material.
+  Std Wh Code      — the issued component's own warehouse; a code ENDING
+                      in 'SFG' (e.g. 'CBESFG' in the main Accounts W
+                      ledger, 'HCFSFG' in the separate HCF/HCO Foam
+                      ledger) means the component is itself an SFG code
+                      (needs expanding via a second lookup against the
+                      SFG sheet's own Bom Code/PS.No column) — anything
+                      else is treated as a raw material.
   Rate / Total <Month> — unit rate and the ledger's own pre-computed cost
                       for that line. Total <Month> is used as the line's
                       cost directly (NOT qty*rate) because some items (e.g.
@@ -121,7 +123,7 @@ def extract_boms(item_codes: Iterable[str], fg_path: str, sfg_path: str, progres
             code = row[ii_i]
             if not code:
                 continue
-            wh = 'SFG' if str(row[wh_i] or '').strip().upper() == 'CBESFG' else 'RM'
+            wh = 'SFG' if str(row[wh_i] or '').strip().upper().endswith('SFG') else 'RM'
             comp = {
                 'code': str(code).strip(),
                 'desc': str(row[idesc_i] or '').strip(),
