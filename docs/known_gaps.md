@@ -374,7 +374,5 @@ MRP present for all 983 SKUs) — no action needed:
 | Nimbo Regular | 144 |
 | Cloud Plus | 287 |
 
-**Open question**: `Bond Plus Latex` (42 SKUs, fully data-complete) is
-tracked in `sku_master.py` but was NOT included in Sahana's active list.
-Need to confirm with Finance whether this line is active or should be
-marked inactive like Furno/Vista Soft.
+`Bond Plus Latex` (42 SKUs, fully data-complete) — **confirmed INACTIVE**
+by Sahana.K (2026-09-07), same as Furno/Vista Soft. No action needed.
