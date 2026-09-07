@@ -1188,9 +1188,12 @@ let COMM = {
   cirrus_cd:0.030, cirrus_dct:0.0285, cirrus_tod:0.040,
   cirrus_sr:0.015, cirrus_scheme:0.133759,
   inspree_dealer:0.35, inspree_scheme:0.148600,
-  vista_dealer:0.20, vista_dist_vat:0.016364, vista_dist:0.10,
+  vista_dealer:0.30, vista_dist_vat:0.016364, vista_dist:0.10,
   vista_cd:0.030, vista_dct:0.0, vista_tod:0.040,
   vista_sr:0.015, vista_scheme:0.279337,
+  vista_bond_dealer:0.40, vista_bond_dist_vat:0.0, vista_bond_dist:0.0,
+  vista_bond_cd:0.030, vista_bond_dct:0.0, vista_bond_tod:0.040,
+  vista_bond_sr:0.015, vista_bond_scheme:0.279337,
   caprina_dealer:0.20, caprina_dist_vat:0.016364, caprina_dist:0.10,
   caprina_cd:0.030, caprina_dct:0.0, caprina_tod:0.040,
   caprina_sr:0.015, caprina_scheme:0.134466,
@@ -1334,6 +1337,10 @@ const COMM_PATH = {
   vista_dist:['cirrus','vista_foam','dist_margin'], vista_cd:['cirrus','vista_foam','cd'],
   vista_dct:['cirrus','vista_foam','dct'], vista_tod:['cirrus','vista_foam','tod'],
   vista_sr:['cirrus','vista_foam','sales_return'], vista_scheme:['cirrus','vista_foam','scheme_rm_pct'],
+  vista_bond_dealer:['cirrus','vista_bond','dealer_margin'], vista_bond_dist_vat:['cirrus','vista_bond','dist_vat_diff'],
+  vista_bond_dist:['cirrus','vista_bond','dist_margin'], vista_bond_cd:['cirrus','vista_bond','cd'],
+  vista_bond_dct:['cirrus','vista_bond','dct'], vista_bond_tod:['cirrus','vista_bond','tod'],
+  vista_bond_sr:['cirrus','vista_bond','sales_return'], vista_bond_scheme:['cirrus','vista_bond','scheme_rm_pct'],
   caprina_dealer:['cirrus','caprina','dealer_margin'], caprina_dist_vat:['cirrus','caprina','dist_vat_diff'],
   caprina_dist:['cirrus','caprina','dist_margin'], caprina_cd:['cirrus','caprina','cd'],
   caprina_dct:['cirrus','caprina','dct'], caprina_tod:['cirrus','caprina','tod'],
@@ -1515,12 +1522,24 @@ function calcSKU(s){
        cd:COMM.cirrus_cd,dct:COMM.cirrus_dct,tod:COMM.cirrus_tod,
        sr:COMM.cirrus_sr,scheme_rm:COMM.inspree_scheme};
   } else if(b==="cirrus"&&ck==="vista_foam"){
-    // Vista Foam — real 20% dealer margin + its own DCT/scheme rate,
-    // derived from source_data/2 - Cirrus Foam Product Contribution
+    // Vista Foam — real 30% dealer margin (confirmed by Finance
+    // 2026-09-07; was previously mis-set to 20%) + its own DCT/scheme
+    // rate, derived from source_data/2 - Cirrus Foam Product Contribution
     // dt 06-02-2026.xlsx (2026-08-08), not the standard Cirrus terms.
     p={dm:COMM.vista_dealer,dv:COMM.vista_dist_vat,di:COMM.vista_dist,
        cd:COMM.vista_cd,dct:COMM.vista_dct,tod:COMM.vista_tod,
        sr:COMM.vista_sr,scheme_rm:COMM.vista_scheme};
+  } else if(b==="cirrus"&&ck==="vista_bond"){
+    // Vista Bond — separate line from Vista Foam (previously incorrectly
+    // shared its bucket). Finance confirmed 2026-09-07: 40% dealer margin,
+    // 0% distributor margin (no distributor in this channel, so dist_vat_diff
+    // is also zeroed, matching the peps dd_south/dd_a_south convention).
+    // cd/dct/tod/sales_return/scheme_rm_pct are carried over from Vista
+    // Foam's prior values pending Finance confirming Vista Bond's own —
+    // only dealer_margin/dist_margin/dist_vat_diff are verified for Vista Bond.
+    p={dm:COMM.vista_bond_dealer,dv:COMM.vista_bond_dist_vat,di:COMM.vista_bond_dist,
+       cd:COMM.vista_bond_cd,dct:COMM.vista_bond_dct,tod:COMM.vista_bond_tod,
+       sr:COMM.vista_bond_sr,scheme_rm:COMM.vista_bond_scheme};
   } else if(b==="cirrus"&&ck==="caprina"){
     // Vista Soft/Caprina Gel/Caprina HR — same 20% dealer margin family
     // as Vista Foam but a distinct (lower) scheme rate; see vista_foam.
@@ -2327,6 +2346,13 @@ function mcAdapt(s){
     pol={dv:COMM.vista_dist_vat, cd:COMM.vista_cd, dct:COMM.vista_dct,
          tod:COMM.vista_tod, salesReturn:COMM.vista_sr, schemeRmPct:COMM.vista_scheme};
     dealerPct=COMM.vista_dealer*100; distPct=COMM.vista_dist*100;
+    directLabourPct=f.direct_labour_pct_cirrus; mfgOhsPct=f.mfg_ohs_pct;
+    adminPct=f.admin_ohs_pct; mktgPct=f.mktg_salary_pct;
+    depreciationPct=f.depreciation_pct_cirrus; taxRate=f.direct_tax_rate;
+  } else if(b==="cirrus" && ck==="vista_bond"){
+    pol={dv:COMM.vista_bond_dist_vat, cd:COMM.vista_bond_cd, dct:COMM.vista_bond_dct,
+         tod:COMM.vista_bond_tod, salesReturn:COMM.vista_bond_sr, schemeRmPct:COMM.vista_bond_scheme};
+    dealerPct=COMM.vista_bond_dealer*100; distPct=COMM.vista_bond_dist*100;
     directLabourPct=f.direct_labour_pct_cirrus; mfgOhsPct=f.mfg_ohs_pct;
     adminPct=f.admin_ohs_pct; mktgPct=f.mktg_salary_pct;
     depreciationPct=f.depreciation_pct_cirrus; taxRate=f.direct_tax_rate;

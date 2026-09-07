@@ -330,11 +330,20 @@ scope, not a missing-data gap. Recorded here so it is not re-reported.
 - Absent Cirrus brands — Kozybond, Mirage, Spring Soft, Pure Latex,
   Panorama, Orthobond, Haven, Memorio
 
-**Needs FINANCE input, but not blocking** — Ardene (630), Spine Guard (70),
-Vista Bond (105), Kozybreeze (210), Furno (3) all have complete BOM/MRP;
-only `policy_cost` (and, for Kozybreeze/Furno, `channel_key`) is unset.
-User confirmed this can be filled in later during testing, not a launch
-blocker.
+**Finance policy — RESOLVED (2026-09-07, confirmed by Sahana.K):**
+- Ardene 33%/10% (`sanibel`) — confirmed correct, no change
+- Spine Guard 35%/10% (`organica_crystal` rate-group) — confirmed correct, no change
+- Kozybreeze 30%/10% (plain-Cirrus default, `dis_south`) — confirmed correct, no change
+- Vista Foam 30%/10% — was wrong (20% dealer margin), corrected in `finance_config.json`
+- Vista Bond 40%/0% — was wrong (shared Vista Foam's 20%/10% bucket), split into
+  its own `cirrus.vista_bond` bucket; `sku_master.py`'s 105 `HYPVISBND*` rows
+  repointed; `calcSKU()`/`mcAdapt()` given a matching branch (root + web HTML).
+  Note: only dealer_margin/dist_margin/dist_vat_diff are Finance-confirmed for
+  Vista Bond — cd/dct/tod/sales_return/scheme_rm_pct were carried over from
+  Vista Foam's old values pending Finance giving Vista Bond's own.
+- `policy_cost` itself (the separate per-SKU cost field, distinct from the
+  dealer/distributor margin policy) remains unset for all — not a launch
+  blocker, can be filled in during testing.
 
 **No longer gaps (resolved):**
 - Peps+Cirrus no-BOM SKUs (2,946) — July'26 ledger scan
@@ -342,5 +351,9 @@ blocker.
 - 70 Crystal New Beige (-NEW) — RM from Crystal Beige
 - Freight 9.76%/10.06% catalog-wide (6,536 SKUs)
 
-**Out of scope:**
-- Foamera (3 SKUs) — confirmed INACTIVE product, no BOM needed.
+**Out of scope (confirmed inactive/discontinued — no BOM/policy work needed):**
+- Foamera (3 SKUs, no item_code)
+- Furno (3 SKUs) — confirmed 2026-09-07
+- Vista Soft (105 SKUs, `caprina` bucket) — confirmed 2026-09-07. Fully
+  data-complete (BOM + channel_key already set) but product is inactive;
+  no action needed, recorded so it isn't mistaken for an open item.

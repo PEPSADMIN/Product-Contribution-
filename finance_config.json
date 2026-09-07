@@ -95,7 +95,12 @@
         "scheme_rm_pct": 0.133759
       },
       "vista_foam": {
-        "dealer_margin": 0.20, "dist_vat_diff": 0.016364, "dist_margin": 0.10,
+        "dealer_margin": 0.30, "dist_vat_diff": 0.016364, "dist_margin": 0.10,
+        "cd": 0.030, "dct": 0.0, "tod": 0.040, "sales_return": 0.015,
+        "scheme_rm_pct": 0.279337
+      },
+      "vista_bond": {
+        "dealer_margin": 0.40, "dist_vat_diff": 0.0, "dist_margin": 0.0,
         "cd": 0.030, "dct": 0.0, "tod": 0.040, "sales_return": 0.015,
         "scheme_rm_pct": 0.279337
       },
