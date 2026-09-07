@@ -357,3 +357,24 @@ scope, not a missing-data gap. Recorded here so it is not re-reported.
 - Vista Soft (105 SKUs, `caprina` bucket) — confirmed 2026-09-07. Fully
   data-complete (BOM + channel_key already set) but product is inactive;
   no action needed, recorded so it isn't mistaken for an open item.
+
+## Coir mattress active list (confirmed 2026-09-07, Sahana.K)
+
+All 8 confirmed-active Coir families verified fully data-complete (BOM +
+MRP present for all 983 SKUs) — no action needed:
+
+| Line | SKUs |
+|---|---|
+| Bond Plus Memory PT | 48 |
+| Bond Plus Memory Regular | 48 |
+| Eco Plus ET | 24 |
+| Nimbo Plus | 96 |
+| Bond Plus (PU) | 192 |
+| Coir Bond | 144 |
+| Nimbo Regular | 144 |
+| Cloud Plus | 287 |
+
+**Open question**: `Bond Plus Latex` (42 SKUs, fully data-complete) is
+tracked in `sku_master.py` but was NOT included in Sahana's active list.
+Need to confirm with Finance whether this line is active or should be
+marked inactive like Furno/Vista Soft.
