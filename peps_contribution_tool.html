@@ -1297,7 +1297,13 @@ const SKUS_RAW = [
 // the engine server if reachable); resetAll() reverts to this, not to the
 // static SKUS_RAW, so a server-loaded RM cost survives a reset.
 let SKUS_BASE = JSON.parse(JSON.stringify(SKUS_RAW));
-let skus = SKUS_BASE.map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:s.rm_from_ramco||false, rm_source:s.rm_source}));
+// Discontinued lines (Foamera/Furno/Vista Soft/Bond Plus Latex, confirmed
+// inactive by Finance 2026-09-07/09) carry active:false from sku_master.py
+// but are never deleted — deactivateFilter() below is the single point
+// that hides them from every product list (NM Abstract/Material Costing/
+// RD/Params all read from `skus`), so no per-screen filtering is needed.
+const deactivateFilter = s=>s.active!==false;
+let skus = SKUS_BASE.filter(deactivateFilter).map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:s.rm_from_ramco||false, rm_source:s.rm_source}));
 let baseResults = null;
 // Commercial Rates: typed-but-not-yet-applied field values, keyed by COMM
 // key — see applyParamGroup()/renderParams().
@@ -1425,6 +1431,10 @@ function applyServerSkus(list){
       // original 9 tracked Sanibel entries) would never reach the page.
       if(item.freight_south!=null) s.fr = item.freight_south;
       if(item.consumer_scheme!=null) s.cs = item.consumer_scheme;
+      // active:false marks a confirmed-discontinued line (Foamera/Furno/
+      // Vista Soft/Bond Plus Latex, etc.) — sync so a sku_master.py-only
+      // change is enough, see deactivateFilter().
+      s.active = item.active !== false;
     }
   });
   // Any server SKU with no match in the embedded fallback is genuinely
@@ -1442,11 +1452,11 @@ function applyServerSkus(list){
       mrp:item.mrp, rm:item.rm_cost, fr:item.freight_south, cs:item.consumer_scheme,
       rm_source:item.rm_source, rm_from_ramco:(item.rm_source||'').startsWith('ledger'),
       colour:item.colour||null, cst:item.cost_structure||undefined, rg:item.rg||undefined,
-      ck:item.channel_key||undefined,
+      ck:item.channel_key||undefined, active:item.active!==false,
     });
     if(item.rm_source && item.rm_source.startsWith('ledger')) updated++;
   });
-  skus = SKUS_BASE.map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:s.rm_from_ramco||false, rm_source:s.rm_source, colour:s.colour||null}));
+  skus = SKUS_BASE.filter(deactivateFilter).map(s=>({...s, mrp_live:s.mrp, rm_live:s.rm, rm_from_ramco:s.rm_from_ramco||false, rm_source:s.rm_source, colour:s.colour||null}));
   return updated;
 }
 
@@ -2134,7 +2144,7 @@ function showPage(p, skipRdCleanup){
 }
 
 function resetAll(){
-  skus=SKUS_BASE.map(s=>({...s,mrp_live:s.mrp,rm_live:s.rm,rm_from_ramco:s.rm_from_ramco||false,rm_source:s.rm_source}));
+  skus=SKUS_BASE.filter(deactivateFilter).map(s=>({...s,mrp_live:s.mrp,rm_live:s.rm,rm_from_ramco:s.rm_from_ramco||false,rm_source:s.rm_source}));
   Object.assign(COMM,JSON.parse(JSON.stringify(COMM_BASE)));
   paramPending={};
   baseResults=null;
