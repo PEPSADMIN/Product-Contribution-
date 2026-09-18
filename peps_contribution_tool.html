@@ -3097,11 +3097,41 @@ function mcParseHeight(name){
   const m = name.match(/(\d+(?:\.\d+)?)"\s*$/);
   return m ? m[1]+'"' : null;
 }
+// Some batches were added to sku_master.py with their full verbose
+// Ramco/marketing name baked into `product` (brand + build + colour, e.g.
+// "Peps Restonic Bonnell Sanibel Plush Memory ET Purple") instead of the
+// short line name the rest of the catalog uses ("Sanibel MF ET") — colour
+// is tracked separately (s.colour) and shown in its own filter, so leaving
+// it in the Product Line grouping just fragments one real line into a
+// separate dropdown entry per colour. Verified 2026-09-18 against each
+// group's item_code prefix (e.g. RTBNSNPLMFETPR = Restonic-Bonnell-
+// Sanibel-Plush-MF-ET-Purple) before mapping — "Crystal New" folds into
+// plain "Crystal" because those -NEW item codes are confirmed the same
+// physical product (see docs/known_gaps.md), not a distinct line.
+const MC_LINE_REMAP = {
+  'bonnell comfort normal dark blue':'Comfort', 'bonnell comfort normal grey':'Comfort',
+  'bonnell comfort normal pink':'Comfort',
+  'pocketed supreme normal beige':'Supreme', 'pocketed supreme normal blue':'Supreme',
+  'pocketed supreme normal grey':'Supreme',
+  'restonic bonnell sanibel plush memory et purple':'Sanibel MF ET',
+  'restonic bonnell sanibel plush memory nl purple':'Sanibel MF NL',
+  'restonic bonnell sanibel plush memory pt grey':'Sanibel MF PT',
+  'restonic pocketed ardene plush memory et grey':'Ardene MF ET',
+  'restonic pocketed ardene plush memory nl grey':'Ardene MF NL',
+  'restonic pocketed ardene plush memory pt grey':'Ardene MF PT',
+  'restonic pocketed grandpalais crystal new biege':'Crystal',
+  'restonic pocketed grandpalais crystal new pure white':'Crystal',
+  'restonic pocketed grandpalais crystal pure white':'Crystal',
+  'restonic ultra premium grand palais grey':'Grand Palais',
+  'springkoil bonnell crown top maroon':'Crown Top',
+  'springkoil bonnell crown top steel grey':'Crown Top',
+};
 function mcParseLine(name){
   let s = name.replace(/\s*\d+(?:\.\d+)?"\s*$/,'').replace(/\s*[\d.]+x[\d.]+(?:x[\d.]+)?\s*$/i,'').trim();
   let words = s.split(/\s+/).filter(Boolean);
   if(words[0]==='Peps' && words.length>1) words = words.slice(1);
-  return words.join(' ') || name;
+  const joined = words.join(' ') || name;
+  return MC_LINE_REMAP[joined.toLowerCase()] || joined;
 }
 function mcParseSize(s){
   if(s.ic){
