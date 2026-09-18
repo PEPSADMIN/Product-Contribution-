@@ -330,13 +330,29 @@ Confirmed INACTIVE (no action needed, out of scope):
 - Peps: Carousel, Geneva, Opulence, Fontaine, Cameo (NL/ST/Ultra NL/Ultra ST)
 - Cirrus: Kozybond, Spring Soft, Orthobond, Haven, Memorio
 
-Confirmed ACTIVE — still a real DATA/BOM gap (never tracked; this file only
-gives height/colour, not item codes/MRP/RM, so full data build is still
-needed from Ramco/Finance):
-- Peps: Caspio, Allura, Tartania
-
 **HotMot** — not mentioned in this file at all. Status still unknown, needs
 a direct ask to Finance.
+
+**Peps Spring: Caspio/Allura/Tartania — cross-checked against the real
+ledger (2026-09-18)**, same method as the Cirrus check below:
+
+- **Caspio (`HYPCASBNNLMR*`/`HYPCASBNNLNB*`, Bonnell Normal Maroon/Navy)**
+  and **Allura (`HYPALRPKMFBL*`/`HYPALRPKNLBL*`/`HYPALRPKNLST*`)** — both
+  genuinely active, with complete 12-14 line BOMs for nearly all sizes in
+  the July ledger. (One Caspio sub-variant, "Single Side Bonnell Maroon",
+  has zero ledger presence and is not active.) But **no MRP found**:
+  checked the South MRP file (no matching sheet) and the full 24-page Peps
+  pricelist PDF (rendered and reviewed page by page — covers Crowntop,
+  Spine Guard, Double Decker, Top-of-Bed accessories, but no Hypnos-branded
+  section at all). **Marked INACTIVE per user decision (2026-09-18)** —
+  same reasoning as Pure Latex: no MRP means it can't be priced through
+  this tool regardless of BOM completeness.
+- **Tartania (`PEPSTRTPKDB*`/`PEPSTRTPKGR*`/`PEPSTRTPKMR*`)** — of 2,606
+  total codes across 3 colours, 2,521 (97%) are single-line stubs, same
+  pattern as Mirage/Panorama; only ~84 codes have genuine complete BOMs.
+  **Marked INACTIVE per user decision (2026-09-18)**, consistent with the
+  Mirage/Panorama precedent — no MRP was checked separately since the BOM
+  data itself already fails the bar.
 
 **Cirrus Mirage/Panorama/Pure Latex — cross-checked against the real ledger
 (2026-09-18)**, since Finance's Sept 8 list marked all three "ACTIVE" but
