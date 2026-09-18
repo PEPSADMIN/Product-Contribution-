@@ -3125,11 +3125,22 @@ const MC_LINE_REMAP = {
   'restonic ultra premium grand palais grey':'Grand Palais',
   'springkoil bonnell crown top maroon':'Crown Top',
   'springkoil bonnell crown top steel grey':'Crown Top',
+  // Cirrus side of the same problem, found 2026-09-18 — same verbose-name-
+  // with-colour-baked-in pattern, plus "Latex" alone is ambiguous (it's
+  // Pin Core Latex/HYPPINLTX*, a different line from Inspree Latex).
+  'inspree soft top latex et pink':'Inspree Latex ET',
+  'inspree soft top latex pink':'Inspree Latex',
+  'inspree soft top memory blue':'Inspree Memory',
+  'inspree soft top memory et blue':'Inspree Memory ET',
+  'inspree soft top memory et grey':'Inspree Memory ET',
+  'inspree soft top memory grey':'Inspree Memory',
+  'kozybreeze maroon':'Kozybreeze',
+  'latex':'Pin Core Latex',
 };
 function mcParseLine(name){
-  let s = name.replace(/\s*\d+(?:\.\d+)?"\s*$/,'').replace(/\s*[\d.]+x[\d.]+(?:x[\d.]+)?\s*$/i,'').trim();
+  let s = name.replace(/\s*\d+(?:\.\d+)?"\s*$/,'').replace(/\s*[\d.]+x[\d.]+(?:x[\d.]+)?(?:-[A-Za-z0-9]+)?\s*$/i,'').trim();
   let words = s.split(/\s+/).filter(Boolean);
-  if(words[0]==='Peps' && words.length>1) words = words.slice(1);
+  if(['Peps','Cirrus','Italiano'].includes(words[0]) && words.length>1) words = words.slice(1);
   const joined = words.join(' ') || name;
   return MC_LINE_REMAP[joined.toLowerCase()] || joined;
 }
