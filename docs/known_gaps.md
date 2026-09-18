@@ -334,7 +334,6 @@ Confirmed ACTIVE — still a real DATA/BOM gap (never tracked; this file only
 gives height/colour, not item codes/MRP/RM, so full data build is still
 needed from Ramco/Finance):
 - Peps: Caspio, Allura, Tartania
-- Cirrus: Pure Latex (see below — resolved to genuinely active)
 
 **HotMot** — not mentioned in this file at all. Status still unknown, needs
 a direct ask to Finance.
@@ -344,13 +343,17 @@ a direct ask to Finance.
 none had ever been tracked. Checked the July'26 FG/SFG production ledger
 (`Accounts W - 27.07.2026/RM/6 - July'26/`) directly:
 
-- **Pure Latex (`HYPLTXGR*`)** — genuinely active. All 105 sizes have a
-  complete, itemized 14-line BOM in the ledger (foam block, fabric, thread,
-  labels, etc.), same completeness as Vista Bond/Kozybreeze. Extracted and
-  verified (`scratch_mirage_panorama_ltx_boms.json`, not committed — still
-  needs MRP before it can be added to `sku_master.py`; checked the Cirrus
-  Foam MRP file (no matching sheet), Item Master (no MRP field), and the
-  pricelist PDFs (scanned images, not text-extractable) — none had it.
+- **Pure Latex (`HYPLTXGR*`)** — has a genuine, complete 14-line BOM in the
+  ledger (foam block, fabric, thread, labels, etc.), same completeness as
+  Vista Bond/Kozybreeze, but **no MRP found anywhere**: not in the Cirrus
+  Foam MRP file, Item Master, or either the South or Rest-of-India
+  pricelist PDF (both fully checked, page by page — neither has a Pure
+  Latex table at all, only Memorio/Inspree Latex-MF-PU/Kozybreeze/Vista
+  Foam/Vista Soft/Caprina Gel+Lax/Caprina HR+Latex/Pin Core Latex). All
+  105 item codes carry an `-ECOM` suffix, suggesting an e-commerce-only
+  line never given standard dealer pricing. **Marked INACTIVE per user
+  decision (2026-09-18)** — no MRP means it can't be priced/sold through
+  this tool regardless of ledger BOM completeness.
 - **Mirage (`HYPMIRFMBG*`) / Panorama (`HYPPANFMBG*`)** — **contradicts**
   Finance's "ACTIVE" label. Both have FG item codes for all 105 sizes, but
   each carries only ONE incomplete ledger line (a fabric panel costing
