@@ -323,11 +323,21 @@ scope, not a missing-data gap. Recorded here so it is not re-reported.
 
 ## Current gap summary (confirmed 2026-09-04)
 
-**Needs DATA/BOM input (blocked, no BOM source in tool):**
-- Absent Peps brands — HotMot, Caspio, Allura, Carousel, Tartania, Geneva,
-  Opulence, Fontaine, Cameo (exist in Item Master, not tracked)
-- Absent Cirrus brands — Kozybond, Mirage, Spring Soft, Pure Latex,
-  Panorama, Orthobond, Haven, Memorio
+**Absent Peps/Cirrus brands — status resolved 2026-09-18** via
+`active and Inactive list/ACTIVE & IN ACTIVE PRODUCT LIST - 08.09.2026.xlsx`:
+
+Confirmed INACTIVE (no action needed, out of scope):
+- Peps: Carousel, Geneva, Opulence, Fontaine, Cameo (NL/ST/Ultra NL/Ultra ST)
+- Cirrus: Kozybond, Spring Soft, Orthobond, Haven, Memorio
+
+Confirmed ACTIVE — still a real DATA/BOM gap (never tracked; this file only
+gives height/colour, not item codes/MRP/RM, so full data build is still
+needed from Ramco/Finance):
+- Peps: Caspio, Allura, Tartania
+- Cirrus: Mirage, Panorama, Pure Latex (listed as "PU Latex" in the file)
+
+**HotMot** — not mentioned in this file at all. Status still unknown, needs
+a direct ask to Finance.
 
 **12 Accessories — RESOLVED (2026-09-18, `Accessories/17-09-2026.xlsx`):**
 RM cost and MRP verified against Costing's item-level file for all 12 —
