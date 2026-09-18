@@ -324,11 +324,20 @@ scope, not a missing-data gap. Recorded here so it is not re-reported.
 ## Current gap summary (confirmed 2026-09-04)
 
 **Needs DATA/BOM input (blocked, no BOM source in tool):**
-- 12 Accessories — RM is a flat placeholder, no itemized component BOM
 - Absent Peps brands — HotMot, Caspio, Allura, Carousel, Tartania, Geneva,
   Opulence, Fontaine, Cameo (exist in Item Master, not tracked)
 - Absent Cirrus brands — Kozybond, Mirage, Spring Soft, Pure Latex,
   Panorama, Orthobond, Haven, Memorio
+
+**12 Accessories — RESOLVED (2026-09-18, `Accessories/17-09-2026.xlsx`):**
+RM cost and MRP verified against Costing's item-level file for all 12 —
+none were missing. MRP matched exactly for all 12. 4 items had a real RM
+cost increase since 14-08-2026 (Stargaze Pillow 127.70→130.90, Stargaze
+Plus 133.00→141.20, Tender Plush 206.70→210.10, Jumbo Plush Gussetted
+274.85→279.40); the other 8 matched exactly, no change made. Note: this
+is still a flat per-unit RM figure, not an itemized component BOM — that
+distinction was never actually requested back by Finance, so treating
+this as closed unless told otherwise.
 
 **Finance policy — RESOLVED (2026-09-07, confirmed by Sahana.K):**
 - Ardene 33%/10% (`sanibel`) — confirmed correct, no change
