@@ -330,8 +330,11 @@ Confirmed INACTIVE (no action needed, out of scope):
 - Peps: Carousel, Geneva, Opulence, Fontaine, Cameo (NL/ST/Ultra NL/Ultra ST)
 - Cirrus: Kozybond, Spring Soft, Orthobond, Haven, Memorio
 
-**HotMot** — not mentioned in this file at all. Status still unknown, needs
-a direct ask to Finance.
+**HotMot** — not mentioned in this file at all, and never appeared in
+`sku_master.py`. **Marked INACTIVE per user decision (2026-09-18)** —
+absence from the active/inactive list and zero tracked data treated as
+no evidence of active production, consistent with the Mirage/Panorama/
+Tartania precedent.
 
 **Peps Spring: Caspio/Allura/Tartania — cross-checked against the real
 ledger (2026-09-18)**, same method as the Cirrus check below:
